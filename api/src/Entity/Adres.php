@@ -101,7 +101,7 @@ class Adres
     private $type;
 
     /**
-     * @param ingeteger $oppervlakte The surface area in square meters (in case of verblijfsobject)
+     * @param integer $oppervlakte The surface area in square meters (in case of verblijfsobject)
      *
      * @ApiProperty(
      *     attributes={
@@ -250,7 +250,7 @@ class Adres
      *     }
      * )
      */
-    private $status_nummeraanduiding;
+    private $statusNummeraanduiding;
 
     /**
      * @param string $status_verblijfsobject The last known status of this address.
@@ -265,7 +265,7 @@ class Adres
      *     }
      * )
      */
-    private $status_verblijfsobject;
+    private $statusVerblijfsobject;
 
     /**
      * @param string $status_openbare_ruimte The last known status of this address.
@@ -280,7 +280,7 @@ class Adres
      *     }
      * )
      */
-    private $status_openbare_ruimte;
+    private $statusOpenbareRuimte;
 
     /**
      * @param string $status_woonplaats The last known status of this address.
@@ -295,7 +295,7 @@ class Adres
      *     }
      * )
      */
-    private $status_woonplaats;
+    private $statusWoonplaats;
 
     /**
      * @param array $links A name property - this description will be available in the API documentation too.
