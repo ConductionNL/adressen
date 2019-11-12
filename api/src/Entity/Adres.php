@@ -71,7 +71,6 @@ class Adres
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="string")
-	 * @Assert\NotBlank
      * @Assert\Length(
      *     max = 16
      * )
@@ -196,7 +195,6 @@ class Adres
      /**
      * @param string $woonplaats The city  to witch this adres belongs.
      * @Assert\Type("string")
-     * @Assert\NotBlank
      * @ApiProperty(
      *     attributes={
      *         "swagger_context"={
