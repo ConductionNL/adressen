@@ -487,7 +487,7 @@ class Adres
 
     public function setStatusWoonplaats(?string $statusWoonplaats): self
     {
-    	$this->statusWoonplaats= $statusWoonplaatse;
+    	$this->statusWoonplaats= $statusWoonplaats;
 
     	return $this;
     }
