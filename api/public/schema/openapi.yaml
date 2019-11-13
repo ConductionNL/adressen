@@ -105,6 +105,44 @@ paths:
           name: X-Audit-Clarification
           description: 'A clarification as to why a request has been made  (doelbinding)'
           in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
     post:
       tags:
         - ExampleEntity
@@ -116,28 +154,28 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             application/json:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             application/xml:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             application/x-yaml:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             text/csv:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             text/html:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
           links:
             GetExampleEntityItem:
               parameters:
@@ -152,28 +190,28 @@ paths:
         content:
           application/hal+json:
             schema:
-              $ref: '#/components/schemas/ExampleEntity'
+              $ref: '#/components/schemas/ExampleEntity-write'
           application/ld+json:
             schema:
-              $ref: '#/components/schemas/ExampleEntity'
+              $ref: '#/components/schemas/ExampleEntity-write'
           application/vnd.api+json:
             schema:
-              $ref: '#/components/schemas/ExampleEntity'
+              $ref: '#/components/schemas/ExampleEntity-write'
           application/json:
             schema:
-              $ref: '#/components/schemas/ExampleEntity'
+              $ref: '#/components/schemas/ExampleEntity-write'
           application/xml:
             schema:
-              $ref: '#/components/schemas/ExampleEntity'
+              $ref: '#/components/schemas/ExampleEntity-write'
           application/x-yaml:
             schema:
-              $ref: '#/components/schemas/ExampleEntity'
+              $ref: '#/components/schemas/ExampleEntity-write'
           text/csv:
             schema:
-              $ref: '#/components/schemas/ExampleEntity'
+              $ref: '#/components/schemas/ExampleEntity-write'
           text/html:
             schema:
-              $ref: '#/components/schemas/ExampleEntity'
+              $ref: '#/components/schemas/ExampleEntity-write'
         description: 'The new ExampleEntity resource'
       parameters:
         -
@@ -247,34 +285,72 @@ paths:
           name: X-Audit-Clarification
           description: 'A clarification as to why a request has been made  (doelbinding)'
           in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
       responses:
         200:
           description: 'ExampleEntity resource response'
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             application/json:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             application/xml:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             application/x-yaml:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             text/csv:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             text/html:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
         404:
           description: 'Resource not found'
     delete:
@@ -370,28 +446,28 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             application/json:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             application/xml:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             application/x-yaml:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             text/csv:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             text/html:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
         400:
           description: 'Invalid input'
         404:
@@ -400,28 +476,28 @@ paths:
         content:
           application/hal+json:
             schema:
-              $ref: '#/components/schemas/ExampleEntity'
+              $ref: '#/components/schemas/ExampleEntity-write'
           application/ld+json:
             schema:
-              $ref: '#/components/schemas/ExampleEntity'
+              $ref: '#/components/schemas/ExampleEntity-write'
           application/vnd.api+json:
             schema:
-              $ref: '#/components/schemas/ExampleEntity'
+              $ref: '#/components/schemas/ExampleEntity-write'
           application/json:
             schema:
-              $ref: '#/components/schemas/ExampleEntity'
+              $ref: '#/components/schemas/ExampleEntity-write'
           application/xml:
             schema:
-              $ref: '#/components/schemas/ExampleEntity'
+              $ref: '#/components/schemas/ExampleEntity-write'
           application/x-yaml:
             schema:
-              $ref: '#/components/schemas/ExampleEntity'
+              $ref: '#/components/schemas/ExampleEntity-write'
           text/csv:
             schema:
-              $ref: '#/components/schemas/ExampleEntity'
+              $ref: '#/components/schemas/ExampleEntity-write'
           text/html:
             schema:
-              $ref: '#/components/schemas/ExampleEntity'
+              $ref: '#/components/schemas/ExampleEntity-write'
         description: 'The updated ExampleEntity resource'
     patch:
       tags:
@@ -470,28 +546,28 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             application/json:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             application/xml:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             application/x-yaml:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             text/csv:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
             text/html:
               schema:
-                $ref: '#/components/schemas/ExampleEntity'
+                $ref: '#/components/schemas/ExampleEntity-read'
         400:
           description: 'Invalid input'
         404:
@@ -500,28 +576,28 @@ paths:
         content:
           application/hal+json:
             schema:
-              $ref: '#/components/schemas/ExampleEntity'
+              $ref: '#/components/schemas/ExampleEntity-write'
           application/ld+json:
             schema:
-              $ref: '#/components/schemas/ExampleEntity'
+              $ref: '#/components/schemas/ExampleEntity-write'
           application/vnd.api+json:
             schema:
-              $ref: '#/components/schemas/ExampleEntity'
+              $ref: '#/components/schemas/ExampleEntity-write'
           application/json:
             schema:
-              $ref: '#/components/schemas/ExampleEntity'
+              $ref: '#/components/schemas/ExampleEntity-write'
           application/xml:
             schema:
-              $ref: '#/components/schemas/ExampleEntity'
+              $ref: '#/components/schemas/ExampleEntity-write'
           application/x-yaml:
             schema:
-              $ref: '#/components/schemas/ExampleEntity'
+              $ref: '#/components/schemas/ExampleEntity-write'
           text/csv:
             schema:
-              $ref: '#/components/schemas/ExampleEntity'
+              $ref: '#/components/schemas/ExampleEntity-write'
           text/html:
             schema:
-              $ref: '#/components/schemas/ExampleEntity'
+              $ref: '#/components/schemas/ExampleEntity-write'
         description: 'The updated ExampleEntity resource'
 components:
   schemas:
@@ -541,6 +617,20 @@ components:
         huisnummer_toevoeging:
           type: string
         straat:
+          type: string
+      required:
+        - name
+    ExampleEntity-write:
+      type: object
+      description: ''
+      required:
+        - name
+      properties:
+        name:
+          description: 'The name of this example property'
+          type: string
+        description:
+          description: 'The description of this example property'
           type: string
 host: irc.zaakonline.nl
 servers:
