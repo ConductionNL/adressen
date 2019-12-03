@@ -13,3 +13,8 @@ This tool was created by conduction (https://www.conduction.nl/team) for the mun
 [!['s-Hertogenbosch](https://raw.githubusercontent.com/ConductionNL/adressen/master/resources/logo-s-hertogenbosch.svg?sanitize=true "'s-Hertogenbosch")](https://www.s-hertogenbosch.nl/)
 [![Conduction](https://raw.githubusercontent.com/ConductionNL/adressen/master/resources/logo-conduction.svg?sanitize=true "Conduction")](https://www.conduction.nl/)
 
+
+## License
+Copyright &copy; [Gemeente Utrecht](https://www.utrecht.nl/)  2019 
+
+[Licensed under the EUPL](LICENCE.md)
