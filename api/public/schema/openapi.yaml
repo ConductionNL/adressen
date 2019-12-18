@@ -5,7 +5,7 @@ info:
   description: |
     API Details
     - Component: Proto Component
-    - Reference: as
+    - Reference: adressen
     - Enviroment: dev
     - Version: V.0.1
     - Repository: [online](https://github.com/ConductionNL/Proto-component-commonground) / [zip](https://github.com/ConductionNL/Proto-component-commonground/archive/master.zip)
