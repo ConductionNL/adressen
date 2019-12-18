@@ -5,11 +5,11 @@ info:
   description: |
     API Details
     - Component: Proto Component
-    - Reference: pc
+    - Reference: adressen
     - Enviroment: dev
     - Version: V.0.1
     - Repository: [online](https://github.com/ConductionNL/Proto-component-commonground) / [zip](https://github.com/ConductionNL/Proto-component-commonground/archive/master.zip)
-    - Docker Image: [online](https://hub.docker.com/repository/docker/conduction/pc-php) 
+    - Docker Image: [online]() 
     - Datamodel: [postman](/schema/openapi.postman_collection) / [oas](/schema/openapi.yaml) / [pdf](/schema/datamodel.pdf) / [mwb](/schema/datamodel.mwb) 
     
     'Naast deze JSON rest API is er ook een [graphql](/graphql) interface beschikbaar.'         
@@ -146,373 +146,11 @@ paths:
           in: query
       produces:
         - application/health+json
-    post:
-      tags:
-        - ExampleEntity
-      operationId: postExampleEntityCollection
-      summary: 'Creates a ExampleEntity resource.'
-      responses:
-        201:
-          description: 'ExampleEntity resource created'
-          content:
-            application/hal+json:
-              schema:
-                $ref: '#/components/schemas/ExampleEntity-read'
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/ExampleEntity-read'
-            application/vnd.api+json:
-              schema:
-                $ref: '#/components/schemas/ExampleEntity-read'
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExampleEntity-read'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ExampleEntity-read'
-            application/x-yaml:
-              schema:
-                $ref: '#/components/schemas/ExampleEntity-read'
-            text/csv:
-              schema:
-                $ref: '#/components/schemas/ExampleEntity-read'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/ExampleEntity-read'
-          links:
-            GetExampleEntityItem:
-              parameters:
-                id: '$response.body#/id'
-              operationId: getExampleEntityItem
-              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /example_entities/{id}`.'
-        400:
-          description: 'Invalid input'
-        404:
-          description: 'Resource not found'
-      requestBody:
-        content:
-          application/hal+json:
-            schema:
-              $ref: '#/components/schemas/ExampleEntity-write'
-          application/ld+json:
-            schema:
-              $ref: '#/components/schemas/ExampleEntity-write'
-          application/vnd.api+json:
-            schema:
-              $ref: '#/components/schemas/ExampleEntity-write'
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ExampleEntity-write'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/ExampleEntity-write'
-          application/x-yaml:
-            schema:
-              $ref: '#/components/schemas/ExampleEntity-write'
-          text/csv:
-            schema:
-              $ref: '#/components/schemas/ExampleEntity-write'
-          text/html:
-            schema:
-              $ref: '#/components/schemas/ExampleEntity-write'
-        description: 'The new ExampleEntity resource'
-      parameters:
-        -
-          name: Authorization
-          description: 'The JWT of the entity performing the request'
-          in: header
-        -
-          name: API-Version
-          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
-          example: 1.0.1
-          in: header
-        -
-          name: X-NLX-Logrecord-ID
-          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
-          in: header
-        -
-          name: X-NLX-Request-Process-Id
-          description: 'A process id for purpose registration (doelbinding)'
-          in: header
-        -
-          name: X-NLX-Request-Data-Elements
-          description: 'A list of requested data elements'
-          in: header
-        -
-          name: X-NLX-Request-Data-Subject
-          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
-          in: header
-        -
-          name: X-NLX-Audit-Clarification
-          description: 'A clarification as to why a request has been made  (doelbinding)'
-          in: header
-  '/example_entities/{id}':
-    get:
-      tags:
-        - ExampleEntity
-      operationId: audittrailExampleEntityItem
-      summary: 'Retrieves a ExampleEntity resource.'
-      parameters:
-        -
-          name: id
-          in: path
-          required: true
-          schema:
-            type: string
-        -
-          name: Authorization
-          description: 'The JWT of the entity performing the request'
-          in: header
-        -
-          name: API-Version
-          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
-          example: 1.0.1
-          in: header
-        -
-          name: X-NLX-Logrecord-ID
-          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
-          in: header
-        -
-          name: X-NLX-Request-Process-Id
-          description: 'A process id for purpose registration (doelbinding)'
-          in: header
-        -
-          name: X-NLX-Request-Data-Elements
-          description: 'A list of requested data elements'
-          in: header
-        -
-          name: X-NLX-Request-Data-Subject
-          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
-          in: header
-        -
-          name: X-NLX-Audit-Clarification
-          description: 'A clarification as to why a request has been made  (doelbinding)'
-          in: header
-        -
-          name: Link
-          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
-          in: header
-        -
-          name: 'extend[]'
-          required: false
-          description: 'An array of nested objects to include in the return object'
-          in: query
-          schema:
-            type: array
-        -
-          name: 'fields[]'
-          required: false
-          description: 'An array of fields to return in output, wil return all fields is not supplied'
-          in: query
-          schema:
-            type: array
-        -
-          name: validOn
-          required: false
-          description: 'Returns object as valid on a given date time'
-          schema:
-            type: string
-            format: date-time
-          in: query
-        -
-          name: validFrom
-          required: false
-          description: 'Returns objects valid from a given date time'
-          schema:
-            type: string
-            format: date-time
-          in: query
-        -
-          name: validUntil
-          required: false
-          description: 'Returns objects valid until a given date time'
-          schema:
-            type: string
-            format: date-time
-          in: query
-      responses:
-        200:
-          description: 'ExampleEntity resource response'
-          content:
-            application/hal+json:
-              schema:
-                $ref: '#/components/schemas/ExampleEntity-read'
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/ExampleEntity-read'
-            application/vnd.api+json:
-              schema:
-                $ref: '#/components/schemas/ExampleEntity-read'
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExampleEntity-read'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ExampleEntity-read'
-            application/x-yaml:
-              schema:
-                $ref: '#/components/schemas/ExampleEntity-read'
-            text/csv:
-              schema:
-                $ref: '#/components/schemas/ExampleEntity-read'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/ExampleEntity-read'
-        404:
-          description: 'Resource not found'
-      produces:
-        - application/health+json
-    put:
-      tags:
-        - ExampleEntity
-      operationId: putExampleEntityItem
-      summary: 'Replaces the ExampleEntity resource.'
-      parameters:
-        -
-          name: id
-          in: path
-          required: true
-          schema:
-            type: string
-        -
-          name: Authorization
-          description: 'The JWT of the entity performing the request'
-          in: header
-        -
-          name: API-Version
-          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
-          example: 1.0.1
-          in: header
-        -
-          name: X-NLX-Logrecord-ID
-          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
-          in: header
-        -
-          name: X-NLX-Request-Process-Id
-          description: 'A process id for purpose registration (doelbinding)'
-          in: header
-        -
-          name: X-NLX-Request-Data-Elements
-          description: 'A list of requested data elements'
-          in: header
-        -
-          name: X-NLX-Request-Data-Subject
-          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
-          in: header
-        -
-          name: X-NLX-Audit-Clarification
-          description: 'A clarification as to why a request has been made  (doelbinding)'
-          in: header
-      responses:
-        200:
-          description: 'ExampleEntity resource updated'
-          content:
-            application/hal+json:
-              schema:
-                $ref: '#/components/schemas/ExampleEntity-read'
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/ExampleEntity-read'
-            application/vnd.api+json:
-              schema:
-                $ref: '#/components/schemas/ExampleEntity-read'
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExampleEntity-read'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ExampleEntity-read'
-            application/x-yaml:
-              schema:
-                $ref: '#/components/schemas/ExampleEntity-read'
-            text/csv:
-              schema:
-                $ref: '#/components/schemas/ExampleEntity-read'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/ExampleEntity-read'
-        400:
-          description: 'Invalid input'
-        404:
-          description: 'Resource not found'
-      requestBody:
-        content:
-          application/hal+json:
-            schema:
-              $ref: '#/components/schemas/ExampleEntity-write'
-          application/ld+json:
-            schema:
-              $ref: '#/components/schemas/ExampleEntity-write'
-          application/vnd.api+json:
-            schema:
-              $ref: '#/components/schemas/ExampleEntity-write'
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ExampleEntity-write'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/ExampleEntity-write'
-          application/x-yaml:
-            schema:
-              $ref: '#/components/schemas/ExampleEntity-write'
-          text/csv:
-            schema:
-              $ref: '#/components/schemas/ExampleEntity-write'
-          text/html:
-            schema:
-              $ref: '#/components/schemas/ExampleEntity-write'
-        description: 'The updated ExampleEntity resource'
-    delete:
-      tags:
-        - ExampleEntity
-      operationId: deleteExampleEntityItem
-      summary: 'Removes the ExampleEntity resource.'
-      responses:
-        204:
-          description: 'ExampleEntity resource deleted'
-        404:
-          description: 'Resource not found'
-      parameters:
-        -
-          name: id
-          in: path
-          required: true
-          schema:
-            type: string
-        -
-          name: Authorization
-          description: 'The JWT of the entity performing the request'
-          in: header
-        -
-          name: API-Version
-          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
-          example: 1.0.1
-          in: header
-        -
-          name: X-NLX-Logrecord-ID
-          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
-          in: header
-        -
-          name: X-NLX-Request-Process-Id
-          description: 'A process id for purpose registration (doelbinding)'
-          in: header
-        -
-          name: X-NLX-Request-Data-Elements
-          description: 'A list of requested data elements'
-          in: header
-        -
-          name: X-NLX-Request-Data-Subject
-          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
-          in: header
-        -
-          name: X-NLX-Audit-Clarification
-          description: 'A clarification as to why a request has been made  (doelbinding)'
-          in: header
 components:
   schemas:
     Adres:
       type: object
-      description: 'This is an example entity'
+      description: 'An BAG addres'
       properties:
         id:
           readOnly: true
@@ -527,27 +165,50 @@ components:
           type: string
         straat:
           type: string
-      required:
-        - name
-    ExampleEntity-write:
-      type: object
-      description: 'This is an example entity'
-      required:
-        - name
-      properties:
-        name:
-          description: 'The name of this example property'
+        postcode:
           type: string
-        description:
-          description: 'The description of this example property'
+        woonplaats:
           type: string
+        woonplaats_nummer:
+          type: integer
+        gemeente_nummer:
+          type: integer
+        gemeente_rsin:
+          type: string
+        status_nummeraanduiding:
+          type: string
+        status_verblijfsobject:
+          type: string
+        status_openbare_ruimte:
+          type: string
+        status_woonplaats:
+          type: string
+        links:
+          type: array
+          items:
+            type: string
+      required:
+        - straat
+        - postcode
+definitions: []
 tags:
   -
-    name: ExampleEntity
+    name: Adres
     description: |
-      This is an example entity
+      An BAG addres
       
-      With an adtional description, all in all its pritty nice [url](www.google.nl)
+      
+securityDefinitions:
+  JWT-Oauth:
+    type: oauth2
+    authorizationUrl: 'http://petstore.swagger.io/api/oauth/dialog'
+    flow: implicit
+    scopes: []
+  JWT-Token:
+    type: apiKey
+    in: header
+    name: Authorization
+    scopes: []
 host: irc.zaakonline.nl
 servers:
   -
