@@ -1,30 +1,26 @@
 <?php
 
 namespace App\Entity;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\UuidInterface;
-use Symfony\Component\Serializer\Annotation\Groups;
-use Gedmo\Mapping\Annotation as Gedmo;
-use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Annotation\ApiProperty;
-use Symfony\Component\Serializer\Annotation\MaxDepth;
-use Symfony\Component\Validator\Constraints as Assert;
+
 use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\NumericFilter;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
- * An BAG addres
+ * An BAG addres.
  *
  * @category   	Entity
  *
  * @author     	Ruben van der Linde <ruben@conduction.nl>
  * @license    	EUPL 1.2 https://opensource.org/licenses/EUPL-1.2 *
+ *
  * @version    	1.0
  *
  * @link   		http://www.conduction.nl
- * @package		Common Ground Component
- * @subpackage  Adressen
  *
  *
  * @ApiResource(
@@ -71,7 +67,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\NumericFilter;
  */
 class Adres
 {
-	/**
+    /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="string")
@@ -82,28 +78,29 @@ class Adres
      * 	   identifier=true,
      *     attributes={
      *         "swagger_context"={
-	 *         	   "description" = "The BAG identifier of this address",
+     *         	   "description" = "The BAG identifier of this address",
      *             "type"="string",
      *             "example"="0363200000218908"
      *         }
      *     }
      * )
-	 */
-	private $id;
+     */
+    private $id;
 
     /**
      * @param string $type The type of this address.
+     *
      * @example verblijfsobject
      *
      * @Groups({"read"})
      * @Assert\Choice(
      *     {"ligplaats","standplaats","verblijfsobject","woonplaats","pand"}
      * )
-     * 
+     *
      * @ApiProperty(
      *     attributes={
      *         "swagger_context"={
- 	 *         	   "description" = "The type of address",
+     *         	   "description" = "The type of address",
      *             "type"="string",
      *             "enum"={"verblijfsobject", "ligplaats", "standplaats"},
      *             "example"="verblijfsobject"
@@ -114,7 +111,8 @@ class Adres
     private $type;
 
     /**
-     * @param integer $oppervlakte The surface area in square meters (in case of verblijfsobject)
+     * @param int $oppervlakte The surface area in square meters (in case of verblijfsobject)
+     *
      * @example 22214
      *
      * @Groups({"read"})
@@ -122,11 +120,12 @@ class Adres
     private $oppervlakte;
 
     /**
-     * @param integer $huisnummer The house number of this address.
+     * @param int $huisnummer The house number of this address.
+     *
      * @example 147
      *
      * @Groups({"read"})
-     * 
+     *
      * @Assert\Type("integer")
      * @Assert\Length(
      *     max = 5
@@ -136,6 +135,7 @@ class Adres
 
     /**
      * @param string $huisnummerToevoeging The suffix of the house number of this address.
+     *
      * @example huis
      *
      * @Groups({"read"})
@@ -147,6 +147,7 @@ class Adres
 
     /**
      * @param string $straat The street name of this address.
+     *
      * @example Nieuwezijds Voorburgwal
      *
      * @Groups({"read"})
@@ -157,6 +158,7 @@ class Adres
 
     /**
      * @param string $postcode The zip or postalcode of this address.
+     *
      * @example 1012RJ
      *
      * @Groups({"read"})
@@ -168,8 +170,9 @@ class Adres
      */
     private $postcode;
 
-     /**
+    /**
      * @param string $woonplaats The city  to witch this adres belongs.
+     *
      * @example Amsterdam
      *
      * @Groups({"read"})
@@ -179,6 +182,7 @@ class Adres
 
     /**
      * @param string $woonplaatsNummer The ID of the city or locality to which this address belongs.
+     *
      * @example 3594
      *
      * @Groups({"read"})
@@ -191,6 +195,7 @@ class Adres
 
     /**
      * @param string $gemeenteNummer The ID of the locality to witch this adres belongs.
+     *
      * @example 3594
      *
      * @Groups({"read"})
@@ -203,6 +208,7 @@ class Adres
 
     /**
      * @param string $gemeenteRsin The RSIN of the city or locality to which this address belongs.
+     *
      * @example 002220647
      *
      * @Groups({"read"})
@@ -215,6 +221,7 @@ class Adres
 
     /**
      * @param string $statusNummeraanduiding The last known status of this address.
+     *
      * @example NaamgevingUitgegeven
      *
      * @Groups({"read"})
@@ -224,6 +231,7 @@ class Adres
 
     /**
      * @param string $status_verblijfsobject The last known status of this address.
+     *
      * @example VerblijfsobjectInGebruik
      *
      * @Groups({"read"})
@@ -233,6 +241,7 @@ class Adres
 
     /**
      * @param string $status_openbare_ruimte The last known status of this address.
+     *
      * @example NaamgevingUitgegeven
      *
      * @Groups({"read"})
@@ -242,6 +251,7 @@ class Adres
 
     /**
      * @param string $status_woonplaats The last known status of this address.
+     *
      * @example WoonplaatsAangewezen
      *
      * @Groups({"read"})
@@ -252,25 +262,24 @@ class Adres
     /**
      * @param array $links The Bag objects beloning to this adress.
      * @Groups({"read"})
-     *
      */
     private $links = [];
 
     public function getId(): ?string
     {
-    	return $this->id;
+        return $this->id;
     }
 
     public function setId(?string $id): self
     {
-    	$this->id= $id;
+        $this->id = $id;
 
-    	return $this;
+        return $this;
     }
 
     public function getType(): ?string
     {
-    	return $this->type;
+        return $this->type;
     }
 
     public function setType(?string $type): self
@@ -354,86 +363,86 @@ class Adres
 
     public function getWoonplaatsNummer(): ?int
     {
-    	return $this->woonplaatsNummer;
+        return $this->woonplaatsNummer;
     }
 
     public function setWoonplaatsNummer(?int $woonplaatsNummer): self
     {
-    	$this->woonplaatsNummer= $woonplaatsNummer;
+        $this->woonplaatsNummer = $woonplaatsNummer;
 
-    	return $this;
+        return $this;
     }
 
     public function getGemeenteNummer(): ?int
     {
-    	return $this->gemeenteNummer;
+        return $this->gemeenteNummer;
     }
 
     public function setGemeenteNummer(?int $gemeenteNummer): self
     {
-    	$this->gemeenteNummer = $gemeenteNummer;
+        $this->gemeenteNummer = $gemeenteNummer;
 
-    	return $this;
+        return $this;
     }
 
     public function getGemeenteRsin(): ?string
     {
-    	return $this->gemeenteRsin;
+        return $this->gemeenteRsin;
     }
 
     public function setGemeenteRsin(?string $gemeenteRsin): self
     {
-    	$this->gemeenteRsin= $gemeenteRsin;
+        $this->gemeenteRsin = $gemeenteRsin;
 
-    	return $this;
+        return $this;
     }
 
     public function getStatusNummeraanduiding(): ?string
     {
-    	return $this->statusNummeraanduiding;
+        return $this->statusNummeraanduiding;
     }
 
     public function setStatusNummeraanduiding(?string $statusNummeraanduiding): self
     {
-    	$this->statusNummeraanduiding= $statusNummeraanduiding;
+        $this->statusNummeraanduiding = $statusNummeraanduiding;
 
-    	return $this;
+        return $this;
     }
 
     public function getStatusVerblijfsobject(): ?string
     {
-    	return $this->statusVerblijfsobject;
+        return $this->statusVerblijfsobject;
     }
 
     public function setStatusVerblijfsobject(?string $statusVerblijfsobject): self
     {
-    	$this->statusVerblijfsobject = $statusVerblijfsobject;
+        $this->statusVerblijfsobject = $statusVerblijfsobject;
 
-    	return $this;
+        return $this;
     }
 
     public function getStatusOpenbareRuimte(): ?string
     {
-    	return $this->statusOpenbareRuimte;
+        return $this->statusOpenbareRuimte;
     }
 
     public function setStatusOpenbareRuimte(?string $statusOpenbareRuimte): self
     {
-    	$this->statusOpenbareRuimte = $statusOpenbareRuimte;
+        $this->statusOpenbareRuimte = $statusOpenbareRuimte;
 
-    	return $this;
+        return $this;
     }
 
     public function getStatusWoonplaats(): ?string
     {
-    	return $this->statusWoonplaats;
+        return $this->statusWoonplaats;
     }
 
     public function setStatusWoonplaats(?string $statusWoonplaats): self
     {
-    	$this->statusWoonplaats= $statusWoonplaats;
+        $this->statusWoonplaats = $statusWoonplaats;
 
-    	return $this;
+        return $this;
     }
 
     public function getLinks(): ?array

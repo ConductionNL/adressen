@@ -8,8 +8,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class FieldsAndExtendSubscriber implements EventSubscriberInterface
 {
@@ -27,7 +27,7 @@ class FieldsAndExtendSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-                KernelEvents::VIEW => ['FilterFields', EventPriorities::PRE_SERIALIZE],
+            KernelEvents::VIEW => ['FilterFields', EventPriorities::PRE_SERIALIZE],
         ];
     }
 
@@ -39,7 +39,7 @@ class FieldsAndExtendSubscriber implements EventSubscriberInterface
 
         // This needs to be bassed on the content-type
         $type = 'jsonhal';
-        
+
         // Only do somthing if fields is query supplied
         if (!$fields && $extends) {
             return $result;
@@ -50,17 +50,17 @@ class FieldsAndExtendSubscriber implements EventSubscriberInterface
             $fields = explode(',', $fields);
         }
         if (!is_array($extends)) {
-        	$extends= explode(',', $extends);
+            $extends = explode(',', $extends);
         }
-        
+
         // Its possible to nest fields for filterins
-        foreach($fields as $key->$value){
-        	// Lets check if the fields contain one or more .'s
-        	if (strpos($value, '.') !== false) {
-        		// This is where it gets complicated couse it could go on indevinitly        		
-        	}
+        foreach ($fields as $key->$value) {
+            // Lets check if the fields contain one or more .'s
+            if (strpos($value, '.') !== false) {
+                // This is where it gets complicated couse it could go on indevinitly
+            }
         }
-        
+
         // Overwrite maxdepth for extended properties
 
         // we always need to return an id and links (in order not to break stuff)
@@ -74,30 +74,29 @@ class FieldsAndExtendSubscriber implements EventSubscriberInterface
         // now we need to overide the normal subscriber
         $json = $this->serializer->serialize(
             $result,
-        	$type, 
-        	['enable_max_depth' => true, 
-        	'attributes'=> $fields]
+            $type,
+            ['enable_max_depth' => true,
+                'attributes'    => $fields, ]
         );
-        
-        
+
         $jsonArray = json_decode($json, true);
-        
+
         // The we want to extend properties from the extend query
-        foreach($extends as $extend){
-        	/* @todo add security checks */
-        	// Get new object for the extend
-        	$extendObject = $this->propertyAccessor->getValue($result, $extend);
-        	// turn to json
-        	$extendjson = $this->serializer->serialize(
-        		$result,
-        		$type,
-        		['enable_max_depth' => true,
-        		'attributes'=> $fields]
-        	);        	
-        	// add to the array
-        	$jsonArray[$extend] = json_decode($extendjson, true);
+        foreach ($extends as $extend) {
+            /* @todo add security checks */
+            // Get new object for the extend
+            $extendObject = $this->propertyAccessor->getValue($result, $extend);
+            // turn to json
+            $extendjson = $this->serializer->serialize(
+                $result,
+                $type,
+                ['enable_max_depth' => true,
+                    'attributes'    => $fields, ]
+            );
+            // add to the array
+            $jsonArray[$extend] = json_decode($extendjson, true);
         }
-        
+
         $json = json_encode($jsonArray);
 
         $response = new Response(
