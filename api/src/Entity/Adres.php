@@ -3,28 +3,29 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\NumericFilter;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * An BAG addres
+ * An BAG addres.
  *
  * @category   	Entity
  *
  * @author     	Ruben van der Linde <ruben@conduction.nl>
  * @license    	EUPL 1.2 https://opensource.org/licenses/EUPL-1.2 *
+ *
  * @version    	1.0
  *
- * @link   		http//:www.conduction.nl
- * @package		Common Ground Component
- * @subpackage  Adressen
- * 
- * 
+ * @link   		http://www.conduction.nl
+ *
+ *
  * @ApiResource(
  *     collectionOperations={
- *          "get"={          
+ *          "get"={
  *      		"path"="/adressen",
  *              "method"="GET",
  *              "swagger_context" = {
@@ -36,14 +37,14 @@ use Doctrine\ORM\Mapping as ORM;
  *                          "description" = "The number of the building",
  *                          "required" = true,
  *                          "type" : "integer"
- *                      },                      
+ *                      },
  *                      {
  *                          "name" = "huisnummer_toevoeging",
  *                          "in" = "query",
  *                          "description" = "The suffix of the house number. This is used to filter a result list. Only applied when one or more matches can be found. Compared in a non-strict manner, meaning a wildcard is applied both after and before the given value when comparing for matches",
  *                          "required" = false,
  *                          "type" : "string"
- *                      },                      
+ *                      },
  *                      {
  *                          "name" = "postcode",
  *                          "in" = "query",
@@ -66,31 +67,40 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Adres
 {
-	/**
+    /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="string")
-	 * 	 
+     * @Assert\Length(
+     *     max = 16
+     * )
      * @ApiProperty(
      * 	   identifier=true,
      *     attributes={
      *         "swagger_context"={
-	 *         	   "description" = "The BAG identifier of this address",
+     *         	   "description" = "The BAG identifier of this address",
      *             "type"="string",
      *             "example"="0363200000218908"
      *         }
      *     }
      * )
-	 */
-	private $id;
-	
+     */
+    private $id;
+
     /**
      * @param string $type The type of this address.
-     *     
+     *
+     * @example verblijfsobject
+     *
+     * @Groups({"read"})
+     * @Assert\Choice(
+     *     {"ligplaats","standplaats","verblijfsobject","woonplaats","pand"}
+     * )
+     *
      * @ApiProperty(
      *     attributes={
      *         "swagger_context"={
- 	 *         	   "description" = "The type of address",
+     *         	   "description" = "The type of address",
      *             "type"="string",
      *             "enum"={"verblijfsobject", "ligplaats", "standplaats"},
      *             "example"="verblijfsobject"
@@ -101,46 +111,36 @@ class Adres
     private $type;
 
     /**
-     * @param ingeteger $oppervlakte The surface area in square meters (in case of verblijfsobject)
-     *     
-     * @ApiProperty(
-     *     attributes={
-     *         "swagger_context"={
- 	 *         	   "description" = "The surface area in square meters (in case of verblijfsobject)",
-     *             "type"="ingeteger",
-     *             "example"="22214"
-     *         }
-     *     }
-     * )
+     * @param int $oppervlakte The surface area in square meters (in case of verblijfsobject)
+     *
+     * @example 22214
+     *
+     * @Groups({"read"})
      */
     private $oppervlakte;
 
     /**
-     * @param integer $huisnummer The house number of this address.
-     *     
-     * @ApiProperty(
-     *     attributes={
-     *         "swagger_context"={
- 	 *         	   "description" = "The house number of this address",
-     *             "type"="integer",
-     *             "example"=147
-     *         }
-     *     }
+     * @param int $huisnummer The house number of this address.
+     *
+     * @example 147
+     *
+     * @Groups({"read"})
+     *
+     * @Assert\Type("integer")
+     * @Assert\Length(
+     *     max = 5
      * )
      */
     private $huisnummer;
 
     /**
      * @param string $huisnummerToevoeging The suffix of the house number of this address.
-     * 
-     * @ApiProperty(
-     *     attributes={
-     *         "swagger_context"={
- 	 *         	   "description" = "The suffix of the house number of this address",
-     *             "type"="string",
-     *             "example"="huis"
-     *         }
-     *     }
+     *
+     * @example huis
+     *
+     * @Groups({"read"})
+     * @Assert\Length(
+     *     max = 4
      * )
      */
     private $huisnummerToevoeging;
@@ -148,185 +148,138 @@ class Adres
     /**
      * @param string $straat The street name of this address.
      *
-     * @ApiProperty(
-     *     attributes={
-     *         "swagger_context"={
- 	 *         	   "description" = "The street name of this address",
-     *             "type"="string",
-     *             "example"="Nieuwezijds Voorburgwal"
-     *         }
-     *     }
-     * )
+     * @example Nieuwezijds Voorburgwal
+     *
+     * @Groups({"read"})
+     * @Assert\Type("string")
+     * @Assert\NotBlank
      */
-    private $straat; 
+    private $straat;
 
     /**
      * @param string $postcode The zip or postalcode of this address.
      *
-     * @ApiProperty(
-     *     attributes={
-     *         "swagger_context"={
- 	 *         	   "description" = "The zip or postcode of this address",
-     *             "type"="string",
-     *             "example"="1012RJ",
-     *             "maxLength"="6",
-     *             "minLength"="6"
-     *         }
-     *     }
+     * @example 1012RJ
+     *
+     * @Groups({"read"})
+     * @Assert\Length(
+     *     min = 6,
+     *     max = 6
      * )
+     * @Assert\NotBlank
      */
     private $postcode;
 
-     /**
+    /**
      * @param string $woonplaats The city  to witch this adres belongs.
      *
-     * @ApiProperty(
-     *     attributes={
-     *         "swagger_context"={
- 	 *         	   "description" = "The city or locality to which this address belongs",
-     *             "type"="string",
-     *             "example"="Amsterdam"
-     *         }
-     *     }
-     * )
+     * @example Amsterdam
+     *
+     * @Groups({"read"})
+     * @Assert\Type("string")
      */
     private $woonplaats;
-    
+
     /**
-     * @param string $gemeenteNummer The ID of the city or locality to which this address belongs.
+     * @param string $woonplaatsNummer The ID of the city or locality to which this address belongs.
      *
-     * @ApiProperty(
-     *     attributes={
-     *         "swagger_context"={
-     *         	   "description" = "The ID of the city or locality to which this address belongs",
-     *             "type"="integer",
-     *             "example"=3594
-     *         }
-     *     }
+     * @example 3594
+     *
+     * @Groups({"read"})
+     * @Assert\Type("integer")
+     * @Assert\Length(
+     *     max = 4
      * )
      */
     private $woonplaatsNummer;
-    
+
     /**
      * @param string $gemeenteNummer The ID of the locality to witch this adres belongs.
      *
-     * @ApiProperty(
-     *     attributes={
-     *         "swagger_context"={
-     *         	   "description" = "The ID of the  locality to witch this adres belongs",
-     *             "type"="integer",
-     *             "example"=3594
-     *         }
-     *     }
+     * @example 3594
+     *
+     * @Groups({"read"})
+     * @Assert\Type("integer")
+     * @Assert\Length(
+     *     max = 4
      * )
      */
     private $gemeenteNummer;
-    
+
     /**
      * @param string $gemeenteRsin The RSIN of the city or locality to which this address belongs.
      *
-     * @ApiProperty(
-     *     attributes={
-     *         "swagger_context"={
-     *         	   "description" = "The RSIN of the city or locality to which this address belongs",
-     *             "type"="string",
-     *             "example"="002220647"
-     *         }
-     *     }
-     * )
-     */
-    private $gemeenteRsin;   
-    
-    /**
-     * @param string $status_nummeraanduiding The last known status of this address.
+     * @example 002220647
      *
-     * @ApiProperty(
-     *     attributes={
-     *         "swagger_context"={
-     *         	   "description" = "The last known status of this address",
-     *             "type"="string",
-     *             "example"="NaamgevingUitgegeven"
-     *         }
-     *     }
+     * @Groups({"read"})
+     * @Assert\Type("integer")
+     * @Assert\Length(
+     *     max = 9
      * )
      */
-    private $status_nummeraanduiding;
-    
+    private $gemeenteRsin;
+
+    /**
+     * @param string $statusNummeraanduiding The last known status of this address.
+     *
+     * @example NaamgevingUitgegeven
+     *
+     * @Groups({"read"})
+     * @Assert\Type("string")
+     */
+    private $statusNummeraanduiding;
+
     /**
      * @param string $status_verblijfsobject The last known status of this address.
      *
-     * @ApiProperty(
-     *     attributes={
-     *         "swagger_context"={
-     *         	   "description" = "The last known status of the verblijfsobject belonging to this address",
-     *             "type"="string",
-     *             "example"="VerblijfsobjectInGebruik"
-     *         }
-     *     }
-     * )
+     * @example VerblijfsobjectInGebruik
+     *
+     * @Groups({"read"})
+     * @Assert\Type("string")
      */
-    private $status_verblijfsobject;
-    
+    private $statusVerblijfsobject;
+
     /**
      * @param string $status_openbare_ruimte The last known status of this address.
      *
-     * @ApiProperty(
-     *     attributes={
-     *         "swagger_context"={
-     *         	   "description" = "The last known status of the openbare ruimte belonging to this address",
-     *             "type"="string",
-     *             "example"="NaamgevingUitgegeven"
-     *         }
-     *     }
-     * )
+     * @example NaamgevingUitgegeven
+     *
+     * @Groups({"read"})
+     * @Assert\Type("string")
      */
-    private $status_openbare_ruimte;
-    
+    private $statusOpenbareRuimte;
+
     /**
      * @param string $status_woonplaats The last known status of this address.
      *
-     * @ApiProperty(
-     *     attributes={
-     *         "swagger_context"={
-     *         	   "description" = "The last known status of the woonplaats belonging to this address",
-     *             "type"="string",
-     *             "example"="WoonplaatsAangewezen"
-     *         }
-     *     }
-     * )
+     * @example WoonplaatsAangewezen
+     *
+     * @Groups({"read"})
+     * @Assert\Type("string")
      */
-    private $status_woonplaats;
+    private $statusWoonplaats;
 
     /**
-     * @param array $links A name property - this description will be available in the API documentation too.
-     *
-     * @ApiProperty(
-     *     attributes={
-     *         "swagger_context"={
- 	 *         	   "description" = "The zip or postalcode of  the address you are searching for",
-     *             "type"="array",
-     *             "example"="[]"
-     *         }
-     *     }
-     * )
+     * @param array $links The Bag objects beloning to this adress.
+     * @Groups({"read"})
      */
     private $links = [];
-    
+
     public function getId(): ?string
     {
-    	return $this->id;
+        return $this->id;
     }
-    
+
     public function setId(?string $id): self
     {
-    	$this->id= $id;
-    	
-    	return $this;
+        $this->id = $id;
+
+        return $this;
     }
-    
+
     public function getType(): ?string
     {
-    	return $this->type;
+        return $this->type;
     }
 
     public function setType(?string $type): self
@@ -407,91 +360,91 @@ class Adres
 
         return $this;
     }
-    
+
     public function getWoonplaatsNummer(): ?int
     {
-    	return $this->woonplaatsNummer;
+        return $this->woonplaatsNummer;
     }
-    
+
     public function setWoonplaatsNummer(?int $woonplaatsNummer): self
     {
-    	$this->woonplaatsNummer= $woonplaatsNummer;
-    	
-    	return $this;
+        $this->woonplaatsNummer = $woonplaatsNummer;
+
+        return $this;
     }
-    
+
     public function getGemeenteNummer(): ?int
     {
-    	return $this->gemeenteNummer;
+        return $this->gemeenteNummer;
     }
-    
+
     public function setGemeenteNummer(?int $gemeenteNummer): self
     {
-    	$this->gemeenteNummer = $gemeenteNummer;
-    	
-    	return $this;
+        $this->gemeenteNummer = $gemeenteNummer;
+
+        return $this;
     }
-    
+
     public function getGemeenteRsin(): ?string
     {
-    	return $this->gemeenteRsin;
+        return $this->gemeenteRsin;
     }
-    
+
     public function setGemeenteRsin(?string $gemeenteRsin): self
     {
-    	$this->gemeenteRsin= $gemeenteRsin;
-    	
-    	return $this;
+        $this->gemeenteRsin = $gemeenteRsin;
+
+        return $this;
     }
-        
+
     public function getStatusNummeraanduiding(): ?string
     {
-    	return $this->statusNummeraanduiding;
+        return $this->statusNummeraanduiding;
     }
-    
+
     public function setStatusNummeraanduiding(?string $statusNummeraanduiding): self
     {
-    	$this->statusNummeraanduiding= $statusNummeraanduiding;
-    	
-    	return $this;
+        $this->statusNummeraanduiding = $statusNummeraanduiding;
+
+        return $this;
     }
-    
+
     public function getStatusVerblijfsobject(): ?string
     {
-    	return $this->statusVerblijfsobject;
+        return $this->statusVerblijfsobject;
     }
-    
+
     public function setStatusVerblijfsobject(?string $statusVerblijfsobject): self
     {
-    	$this->statusVerblijfsobject = $statusVerblijfsobject;
-    	
-    	return $this;
+        $this->statusVerblijfsobject = $statusVerblijfsobject;
+
+        return $this;
     }
-    
+
     public function getStatusOpenbareRuimte(): ?string
     {
-    	return $this->statusOpenbareRuimte;
+        return $this->statusOpenbareRuimte;
     }
-    
+
     public function setStatusOpenbareRuimte(?string $statusOpenbareRuimte): self
     {
-    	$this->statusOpenbareRuimte = $statusOpenbareRuimte;
-    	
-    	return $this;
+        $this->statusOpenbareRuimte = $statusOpenbareRuimte;
+
+        return $this;
     }
-    
+
     public function getStatusWoonplaats(): ?string
     {
-    	return $this->statusWoonplaats;
+        return $this->statusWoonplaats;
     }
-    
+
     public function setStatusWoonplaats(?string $statusWoonplaats): self
     {
-    	$this->statusWoonplaats= $statusWoonplaatse;
-    	
-    	return $this;
+        $this->statusWoonplaats = $statusWoonplaats;
+
+        return $this;
     }
-    
+
     public function getLinks(): ?array
     {
         return $this->links;
