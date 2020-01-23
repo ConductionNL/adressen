@@ -271,7 +271,7 @@ class KadasterService
 		// Then we need to enrich that
 		foreach($nummeraanduidingen['nummeraanduidingen'] as $nummeraanduiding){
 
-
+            //var_dump($nummeraanduiding);
 			$responce['id'] = $nummeraanduiding['identificatiecode'];
 
 			$adresseerbaarObject = $this->analyseUri($nummeraanduiding["_links"]['adresseerbaarObject']['href']);
@@ -300,7 +300,6 @@ class KadasterService
 			if(array_key_exists('huisnummertoevoeging', $nummeraanduiding)){$responce['huisnummertoevoeging'] = $nummeraanduiding['huisnummertoevoeging'];}
             if(array_key_exists('huisletter', $nummeraanduiding)){$responce['huisletter'] = $nummeraanduiding['huisletter'];}
 			if(array_key_exists('postcode', $nummeraanduiding)){$responce['postcode']= $nummeraanduiding['postcode'];}
-
 			// We want return a single housenumber suffix
             if(!array_key_exists('huisnummertoevoeging', $responce) && array_key_exists('huisletter', $responce)){
                 $responce['huisnummertoevoeging'] = $responce['huisletter'];
@@ -311,7 +310,6 @@ class KadasterService
                 $responce['huisnummertoevoeging'] =  $responce['huisletter'].' '.$responce['huisnummertoevoeging'];
                 unset($responce['huisletter']);
             }
-
 
 			// Then the apropriote openbare ruimte
 			$bijbehorendeOpenbareRuimte = $this->analyseUri($nummeraanduiding['_links']['bijbehorendeOpenbareRuimte']['href']);
@@ -341,6 +339,7 @@ class KadasterService
 
 			// Lets add the current responce to the array of responces
 			$responces[] = $responce;
+			$responce = [];
 		}
 
 		return $responces;
