@@ -352,6 +352,7 @@ class KadasterService
 
             // Lets add the current responce to the array of responces
             $responces[] = $responce;
+            $responce = [];
         }
 
         return $responces;
