@@ -8,7 +8,9 @@
 		"api-platform/api-pack": "^1.1",
 		"conduction/commongroundbundle": "dev-master",
 		"doctrine/doctrine-fixtures-bundle": "^3.2",
+		"doctrine/rst-parser": "^0.1.0",
 		"guzzlehttp/guzzle": "^6.3",
+		"knplabs/knp-markdown-bundle": "^1.8",
 		"lexik/jwt-authentication-bundle": "^2.6",
 		"phpdocumentor/reflection-docblock": "^4.3",
 		"phpoffice/phpspreadsheet": "^1.10",
@@ -27,9 +29,9 @@
 		"webonyx/graphql-php": "^0.13.8"
 	},
 	"require-dev" : {
-		"api-platform/schema-generator" : "^2.1",
-		"symfony/maker-bundle" : "^1.11",
-		"symfony/profiler-pack" : "^1.0"
+		"api-platform/schema-generator": "^2.1",
+		"symfony/maker-bundle": "^1.11",
+		"symfony/profiler-pack": "^1.0"
 	},
 	"config" : {
 		"preferred-install" : {

@@ -41,6 +41,8 @@ services:
       - APP_DEMO=${APP_DEMO}
       - APP_REPRO=${APP_REPRO}
       - APP_DESCRIPTION=${APP_DESCRIPTION}
+      - APP_LOGO=${APP_LOGO}
+      - APP_HOME=${APP_HOME}
       - ORGANIZATION_NAME=${ORGANIZATION_NAME}
       - ORGANIZATION_EMAIL_ADDRESS=${ORGANIZATION_EMAIL_ADDRESS}
       - ORGANIZATION_COUNTRY_NAME=${ORGANIZATION_COUNTRY_NAME}
@@ -178,7 +180,7 @@ services:
   #    - db-data:/var/lib/postgresql/data:rw
     
   db:
-    image: mysql:5.6
+    image: mysql:5.7
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=example
