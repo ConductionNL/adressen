@@ -150,7 +150,7 @@ components:
   schemas:
     Adres:
       type: object
-      description: 'An BAG addres'
+      description: 'An BAG addres.'
       properties:
         id:
           readOnly: true
@@ -195,7 +195,7 @@ tags:
   -
     name: Adres
     description: |
-      An BAG addres
+      An BAG addres.
       
       
 securityDefinitions:
