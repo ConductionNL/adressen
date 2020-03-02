@@ -103,6 +103,12 @@ final class SwaggerDecorator implements NormalizerInterface
                     $description = $docblock->getDescription()->render();
                     $description = $summary."\n\n".$description;
 
+                    /*
+                    if(){
+                    	
+                    }
+                    */
+                    
                     $tag = [];
                     $tag['name'] = $shortName;
                     $tag['description'] = $description;
@@ -113,6 +119,7 @@ final class SwaggerDecorator implements NormalizerInterface
 
                     //$additionalEntityDocs = $this->getAdditionalEntityDocs($entity);
                     $entityDocs = $this->getAdditionalEntityDocs($entity);
+                    
                     // Only run if we have aditional docs
                     if (array_key_exists('properties', $entityDocs)) {
                         $additionalDocs = array_merge($additionalDocs, $entityDocs['properties']);
@@ -127,7 +134,7 @@ final class SwaggerDecorator implements NormalizerInterface
             }
         }
 
-        // Oke dit is echt but lelijk
+        // Ruben: Oke dit is echt but lelijk
         $schemas = (array) $docs['definitions'];
         foreach ($schemas as $schemaName => $schema) {
 
@@ -421,10 +428,28 @@ final class SwaggerDecorator implements NormalizerInterface
             foreach ($tags as $tag) {
                 $name = $tag->getName();
                 $description = $tag->getDescription();
-                //
-                //$description = (string) $description;
 
                 switch ($name) {
+
+                    // Description
+                    case 'var':
+                        $atributes['description'] = (string) $description;
+                        $atributes['type'] = (string) $tag->getType();
+                        
+                        // Lets check on objects                        
+                        $chr = mb_substr ($atributes['type'], 0, 1, "UTF-8");
+                        $skip = ['UuidInterface','Datetime'];
+                        $strip = ['\\','[',']'];
+                        $clean = str_replace($strip,'', $atributes['type']);
+                        if("\\" == $chr && !in_array($clean,$skip)){      
+                        	// We have an object
+                        	$atributes['eaxample'] = '#/components/schemas/'.$clean.'-read'; 
+                        	$atributes['type'] = 'object';
+                        	$atributes['format'] = $clean;
+                        }
+                        
+                        break;
+                        
                     // Docblocks
                     case 'example':
                         $atributes['example'] = (string) $description;
@@ -436,29 +461,56 @@ final class SwaggerDecorator implements NormalizerInterface
                         $groups = $propertyAnnotation->getGroups();
                         break;
 
-                    // Constrainds (Validation)
+                        // Constrainds (Validation)
+                    case "Assert\Date":
+                        $atributes['type'] = 'string';
+                        $atributes['format'] = 'date';
+                        $atributes['example'] = \date('Y-m-d');
+                        break;
+                    case "Assert\DateTime":
+                        $atributes['type'] = 'string';
+                        $atributes['format'] = 'date-time';
+                        $atributes['example'] = \date('Y-m-d').'T'.\date('H:i:s').'+00:00';
+                        break;
+                    case "Assert\Time":
+                        $atributes['type'] = 'string';
+                        $atributes['format'] = 'time';
+                        $atributes['example'] = \date('H:i:s');
+                        break;
+                    case "Assert\Timezone":
+                        $atributes['type'] = 'string';
+                        $atributes['format'] = 'timezone';
+                        $atributes['example'] = 'America/New_York';
+                        break;
                     case "Assert\Uuid":
-                        $atributes['format'] = 'uuid';
+                    	$atributes['type'] = 'string'; 
+                    	$atributes['format'] = 'uuid';
+                    	$atributes['example'] = '9b9eea1a-ef04-427d-b8bd-7f5c24801874';
                         break;
                     case "Assert\Email":
+                        $atributes['type'] = 'string';
                         $atributes['format'] = 'email';
                         break;
                     case "Assert\Url":
+                        $atributes['type'] = 'string';
                         $atributes['format'] = 'url';
                         break;
                     case "Assert\Regex":
+                        $atributes['type'] = 'string';
                         $atributes['format'] = 'regex';
                         break;
                     case "Assert\Ip":
+                        $atributes['type'] = 'string';
                         $atributes['format'] = 'ip';
                         break;
                     case "Assert\Json":
+                        $atributes['type'] = 'string';
                         $atributes['format'] = 'json';
                         break;
                     case "Assert\Choice":
                         //@todo
                         //$atributes['format'] = 'json';
-                        break;
+                        break;                      
 
                     case "Assert\NotNull":
                         $required[] = $property->name;
@@ -472,6 +524,10 @@ final class SwaggerDecorator implements NormalizerInterface
                             $atributes['minLength'] = $propertyAnnotation->min;
                         }
                         break;
+                    case "Assert\Valid":
+                    	//@todo
+                    	// this means tha we haven an object on our hands;
+                    	break;
                 }
             }
             // Lets write everything to the docs

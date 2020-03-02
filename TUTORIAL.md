@@ -18,7 +18,7 @@ You can install docker-desktop from [the docker website](https://hub.docker.com/
 ## Generating your component (repository/codebase)
 Starting up your first Common Ground component is extremely easy, al you need is a GitHub account and go the link below and fill in the form, press create and press to we have a component!
 
-[https://github.com/ConductionNL/Proto-component-commonground/generate](https://github.com/ConductionNL/Proto-component-commonground/generate) 
+[https://github.com/ConductionNL/proto-application-commonground/generate](https://github.com/ConductionNL/proto-application-commonground/generate) 
 
 After that you should be redirected to your own brand new repository. 
 
@@ -84,8 +84,19 @@ Best practice is to fetch the Conduction Common Ground component into a local up
 
 __Please make sure the you have committed al your changes to your current codebase and pushed a backup copy to your Git repo before continuing__
 
+
 ```CLI
 git remote add upstream https://github.com/ConductionNL/Proto-component-commonground.git
+```
+
+If you are running the proto application use the following line instead
+
+```CLI
+git remote add upstream https://github.com/ConductionNL/proto-application-commonground.git
+```
+And then we need to fetch this new code
+
+```CLI
 git fetch upstream
 git branch upstream upstream/master
 ```
@@ -307,15 +318,9 @@ More information on using data fixtures can be found at the [symfony website](ht
 ## Sharing your work 
 A vital part of te common ground community is sharing your work, and telling other people what you are working. This way people can help you with problems that you run into. And keep tabs on any (security) updates that you make to you code. Sounds like a lot of work right?
 
-Wel it actually isn't, there is a specific common ground platform over at common-ground.dev that reads repositories and updates user. So the only thing we need to do is tell this platform that we have started a new common ground repository. And tell it when we have updates ours. We can do all that by simply adding a webhook to our component. 
+Wel it actually isn't, there is a specific common ground platform over at common-ground.dev that reads repositories and updates user. So the only thing we need to do is tell this platform that we have started a new common ground repository. How do we do that? Simple we use the name common ground (or commonground) in the discription of our repository. common-ground.dev should then pick up our repository within the hour.
 
-When using Github. To set up a webhook, go to the settings page of your repository or organization. From there, click Webhooks, then Add webhook. Use te following settings:
-* Payload URL: https://www.common-ground.dev/webhook/github
-* Content type: Application/JSON
-* Secret: [leave blanck]
-* Events: [just the push event]
-
-Now every time you update your repository the commonground dev page will alerted, rescan your repository and do al the appropriate platform actions. It just as easy as that.
+Another option that we have is to declare our repository on [publiccode](), to do this you need to copy the publiccode.yaml from the [api/public/schema](api/public/schema]) folder to your root folder (dont forget to redo this every time you make a major change to your repository concerning versioning or licencing).  
 
 
 Continues integration
