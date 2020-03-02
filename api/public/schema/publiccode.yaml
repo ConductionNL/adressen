@@ -1,6 +1,6 @@
 publiccodeYmlVersion: "0.2"
 
-name: pa
+name: adressen
 applicationSuite: commonground
 url: "https://github.com/ConductionNL/Proto-component-commonground"
 landingURL: "test.conduction.nl" 
