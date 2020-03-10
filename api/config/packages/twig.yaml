@@ -23,6 +23,8 @@ parameters:
     env(APP_REPRO): ''           
     env(APP_DESCRIPTION): ''           
     env(AUTH_ENABLED): ''    
+    env(AUTH_PROVIDER_USER): ''        
+    env(AUTH_PROVIDER_APPLICATION): ''    
     env(AUDITTRAIL_ENABLED): ''    
     env(NOTIFICATION_ENABLED): ''    
     env(HEALTH_ENABLED): ''       
@@ -30,6 +32,10 @@ parameters:
     env(TRUSTED_PROXIES): ''        
     env(NLX_OUTWAY): ''     
     env(NLX_INWAY): '' 
+    env(APP_COMMONGROUND_ID): '' 
+    env(APP_COMMONGROUND_KEY): '' 
+    env(APP_APPLICATION_KEY): '' 
+    env(APP_USER_KEY): '' 
 
 twig:
     default_path: '%kernel.project_dir%/templates'
@@ -63,9 +69,16 @@ twig:
         app_description: '%env(APP_DESCRIPTION)%'
         
         app_auth: '%env(AUTH_ENABLED)%'        
+        auth_provider_user: '%env(AUTH_PROVIDER_USER)%'        
+        auth_provider_application: '%env(AUTH_PROVIDER_APPLICATION)%'        
         app_audittrail: '%env(AUDITTRAIL_ENABLED)%'        
         app_notification: '%env(NOTIFICATION_ENABLED)%'
-        app_health: '%env(HEALTH_ENABLED)%'        
+        app_health: '%env(HEALTH_ENABLED)%'   
+        
+        app_commonground_id: '%env(APP_COMMONGROUND_ID)%'   
+        app_commonground_key: '%env(APP_COMMONGROUND_KEY)%'   
+        app_application_key: '%env(APP_APPLICATION_KEY)%'   
+        app_user_key: '%env(APP_USER_KEY)%'               
         
         trusted_hosts: '%env(TRUSTED_HOSTS)%'
         trusted_proxies: '%env(TRUSTED_PROXIES)%'
