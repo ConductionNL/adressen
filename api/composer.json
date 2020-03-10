@@ -13,7 +13,6 @@
 		"knplabs/knp-markdown-bundle": "^1.8",
 		"lexik/jwt-authentication-bundle": "^2.6",
 		"phpdocumentor/reflection-docblock": "^4.3",
-		"phpoffice/phpspreadsheet": "^1.10",
 		"ramsey/uuid": "^3.8",
 		"ramsey/uuid-doctrine": "^1.5",
 		"sensio/framework-extra-bundle": "^5.5",
@@ -65,7 +64,7 @@
 	"extra" : {
 		"symfony" : {
 			"allow-contrib" : false,
-			"require" : "4.3.*"
+			"require" : "4.4.*"
 		}
 	},
 	"scripts": {
