@@ -25,6 +25,16 @@ paths:
         200:
           description: 'Adres collection response'
           content:
+            application/health+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExampleEntity-read'
+            application/json+health:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExampleEntity-read'
             application/hal+json:
               schema:
                 type: array
@@ -73,6 +83,7 @@ paths:
           description: 'The collection page number'
           schema:
             type: integer
+            default: 1
         -
           name: Authorization
           description: 'The JWT of the entity performing the request'
@@ -154,6 +165,9 @@ components:
       properties:
         id:
           readOnly: true
+          description: 'The UUID identifier of this object'
+          externalDocs:
+            url: 'http://schema.org/identifier'
           type: string
         type:
           type: string
