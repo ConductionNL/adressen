@@ -9,10 +9,10 @@ settings:
   title: Proto Component
   version: V.0.1
   description: '&#039;Naast deze JSON rest API is er ook een [graphql](/graphql) interface beschikbaar.&#039;'
-  demo: pc.zaakonline.nl
-  repro: https://github.com/ConductionNL/Proto-component-commonground
-  container: https://hub.docker.com/repository/docker/conduction/pc-php
-  subdomain: pc  
+  repro: https://github.com/ConductionNL/adresservice
+  demo: adressen.zaakonline.nl
+  container: https://hub.docker.com/repository/docker/conduction/adressen-php
+  subdomain: adressen  
   domains:
     - conduction.nl
     - zaakonline.nl
