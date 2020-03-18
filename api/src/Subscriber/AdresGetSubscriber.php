@@ -61,20 +61,10 @@ final class AdresGetSubscriber implements EventSubscriberInterface
         $postcode = trim($postcode);
 
         if($bagId && $bagId != ""){
-            $result = $this->kadasterService->getAdresOnBagId($bagId);
+
+            $response = $this->kadasterService->getAdresOnBagId($bagId);
 //            var_dump($result);
-            $json = $this->serializer->serialize(
-                $result,
-                'jsonhal', ['enable_max_depth' => true]
-            );
-//            var_dump($json);
-            $response = new Response(
-                $json,
-                Response::HTTP_OK,
-                ['content-type' => 'application/json+hal']
-            );
-//            var_dump($response);
-            $event->setResponse($response);
+
         }
         else {
             // Even iets van basis valdiatie
@@ -112,19 +102,19 @@ final class AdresGetSubscriber implements EventSubscriberInterface
             $response['_links'] = ['self' => '/adressen?huisnummer=' . $huisnummer . '&postcode=' . $postcode];
             $response['totalItems'] = count($adressen);
             $response['itemsPerPage'] = 30;
-
-            $json = $this->serializer->serialize(
-                $response,
-                'jsonhal', ['enable_max_depth' => true]
-            );
-
-            $response = new Response(
-                $json,
-                Response::HTTP_OK,
-                ['content-type' => 'application/json+hal']
-            );
-
-            $event->setResponse($response);
+            
         }
+        $json = $this->serializer->serialize(
+            $response,
+            'jsonhal', ['enable_max_depth' => true]
+        );
+//            var_dump($json);
+        $response = new Response(
+            $json,
+            Response::HTTP_OK,
+            ['content-type' => 'application/json+hal']
+        );
+//            var_dump($response);
+        $event->setResponse($response);
     }
 }
