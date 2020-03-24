@@ -325,14 +325,14 @@ class KadasterService
         $nummeraanduiding['woonplaats'] = $this->getWoonplaats($bijbehorendeOpenbareRuimte['id']);
 
         $responce['woonplaats'] = $nummeraanduiding['woonplaats']['naam'];
-        $responce['woonplaats_nummer'] = (int) $nummeraanduiding['woonplaats']['identificatiecode'];
-        $responce['gemeente_nummer'] = (int) '';
-        $responce['gemeente_rsin'] = (int) '';
+        $responce['woonplaatsNummer'] = (int) $nummeraanduiding['woonplaats']['identificatiecode'];
+        $responce['gemeenteNummer'] = (int) '';
+        $responce['gemeenteRsin'] = (int) '';
 
-        $responce['status_nummeraanduiding'] = $nummeraanduiding['status'];
-        $responce['status_verblijfsobject'] = $nummeraanduiding['adres']['status'];
-        $responce['status_openbare_ruimte'] = $nummeraanduiding['openbareRuimte']['status'];
-        $responce['status_woonplaats'] = $nummeraanduiding['woonplaats']['status'];
+        $responce['statusNummeraanduiding'] = $nummeraanduiding['status'];
+        $responce['statusVerblijfsobject'] = $nummeraanduiding['adres']['status'];
+        $responce['statusOpenbareRuimte'] = $nummeraanduiding['openbareRuimte']['status'];
+        $responce['statusWoonplaats'] = $nummeraanduiding['woonplaats']['status'];
 
         // Dan willen we nog wat links toevoegen
         $responce['_links'] = [];
