@@ -6,20 +6,16 @@ settings:
   registryBase: docker.io/conduction
   projectName: adressen
   name: adressen
-  title: Proto Component
+  title: Adressen component
   version: V.0.1
-  id: &#039;&#039;
+  id: 
   description: '&#039;Naast deze JSON rest API is er ook een [graphql](/graphql) interface beschikbaar.&#039;'
+  type: component
   repro: https://github.com/ConductionNL/adresservice
   demo: adressen.zaakonline.nl
   container: https://hub.docker.com/repository/docker/conduction/adressen-php
-  subdomain: adressen  
-  domains:
-    - conduction.nl
-    - zaakonline.nl
-    - huwelijksplanner.online
-    - common-ground.dev
-  domainsJson: ["conduction.nl","zaakonline.nl","huwelijksplanner.online","common-ground.dev"]
+  domain: conduction.nl
+  subdomain: adressen
   organisationName: Conduction
   email: info@conduction.nl
   country: Netherlands
