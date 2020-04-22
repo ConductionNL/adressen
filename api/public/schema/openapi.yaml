@@ -1,6 +1,6 @@
 openapi: 3.0.2
 info:
-  title: 'Proto Component'
+  title: 'Proto component commonground'
   version: V.0.1
   description: |
     API Details
@@ -2773,8 +2773,8 @@ securityDefinitions:
 host: irc.zaakonline.nl
 servers:
   -
-    description: 'Demo Omgeving'
-    url: 'http://proto.demo.common-ground.dev'
+    name: conduction.nl
+    url: pc.dev.conduction.nl
 externalDocs:
   -
     description: 'OAS Documentatie'
