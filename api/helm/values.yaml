@@ -15,7 +15,7 @@ settings:
   demo: adressen.zaakonline.nl
   container: https://hub.docker.com/repository/docker/conduction/adressen-php
   domain: conduction.nl
-  subdomain: adressen
+  subdomain: as
   organisationName: Conduction
   email: info@conduction.nl
   country: Netherlands
