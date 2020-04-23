@@ -4,8 +4,8 @@ parameters:
     # environment variables are not available yet.
     # You should not need to change this value.
     env(VARNISH_URL): ''
-    env(APP_VERSION): '
-    env(APP_NAME): '''
+    env(APP_VERSION): ''
+    env(APP_NAME): ''
     env(APP_TITLE): ''
     env(APP_DESCRIPTION): ''
     env(APP_REPRO): ''
@@ -46,7 +46,7 @@ api_platform:
     enable_re_doc: true
     
     # In the NL api strategie we use snake case for naming
-    name_converter: 'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter'
+    # name_converter: 'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter'
     
     # Lets confirm to JSON-HA: first, as per common ground. But allow other serializers
     formats:

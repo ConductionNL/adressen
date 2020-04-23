@@ -16,6 +16,7 @@ namespace App\Service;
 use GuzzleHttp\Client;
 use Symfony\Component\Cache\Adapter\AdapterInterface as CacheInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class KadasterService
 {
@@ -266,6 +267,83 @@ class KadasterService
     }
 
     // Somedoc block here
+    public function getObject($nummeraanduiding){
+        $responce['id'] = $nummeraanduiding['identificatiecode'];
+
+        $adresseerbaarObject = $this->analyseUri($nummeraanduiding['_links']['adresseerbaarObject']['href']);
+
+        // Let see what we got here in terms of object
+        switch ($adresseerbaarObject['endpoint']) {
+            case 'verblijfsobjecten':
+                $nummeraanduiding['adres'] = $this->getVerblijfsobject($adresseerbaarObject['id']);
+                $responce['type'] = 'verblijfsobject';
+                $responce['oppervlakte'] = $nummeraanduiding['adres']['oppervlakte'];
+                break;
+            case 'ligplaatsen':
+                $nummeraanduiding['adres'] = $this->getLigplaats($adresseerbaarObject['id']);
+                $responce['type'] = 'ligplaats';
+                break;
+            case 'standplaatsen':
+                $nummeraanduiding['adres'] = $this->getStandplaats($adresseerbaarObject['id']);
+                $responce['type'] = 'standplaats';
+                break;
+        }
+
+        // Lets copy the following information if it exsists
+
+        if (array_key_exists('huisnummer', $nummeraanduiding)) {
+            $responce['huisnummer'] = $nummeraanduiding['huisnummer'];
+        }
+
+        if (array_key_exists('huisnummertoevoeging', $nummeraanduiding)) {
+            $responce['huisnummertoevoeging'] = $nummeraanduiding['huisnummertoevoeging'];
+        }
+        if (array_key_exists('huisletter', $nummeraanduiding)) {
+            $responce['huisletter'] = $nummeraanduiding['huisletter'];
+        }
+        if (array_key_exists('postcode', $nummeraanduiding)) {
+            $responce['postcode'] = $nummeraanduiding['postcode'];
+        }
+
+        // We want return a single housenumber suffix
+        if (!array_key_exists('huisnummertoevoeging', $responce) && array_key_exists('huisletter', $responce)) {
+            $responce['huisnummertoevoeging'] = $responce['huisletter'];
+            unset($responce['huisletter']);
+        } elseif (array_key_exists('huisnummertoevoeging', $responce) && array_key_exists('huisletter', $responce)) {
+            /* @todo uitzoeken of deze samentrekking conform de norm is */
+            $responce['huisnummertoevoeging'] = $responce['huisletter'].' '.$responce['huisnummertoevoeging'];
+            unset($responce['huisletter']);
+        }
+
+        // Then the apropriote openbare ruimte
+        $bijbehorendeOpenbareRuimte = $this->analyseUri($nummeraanduiding['_links']['bijbehorendeOpenbareRuimte']['href']);
+        $nummeraanduiding['openbareRuimte'] = $this->getOpenbareruimte($bijbehorendeOpenbareRuimte['id']);
+        $responce['straat'] = $nummeraanduiding['openbareRuimte']['naam'];
+
+        // Then the gemeente
+        $bijbehorendeOpenbareRuimte = $this->analyseUri($nummeraanduiding['openbareRuimte']['_links']['bijbehorendeWoonplaats']['href']);
+        $nummeraanduiding['woonplaats'] = $this->getWoonplaats($bijbehorendeOpenbareRuimte['id']);
+
+        $responce['woonplaats'] = $nummeraanduiding['woonplaats']['naam'];
+        $responce['woonplaatsNummer'] = (int) $nummeraanduiding['woonplaats']['identificatiecode'];
+        $responce['gemeenteNummer'] = (int) '';
+        $responce['gemeenteRsin'] = (int) '';
+
+        $responce['statusNummeraanduiding'] = $nummeraanduiding['status'];
+        $responce['statusVerblijfsobject'] = $nummeraanduiding['adres']['status'];
+        $responce['statusOpenbareRuimte'] = $nummeraanduiding['openbareRuimte']['status'];
+        $responce['statusWoonplaats'] = $nummeraanduiding['woonplaats']['status'];
+
+        // Dan willen we nog wat links toevoegen
+        $responce['_links'] = [];
+        $responce['_links']['nummeraanduiding'] = $nummeraanduiding['_links']['self'];
+        $responce['_links']['bijbehorendeOpenbareRuimte'] = $nummeraanduiding['_links']['bijbehorendeOpenbareRuimte'];
+        $responce['_links']['bijbehorendeWoonplaats'] = $nummeraanduiding['openbareRuimte']['_links']['bijbehorendeWoonplaats'];
+        $responce['_links']['adresseerbaarObject'] = $nummeraanduiding['_links']['adresseerbaarObject'];
+
+        return $responce;
+    }
+
     public function getAdresOnHuisnummerPostcode($huisnummer, $postcode)
     {
         // Lets start with th getting of nummer aanduidingen
@@ -277,84 +355,92 @@ class KadasterService
         $responces = [];
         // Then we need to enrich that
         foreach ($nummeraanduidingen['nummeraanduidingen'] as $nummeraanduiding) {
-            $responce['id'] = $nummeraanduiding['identificatiecode'];
-
-            $adresseerbaarObject = $this->analyseUri($nummeraanduiding['_links']['adresseerbaarObject']['href']);
-
-            // Let see what we got here in terms of object
-            switch ($adresseerbaarObject['endpoint']) {
-                case 'verblijfsobjecten':
-                    $nummeraanduiding['adres'] = $this->getVerblijfsobject($adresseerbaarObject['id']);
-                    $responce['type'] = 'verblijfsobject';
-                    $responce['oppervlakte'] = $nummeraanduiding['adres']['oppervlakte'];
-                    break;
-                case 'ligplaatsen':
-                    $nummeraanduiding['adres'] = $this->getLigplaats($adresseerbaarObject['id']);
-                    $responce['type'] = 'ligplaats';
-                    break;
-                case 'standplaatsen':
-                    $nummeraanduiding['adres'] = $this->getStandplaats($adresseerbaarObject['id']);
-                    $responce['type'] = 'standplaats';
-                    break;
-            }
-
-            // Lets copy the following information if it exsists
-
-            if (array_key_exists('huisnummer', $nummeraanduiding)) {
-                $responce['huisnummer'] = $nummeraanduiding['huisnummer'];
-            }
-
-            if (array_key_exists('huisnummertoevoeging', $nummeraanduiding)) {
-                $responce['huisnummertoevoeging'] = $nummeraanduiding['huisnummertoevoeging'];
-            }
-            if (array_key_exists('huisletter', $nummeraanduiding)) {
-                $responce['huisletter'] = $nummeraanduiding['huisletter'];
-            }
-            if (array_key_exists('postcode', $nummeraanduiding)) {
-                $responce['postcode'] = $nummeraanduiding['postcode'];
-            }
-
-            // We want return a single housenumber suffix
-            if (!array_key_exists('huisnummertoevoeging', $responce) && array_key_exists('huisletter', $responce)) {
-                $responce['huisnummertoevoeging'] = $responce['huisletter'];
-                unset($responce['huisletter']);
-            } elseif (array_key_exists('huisnummertoevoeging', $responce) && array_key_exists('huisletter', $responce)) {
-                /* @todo uitzoeken of deze samentrekking conform de norm is */
-                $responce['huisnummertoevoeging'] = $responce['huisletter'].' '.$responce['huisnummertoevoeging'];
-                unset($responce['huisletter']);
-            }
-
-            // Then the apropriote openbare ruimte
-            $bijbehorendeOpenbareRuimte = $this->analyseUri($nummeraanduiding['_links']['bijbehorendeOpenbareRuimte']['href']);
-            $nummeraanduiding['openbareRuimte'] = $this->getOpenbareruimte($bijbehorendeOpenbareRuimte['id']);
-            $responce['straat'] = $nummeraanduiding['openbareRuimte']['naam'];
-
-            // Then the gemeente
-            $bijbehorendeOpenbareRuimte = $this->analyseUri($nummeraanduiding['openbareRuimte']['_links']['bijbehorendeWoonplaats']['href']);
-            $nummeraanduiding['woonplaats'] = $this->getWoonplaats($bijbehorendeOpenbareRuimte['id']);
-
-            $responce['woonplaats'] = $nummeraanduiding['woonplaats']['naam'];
-            $responce['woonplaats_nummer'] = (int) $nummeraanduiding['woonplaats']['identificatiecode'];
-            $responce['gemeente_nummer'] = (int) '';
-            $responce['gemeente_rsin'] = (int) '';
-
-            $responce['status_nummeraanduiding'] = $nummeraanduiding['status'];
-            $responce['status_verblijfsobject'] = $nummeraanduiding['adres']['status'];
-            $responce['status_openbare_ruimte'] = $nummeraanduiding['openbareRuimte']['status'];
-            $responce['status_woonplaats'] = $nummeraanduiding['woonplaats']['status'];
-
-            // Dan willen we nog wat links toevoegen
-            $responce['_links'] = [];
-            $responce['_links']['nummeraanduiding'] = $nummeraanduiding['_links']['self'];
-            $responce['_links']['bijbehorendeOpenbareRuimte'] = $nummeraanduiding['_links']['bijbehorendeOpenbareRuimte'];
-            $responce['_links']['bijbehorendeWoonplaats'] = $nummeraanduiding['openbareRuimte']['_links']['bijbehorendeWoonplaats'];
-            $responce['_links']['adresseerbaarObject'] = $nummeraanduiding['_links']['adresseerbaarObject'];
+//            $responce['id'] = $nummeraanduiding['identificatiecode'];
+//
+//            $adresseerbaarObject = $this->analyseUri($nummeraanduiding['_links']['adresseerbaarObject']['href']);
+//
+//            // Let see what we got here in terms of object
+//            switch ($adresseerbaarObject['endpoint']) {
+//                case 'verblijfsobjecten':
+//                    $nummeraanduiding['adres'] = $this->getVerblijfsobject($adresseerbaarObject['id']);
+//                    $responce['type'] = 'verblijfsobject';
+//                    $responce['oppervlakte'] = $nummeraanduiding['adres']['oppervlakte'];
+//                    break;
+//                case 'ligplaatsen':
+//                    $nummeraanduiding['adres'] = $this->getLigplaats($adresseerbaarObject['id']);
+//                    $responce['type'] = 'ligplaats';
+//                    break;
+//                case 'standplaatsen':
+//                    $nummeraanduiding['adres'] = $this->getStandplaats($adresseerbaarObject['id']);
+//                    $responce['type'] = 'standplaats';
+//                    break;
+//            }
+//
+//            // Lets copy the following information if it exsists
+//
+//            if (array_key_exists('huisnummer', $nummeraanduiding)) {
+//                $responce['huisnummer'] = $nummeraanduiding['huisnummer'];
+//            }
+//
+//            if (array_key_exists('huisnummertoevoeging', $nummeraanduiding)) {
+//                $responce['huisnummertoevoeging'] = $nummeraanduiding['huisnummertoevoeging'];
+//            }
+//            if (array_key_exists('huisletter', $nummeraanduiding)) {
+//                $responce['huisletter'] = $nummeraanduiding['huisletter'];
+//            }
+//            if (array_key_exists('postcode', $nummeraanduiding)) {
+//                $responce['postcode'] = $nummeraanduiding['postcode'];
+//            }
+//
+//            // We want return a single housenumber suffix
+//            if (!array_key_exists('huisnummertoevoeging', $responce) && array_key_exists('huisletter', $responce)) {
+//                $responce['huisnummertoevoeging'] = $responce['huisletter'];
+//                unset($responce['huisletter']);
+//            } elseif (array_key_exists('huisnummertoevoeging', $responce) && array_key_exists('huisletter', $responce)) {
+//                /* @todo uitzoeken of deze samentrekking conform de norm is */
+//                $responce['huisnummertoevoeging'] = $responce['huisletter'].' '.$responce['huisnummertoevoeging'];
+//                unset($responce['huisletter']);
+//            }
+//
+//            // Then the apropriote openbare ruimte
+//            $bijbehorendeOpenbareRuimte = $this->analyseUri($nummeraanduiding['_links']['bijbehorendeOpenbareRuimte']['href']);
+//            $nummeraanduiding['openbareRuimte'] = $this->getOpenbareruimte($bijbehorendeOpenbareRuimte['id']);
+//            $responce['straat'] = $nummeraanduiding['openbareRuimte']['naam'];
+//
+//            // Then the gemeente
+//            $bijbehorendeOpenbareRuimte = $this->analyseUri($nummeraanduiding['openbareRuimte']['_links']['bijbehorendeWoonplaats']['href']);
+//            $nummeraanduiding['woonplaats'] = $this->getWoonplaats($bijbehorendeOpenbareRuimte['id']);
+//
+//            $responce['woonplaats'] = $nummeraanduiding['woonplaats']['naam'];
+//            $responce['woonplaats_nummer'] = (int) $nummeraanduiding['woonplaats']['identificatiecode'];
+//            $responce['gemeente_nummer'] = (int) '';
+//            $responce['gemeente_rsin'] = (int) '';
+//
+//            $responce['status_nummeraanduiding'] = $nummeraanduiding['status'];
+//            $responce['status_verblijfsobject'] = $nummeraanduiding['adres']['status'];
+//            $responce['status_openbare_ruimte'] = $nummeraanduiding['openbareRuimte']['status'];
+//            $responce['status_woonplaats'] = $nummeraanduiding['woonplaats']['status'];
+//
+//            // Dan willen we nog wat links toevoegen
+//            $responce['_links'] = [];
+//            $responce['_links']['nummeraanduiding'] = $nummeraanduiding['_links']['self'];
+//            $responce['_links']['bijbehorendeOpenbareRuimte'] = $nummeraanduiding['_links']['bijbehorendeOpenbareRuimte'];
+//            $responce['_links']['bijbehorendeWoonplaats'] = $nummeraanduiding['openbareRuimte']['_links']['bijbehorendeWoonplaats'];
+//            $responce['_links']['adresseerbaarObject'] = $nummeraanduiding['_links']['adresseerbaarObject'];
 
             // Lets add the current responce to the array of responces
-            $responces[] = $responce;
-            $responce = [];
+            $responces[] = $this->getObject($nummeraanduiding);
         }
 
         return $responces;
+    }
+    public function getAdresOnBagId($bagId){
+
+        $nummeraanduiding = $this->getNummeraanduiding($bagId);
+
+        $response = $this->getObject($nummeraanduiding);
+
+        return $response;
+
     }
 }
