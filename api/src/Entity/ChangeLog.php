@@ -32,8 +32,8 @@ use Ramsey\Uuid\UuidInterface;
  * @ApiResource(
  *     normalizationContext={"groups"={"read"}, "enable_max_depth"=true},
  *     denormalizationContext={"groups"={"write"}, "enable_max_depth"=true}
- * )  
- * @ApiFilter(OrderFilter::class, properties={        
+ * )
+ * @ApiFilter(OrderFilter::class, properties={
  * 		"action",
  * 		"objectId",
  * 		"objectClass",
@@ -42,7 +42,7 @@ use Ramsey\Uuid\UuidInterface;
  * 		"dateCreated",
  * 		"dateModified",
  * })
- * @ApiFilter(SearchFilter::class, properties={ 
+ * @ApiFilter(SearchFilter::class, properties={
  * 		"action": "exact",
  * 		"objectId": "exact",
  * 		"objectClass": "exact",
@@ -52,7 +52,7 @@ use Ramsey\Uuid\UuidInterface;
  * @ORM\Entity(repositoryClass="App\Repository\ChangeLogRepository")
  */
 class ChangeLog extends AbstractLogEntry
-{	
+{
 	/**
 	 * @var UuidInterface The UUID identifier of this object
 	 *
@@ -65,8 +65,8 @@ class ChangeLog extends AbstractLogEntry
 	 * @ORM\GeneratedValue(strategy="CUSTOM")
 	 * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
 	 */
-	protected $id;	
-	
+	protected $id;
+
 	/**
 	 * @var string A note conserning this log lin
 	 *
@@ -79,7 +79,7 @@ class ChangeLog extends AbstractLogEntry
 	 * @ORM\Column(type="text", nullable=true)
 	 */
 	private $note;
-	
+
 	/**
 	 * @var string $action
 	 *
@@ -87,22 +87,22 @@ class ChangeLog extends AbstractLogEntry
 	 * @ORM\Column(type="string", length=8)
 	 */
 	protected $action;
-	
+
 	/**
 	 * @var \DateTime $loggedAt
 	 *
 	 * @ORM\Column(name="logged_at", type="datetime")
 	 */
 	protected $loggedAt;
-	
+
 	/**
 	 * @var string $objectId
 	 *
 	 * @Groups({"read"})
 	 * @ORM\Column(name="object_id", length=64, nullable=true)
-	 */ 
-	protected $objectId; 
-	
+	 */
+	protected $objectId;
+
 	/**
 	 * @var string $objectClass
 	 *
@@ -110,7 +110,7 @@ class ChangeLog extends AbstractLogEntry
 	 * @ORM\Column(name="object_class", type="string", length=255)
 	 */
 	protected $objectClass;
-	
+
 	/**
 	 * @var integer $version
 	 *
@@ -118,7 +118,7 @@ class ChangeLog extends AbstractLogEntry
 	 * @ORM\Column(type="integer")
 	 */
 	protected $version;
-	
+
 	/**
 	 * @var array $data
 	 *
@@ -126,7 +126,7 @@ class ChangeLog extends AbstractLogEntry
 	 * @ORM\Column(type="array", nullable=true)
 	 */
 	protected $data;
-	
+
 	/**
 	 * @var string $data
 	 *
@@ -134,7 +134,7 @@ class ChangeLog extends AbstractLogEntry
 	 * @ORM\Column(length=255, nullable=true)
 	 */
 	protected $username;
-	
+
 	/**
 	 * @var sting $session The moment this request was created
 	 *
@@ -145,7 +145,7 @@ class ChangeLog extends AbstractLogEntry
 	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	private $session;
-	
+
 	/**
 	 * @var Datetime $dateCreated The moment this request was created
 	 *
@@ -155,62 +155,62 @@ class ChangeLog extends AbstractLogEntry
 	 * @ORM\Column(type="datetime", nullable=true)
 	 */
 	private $dateCreated;
-	
+
 	/**
 	 * @var Datetime $dateModified  The moment this request last Modified
 	 *
      * @Assert\DateTime
 	 * @Groups({"read"})
-	 * @Gedmo\Timestampable(on="create")
+	 * @Gedmo\Timestampable(on="update")
 	 * @ORM\Column(type="datetime", nullable=true)
 	 */
 	private $dateModified;
-	
+
 	public function getId(): Uuid
 	{
 		return $this->id;
 	}
-	
+
 	public function setId(Uuid $id): self
 	{
 		$this->id = $id;
-		
+
 		return $this;
 	}
-	
+
 	public function getSession(): ?string
 	{
 		return $this->session;
 	}
-	
+
 	public function setSession(string $session): self
 	{
 		$this->session = $session;
-		
+
 		return $this;
 	}
-	
+
 	public function getDateCreated(): ?\DateTimeInterface
 	{
 		return $this->dateCreated;
 	}
-	
+
 	public function setDateCreated(\DateTimeInterface $dateCreated): self
 	{
 		$this->dateCreated= $dateCreated;
-		
+
 		return $this;
 	}
-	
+
 	public function getDateModified(): ?\DateTimeInterface
 	{
 		return $this->dateModified;
 	}
-	
+
 	public function setDateModified(\DateTimeInterface $dateModified): self
 	{
 		$this->dateModified = $dateModified;
-		
+
 		return $this;
 	}
 }
