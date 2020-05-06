@@ -51,164 +51,165 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class ChangeLog extends AbstractLogEntry
 {
-    /**
-     * @var UuidInterface The UUID identifier of this object
-     *
-     * @example e2984465-190a-4562-829e-a8cca81aa35d
-     *
-     * @Assert\Uuid
-     * @Groups({"read"})
-     * @ORM\Id
-     * @ORM\Column(type="uuid", unique=true)
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
-     */
-    protected $id;
 
-    /**
-     * @var string A note conserning this log lin
-     *
-     * @example This log line is suspicius
-     *
-     * @Assert\Length(
-     *      max = 2555
-     * )
-     * @Groups({"read","write"})
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $note;
+	/**
+	 * @var UuidInterface The UUID identifier of this object
+	 *
+	 * @example e2984465-190a-4562-829e-a8cca81aa35d
+	 *
+	 * @Assert\Uuid
+	 * @Groups({"read"})
+	 * @ORM\Id
+	 * @ORM\Column(type="uuid", unique=true)
+	 * @ORM\GeneratedValue(strategy="CUSTOM")
+	 * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
+	 */
+	protected $id;
 
-    /**
-     * @var string
-     *
-     * @Groups({"read"})
-     * @ORM\Column(type="string", length=8)
-     */
-    protected $action;
+	/**
+	 * @var string A note conserning this log lin
+	 *
+	 * @example This log line is suspicius
+	 *
+	 * @Assert\Length(
+	 *      max = 2555
+	 * )
+	 * @Groups({"read","write"})
+	 * @ORM\Column(type="text", nullable=true)
+	 */
+	private $note;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="logged_at", type="datetime")
-     */
-    protected $loggedAt;
+	/**
+	 * @var string $action
+	 *
+	 * @Groups({"read"})
+	 * @ORM\Column(type="string", length=8)
+	 */
+	protected $action;
 
-    /**
-     * @var string
-     *
-     * @Groups({"read"})
-     * @ORM\Column(name="object_id", length=64, nullable=true)
-     */
-    protected $objectId;
+	/**
+	 * @var \DateTime $loggedAt
+	 *
+	 * @ORM\Column(name="logged_at", type="datetime")
+	 */
+	protected $loggedAt;
 
-    /**
-     * @var string
-     *
-     * @Groups({"read"})
-     * @ORM\Column(name="object_class", type="string", length=255)
-     */
-    protected $objectClass;
+	/**
+	 * @var string $objectId
+	 *
+	 * @Groups({"read"})
+	 * @ORM\Column(name="object_id", length=64, nullable=true)
+	 */
+	protected $objectId;
 
-    /**
-     * @var int
-     *
-     * @Groups({"read"})
-     * @ORM\Column(type="integer")
-     */
-    protected $version;
+	/**
+	 * @var string $objectClass
+	 *
+	 * @Groups({"read"})
+	 * @ORM\Column(name="object_class", type="string", length=255)
+	 */
+	protected $objectClass;
 
-    /**
-     * @var array
-     *
-     * @Groups({"read"})
-     * @ORM\Column(type="array", nullable=true)
-     */
-    protected $data;
+	/**
+	 * @var integer $version
+	 *
+	 * @Groups({"read"})
+	 * @ORM\Column(type="integer")
+	 */
+	protected $version;
 
-    /**
-     * @var string
-     *
-     * @Groups({"read"})
-     * @ORM\Column(length=255, nullable=true)
-     */
-    protected $username;
+	/**
+	 * @var array $data
+	 *
+	 * @Groups({"read"})
+	 * @ORM\Column(type="array", nullable=true)
+	 */
+	protected $data;
 
-    /**
-     * @var sting The moment this request was created
-     *
-     * @Assert\Length(
-     *      max = 255
-     * )
-     * @Groups({"read"})
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $session;
+	/**
+	 * @var string $data
+	 *
+	 * @Groups({"read"})
+	 * @ORM\Column(length=255, nullable=true)
+	 */
+	protected $username;
 
-    /**
-     * @var Datetime The moment this request was created
-     *
+	/**
+	 * @var sting $session The moment this request was created
+	 *
+	 * @Assert\Length(
+	 *      max = 255
+	 * )
+	 * @Groups({"read"})
+	 * @ORM\Column(type="string", length=255, nullable=true)
+	 */
+	private $session;
+
+	/**
+	 * @var Datetime $dateCreated The moment this request was created
+	 *
      * @Assert\DateTime
-     * @Groups({"read"})
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $dateCreated;
+	 * @Groups({"read"})
+	 * @Gedmo\Timestampable(on="create")
+	 * @ORM\Column(type="datetime", nullable=true)
+	 */
+	private $dateCreated;
 
-    /**
-     * @var Datetime The moment this request last Modified
-     *
+	/**
+	 * @var Datetime $dateModified  The moment this request last Modified
+	 *
      * @Assert\DateTime
-     * @Groups({"read"})
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $dateModified;
+	 * @Groups({"read"})
+	 * @Gedmo\Timestampable(on="update")
+	 * @ORM\Column(type="datetime", nullable=true)
+	 */
+	private $dateModified;
 
-    public function getId(): Uuid
-    {
-        return $this->id;
-    }
+	public function getId(): Uuid
+	{
+		return $this->id;
+	}
 
-    public function setId(Uuid $id): self
-    {
-        $this->id = $id;
+	public function setId(Uuid $id): self
+	{
+		$this->id = $id;
 
-        return $this;
-    }
+		return $this;
+	}
 
-    public function getSession(): ?string
-    {
-        return $this->session;
-    }
+	public function getSession(): ?string
+	{
+		return $this->session;
+	}
 
-    public function setSession(string $session): self
-    {
-        $this->session = $session;
+	public function setSession(string $session): self
+	{
+		$this->session = $session;
 
-        return $this;
-    }
+		return $this;
+	}
 
-    public function getDateCreated(): ?\DateTimeInterface
-    {
-        return $this->dateCreated;
-    }
+	public function getDateCreated(): ?\DateTimeInterface
+	{
+		return $this->dateCreated;
+	}
 
-    public function setDateCreated(\DateTimeInterface $dateCreated): self
-    {
-        $this->dateCreated = $dateCreated;
+	public function setDateCreated(\DateTimeInterface $dateCreated): self
+	{
+		$this->dateCreated= $dateCreated;
 
-        return $this;
-    }
+		return $this;
+	}
 
-    public function getDateModified(): ?\DateTimeInterface
-    {
-        return $this->dateModified;
-    }
+	public function getDateModified(): ?\DateTimeInterface
+	{
+		return $this->dateModified;
+	}
 
-    public function setDateModified(\DateTimeInterface $dateModified): self
-    {
-        $this->dateModified = $dateModified;
+	public function setDateModified(\DateTimeInterface $dateModified): self
+	{
+		$this->dateModified = $dateModified;
 
-        return $this;
-    }
+		return $this;
+	}
 }
