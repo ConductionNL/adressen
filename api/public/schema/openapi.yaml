@@ -1,10 +1,10 @@
 openapi: 3.0.2
 info:
-  title: 'Proto Component'
+  title: 'Adressen component'
   version: V.0.1
   description: |
     API Details
-    - Component: Proto Component
+    - Component: Adressen component
     - Reference: adressen
     - Enviroment: dev
     - Version: V.0.1
@@ -314,7 +314,7 @@ paths:
               - asc
               - desc
         -
-          name: 'order[resource_type]'
+          name: 'order[resourceType]'
           in: query
           required: false
           schema:
@@ -332,7 +332,7 @@ paths:
               - asc
               - desc
         -
-          name: 'order[content_type]'
+          name: 'order[contentType]'
           in: query
           required: false
           schema:
@@ -359,7 +359,7 @@ paths:
               - asc
               - desc
         -
-          name: 'order[date_created]'
+          name: 'order[dateCreated]'
           in: query
           required: false
           schema:
@@ -368,7 +368,7 @@ paths:
               - asc
               - desc
         -
-          name: 'order[date_modified]'
+          name: 'order[dateModified]'
           in: query
           required: false
           schema:
@@ -441,7 +441,7 @@ paths:
           style: form
           explode: true
         -
-          name: resource_type
+          name: resourceType
           in: query
           required: false
           schema:
@@ -463,13 +463,13 @@ paths:
           style: form
           explode: true
         -
-          name: content_type
+          name: contentType
           in: query
           required: false
           schema:
             type: string
         -
-          name: 'content_type[]'
+          name: 'contentType[]'
           in: query
           required: false
           schema:
@@ -511,49 +511,49 @@ paths:
           style: form
           explode: true
         -
-          name: 'date_created[before]'
+          name: 'dateCreated[before]'
           in: query
           required: false
           schema:
             type: string
         -
-          name: 'date_created[strictly_before]'
+          name: 'dateCreated[strictly_before]'
           in: query
           required: false
           schema:
             type: string
         -
-          name: 'date_created[after]'
+          name: 'dateCreated[after]'
           in: query
           required: false
           schema:
             type: string
         -
-          name: 'date_created[strictly_after]'
+          name: 'dateCreated[strictly_after]'
           in: query
           required: false
           schema:
             type: string
         -
-          name: 'date_modified[before]'
+          name: 'dateModified[before]'
           in: query
           required: false
           schema:
             type: string
         -
-          name: 'date_modified[strictly_before]'
+          name: 'dateModified[strictly_before]'
           in: query
           required: false
           schema:
             type: string
         -
-          name: 'date_modified[after]'
+          name: 'dateModified[after]'
           in: query
           required: false
           schema:
             type: string
         -
-          name: 'date_modified[strictly_after]'
+          name: 'dateModified[strictly_after]'
           in: query
           required: false
           schema:
@@ -1290,7 +1290,7 @@ paths:
               - asc
               - desc
         -
-          name: 'order[object_id]'
+          name: 'order[objectId]'
           in: query
           required: false
           schema:
@@ -1299,7 +1299,7 @@ paths:
               - asc
               - desc
         -
-          name: 'order[object_class]'
+          name: 'order[objectClass]'
           in: query
           required: false
           schema:
@@ -1326,7 +1326,7 @@ paths:
               - asc
               - desc
         -
-          name: 'order[date_created]'
+          name: 'order[dateCreated]'
           in: query
           required: false
           schema:
@@ -1335,7 +1335,7 @@ paths:
               - asc
               - desc
         -
-          name: 'order[date_modified]'
+          name: 'order[dateModified]'
           in: query
           required: false
           schema:
@@ -1360,13 +1360,13 @@ paths:
           style: form
           explode: true
         -
-          name: object_id
+          name: objectId
           in: query
           required: false
           schema:
             type: string
         -
-          name: 'object_id[]'
+          name: 'objectId[]'
           in: query
           required: false
           schema:
@@ -1376,13 +1376,13 @@ paths:
           style: form
           explode: true
         -
-          name: object_class
+          name: objectClass
           in: query
           required: false
           schema:
             type: string
         -
-          name: 'object_class[]'
+          name: 'objectClass[]'
           in: query
           required: false
           schema:
@@ -1408,49 +1408,49 @@ paths:
           style: form
           explode: true
         -
-          name: 'date_created[before]'
+          name: 'dateCreated[before]'
           in: query
           required: false
           schema:
             type: string
         -
-          name: 'date_created[strictly_before]'
+          name: 'dateCreated[strictly_before]'
           in: query
           required: false
           schema:
             type: string
         -
-          name: 'date_created[after]'
+          name: 'dateCreated[after]'
           in: query
           required: false
           schema:
             type: string
         -
-          name: 'date_created[strictly_after]'
+          name: 'dateCreated[strictly_after]'
           in: query
           required: false
           schema:
             type: string
         -
-          name: 'date_modified[before]'
+          name: 'dateModified[before]'
           in: query
           required: false
           schema:
             type: string
         -
-          name: 'date_modified[strictly_before]'
+          name: 'dateModified[strictly_before]'
           in: query
           required: false
           schema:
             type: string
         -
-          name: 'date_modified[after]'
+          name: 'dateModified[after]'
           in: query
           required: false
           schema:
             type: string
         -
-          name: 'date_modified[strictly_after]'
+          name: 'dateModified[strictly_after]'
           in: query
           required: false
           schema:
@@ -2106,7 +2106,7 @@ components:
           type: integer
         huisnummer:
           type: integer
-        huisnummer_toevoeging:
+        huisnummerToevoeging:
           type: string
         straat:
           type: string
@@ -2114,19 +2114,19 @@ components:
           type: string
         woonplaats:
           type: string
-        woonplaats_nummer:
+        woonplaatsNummer:
           type: integer
-        gemeente_nummer:
+        gemeenteNummer:
           type: integer
-        gemeente_rsin:
+        gemeenteRsin:
           type: string
-        status_nummeraanduiding:
+        statusNummeraanduiding:
           type: string
-        status_verblijfsobject:
+        statusVerblijfsobject:
           type: string
-        status_openbare_ruimte:
+        statusOpenbareRuimte:
           type: string
-        status_woonplaats:
+        statusWoonplaats:
           type: string
         links:
           type: array
@@ -2148,7 +2148,7 @@ components:
           type: integer
         huisnummer:
           type: integer
-        huisnummer_toevoeging:
+        huisnummerToevoeging:
           type: string
         straat:
           type: string
@@ -2156,19 +2156,19 @@ components:
           type: string
         woonplaats:
           type: string
-        woonplaats_nummer:
+        woonplaatsNummer:
           type: integer
-        gemeente_nummer:
+        gemeenteNummer:
           type: integer
-        gemeente_rsin:
+        gemeenteRsin:
           type: string
-        status_nummeraanduiding:
+        statusNummeraanduiding:
           type: string
-        status_verblijfsobject:
+        statusVerblijfsobject:
           type: string
-        status_openbare_ruimte:
+        statusOpenbareRuimte:
           type: string
-        status_woonplaats:
+        statusWoonplaats:
           type: string
         links:
           type: array
@@ -2208,13 +2208,13 @@ components:
           readOnly: true
           description: 'The procces on behalf of wich the request was made'
           type: string
-        data_elements:
+        dataElements:
           readOnly: true
           description: 'The moment this request was created'
           type: array
           items:
             type: string
-        data_subjects:
+        dataSubjects:
           readOnly: true
           description: 'The moment this request was created'
           type: array
@@ -2224,7 +2224,7 @@ components:
           readOnly: true
           description: 'The resource that was requested'
           type: string
-        resource_type:
+        resourceType:
           readOnly: true
           description: 'The type of the resource that was requested'
           type: string
@@ -2244,7 +2244,7 @@ components:
           readOnly: true
           description: 'The contentType that was reqousted'
           type: string
-        content_type:
+        contentType:
           readOnly: true
           description: 'The contentType that was suplieds'
           type: string
@@ -2266,11 +2266,11 @@ components:
           type: array
           items:
             type: string
-        status_code:
+        statusCode:
           readOnly: true
           description: 'The status code returned to client'
           type: integer
-        not_found:
+        notFound:
           readOnly: true
           description: 'Whether or not the reqousted endpoint was found'
           type: boolean
@@ -2282,14 +2282,14 @@ components:
           readOnly: true
           description: 'Whether or not there where any problems'
           type: boolean
-        date_created:
+        dateCreated:
           readOnly: true
           description: 'The moment this request was created'
           externalDocs:
             url: 'http://schema.org/DateTime'
           type: string
           format: date-time
-        date_modified:
+        dateModified:
           readOnly: true
           description: 'The moment this request last Modified'
           externalDocs:
@@ -2339,13 +2339,13 @@ components:
           readOnly: true
           description: 'The procces on behalf of wich the request was made'
           type: string
-        data_elements:
+        dataElements:
           readOnly: true
           description: 'The moment this request was created'
           type: array
           items:
             type: string
-        data_subjects:
+        dataSubjects:
           readOnly: true
           description: 'The moment this request was created'
           type: array
@@ -2355,7 +2355,7 @@ components:
           readOnly: true
           description: 'The resource that was requested'
           type: string
-        resource_type:
+        resourceType:
           readOnly: true
           description: 'The type of the resource that was requested'
           type: string
@@ -2375,7 +2375,7 @@ components:
           readOnly: true
           description: 'The contentType that was reqousted'
           type: string
-        content_type:
+        contentType:
           readOnly: true
           description: 'The contentType that was suplieds'
           type: string
@@ -2397,11 +2397,11 @@ components:
           type: array
           items:
             type: string
-        status_code:
+        statusCode:
           readOnly: true
           description: 'The status code returned to client'
           type: integer
-        not_found:
+        notFound:
           readOnly: true
           description: 'Whether or not the reqousted endpoint was found'
           type: boolean
@@ -2413,14 +2413,14 @@ components:
           readOnly: true
           description: 'Whether or not there where any problems'
           type: boolean
-        date_created:
+        dateCreated:
           readOnly: true
           description: 'The moment this request was created'
           externalDocs:
             url: 'http://schema.org/DateTime'
           type: string
           format: date-time
-        date_modified:
+        dateModified:
           readOnly: true
           description: 'The moment this request last Modified'
           externalDocs:
@@ -2454,10 +2454,10 @@ components:
         action:
           readOnly: true
           type: string
-        object_id:
+        objectId:
           readOnly: true
           type: string
-        object_class:
+        objectClass:
           readOnly: true
           type: string
         version:
@@ -2475,14 +2475,14 @@ components:
           readOnly: true
           description: 'The moment this request was created'
           type: string
-        date_created:
+        dateCreated:
           readOnly: true
           description: 'The moment this request was created'
           externalDocs:
             url: 'http://schema.org/DateTime'
           type: string
           format: date-time
-        date_modified:
+        dateModified:
           readOnly: true
           description: 'The moment this request last Modified'
           externalDocs:
@@ -2515,10 +2515,10 @@ components:
         action:
           readOnly: true
           type: string
-        object_id:
+        objectId:
           readOnly: true
           type: string
-        object_class:
+        objectClass:
           readOnly: true
           type: string
         version:
@@ -2536,14 +2536,14 @@ components:
           readOnly: true
           description: 'The moment this request was created'
           type: string
-        date_created:
+        dateCreated:
           readOnly: true
           description: 'The moment this request was created'
           externalDocs:
             url: 'http://schema.org/DateTime'
           type: string
           format: date-time
-        date_modified:
+        dateModified:
           readOnly: true
           description: 'The moment this request last Modified'
           externalDocs:
@@ -2668,12 +2668,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-03-18 12:01:44'
+        example: '2020-04-29 13:51:14'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-03-18 12:01:44'
+        example: '2020-04-29 13:51:14'
     required: []
   AuditTrail-write:
     properties:
@@ -2721,12 +2721,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-03-18 12:01:44'
+        example: '2020-04-29 13:51:14'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-03-18 12:01:44'
+        example: '2020-04-29 13:51:14'
     required: []
   ChangeLog-write:
     properties:
@@ -2773,8 +2773,8 @@ securityDefinitions:
 host: irc.zaakonline.nl
 servers:
   -
-    description: 'Demo Omgeving'
-    url: 'http://proto.demo.common-ground.dev'
+    name: conduction.nl
+    url: adressen.dev.conduction.nl
 externalDocs:
   -
     description: 'OAS Documentatie'

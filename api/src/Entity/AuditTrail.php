@@ -2,21 +2,18 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
-
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Validator\Constraints as Assert;
-use Gedmo\Mapping\Annotation as Gedmo;
-
 use DateTime;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
-
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * An resource representing a log line.
@@ -65,6 +62,7 @@ use Ramsey\Uuid\UuidInterface;
  */
 class AuditTrail
 {
+
 	/**
 	 * @var UuidInterface The UUID identifier of this object
 	 *
@@ -99,19 +97,20 @@ class AuditTrail
      * @Assert\Length(
      *      max = 255
      * )
-	 * @Groups({"read"})
+     * @Groups({"read"})
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $application;
 
     /**
+
      * @var sting $request The id of the request within that application
      *
      * @Assert\Url
      * @Assert\Length(
      *      max = 255
      * )
-	 * @Groups({"read"})
+     * @Groups({"read"})
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $request;
@@ -123,7 +122,7 @@ class AuditTrail
      * @Assert\Length(
      *      max = 255
      * )
-	 * @Groups({"read"})
+     * @Groups({"read"})
      * @ORM\Column(type="string", length=255, nullable=true, name="username")
      */
     private $user;
@@ -134,7 +133,7 @@ class AuditTrail
      * @Assert\Length(
      *      max = 255
      * )
-	 * @Groups({"read"})
+     * @Groups({"read"})
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $subject;
@@ -145,7 +144,7 @@ class AuditTrail
      * @Assert\Length(
      *      max = 255
      * )
-	 * @Groups({"read"})
+     * @Groups({"read"})
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $process;
@@ -167,12 +166,12 @@ class AuditTrail
     private $dataSubjects = [];
 
     /**
-     * @var sting $resource The resource that was requested
+     * @var sting The resource that was requested
      *
      * @Assert\Length(
      *      max = 255
      * )
-	 * @Groups({"read"})
+     * @Groups({"read"})
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $resource;
@@ -183,7 +182,7 @@ class AuditTrail
      * @Assert\Length(
      *      max = 255
      * )
-	 * @Groups({"read"})
+     * @Groups({"read"})
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $resourceType;
@@ -194,7 +193,7 @@ class AuditTrail
      * @Assert\Length(
      *      max = 255
      * )
-	 * @Groups({"read"})
+     * @Groups({"read"})
      * @ORM\Column(type="string", length=255)
      */
     private $route;
@@ -205,7 +204,7 @@ class AuditTrail
      * @Assert\Length(
      *      max = 255
      * )
-	 * @Groups({"read"})
+     * @Groups({"read"})
      * @ORM\Column(type="string", length=255)
      */
     private $endpoint;
@@ -216,13 +215,13 @@ class AuditTrail
      * @Assert\Length(
      *      max = 255
      * )
-	 * @Groups({"read"})
+     * @Groups({"read"})
      * @ORM\Column(type="string", length=10)
      */
     private $method;
 
     /**
-     * @var sting $Accept The contentType that was reqousted
+     * @var sting The contentType that was reqousted
      *
      * @Assert\Length(
      *      max = 255
@@ -238,7 +237,7 @@ class AuditTrail
      * @Assert\Length(
      *      max = 255
      * )
-	 * @Groups({"read"})
+     * @Groups({"read"})
      * @ORM\Column(type="string", length=255)
      */
     private $contentType;
@@ -249,13 +248,13 @@ class AuditTrail
      * @Assert\Length(
      *      max = 2555
      * )
-	 * @Groups({"read"})
+     * @Groups({"read"})
      * @ORM\Column(type="text", nullable=true)
      */
     private $content;
 
     /**
-     * @var sting $ip The moment this request was created
+     * @var sting The moment this request was created
      *
      * @Assert\Length(
      *      max = 255
@@ -271,7 +270,7 @@ class AuditTrail
      * @Assert\Length(
      *      max = 255
      * )
-	 * @Groups({"read"})
+     * @Groups({"read"})
      * @ORM\Column(type="string", length=255)
      */
     private $session;
@@ -325,7 +324,7 @@ class AuditTrail
     private $ok = true;
 
     /**
-     * @var Datetime $dateCreated The moment this request was created
+     * @var Datetime The moment this request was created
      *
      * @Assert\DateTime
      * @Groups({"read"})
@@ -335,7 +334,7 @@ class AuditTrail
     private $dateCreated;
 
     /**
-     * @var Datetime $dateModified  The moment this request last Modified
+     * @var Datetime The moment this request last Modified
      *
      * @Assert\DateTime
      * @Groups({"read"})
@@ -346,7 +345,7 @@ class AuditTrail
 
     public function getId(): Uuid
     {
-    	return $this->id;
+        return $this->id;
     }
 
     public function setId(Uuid $id): self
@@ -442,26 +441,26 @@ class AuditTrail
 
     public function setResource(?string $resource): self
     {
-    	$this->resource = $resource;
+        $this->resource = $resource;
 
         return $this;
     }
 
     public function getResourceType(): ?string
     {
-    	return $this->resourceType;
+        return $this->resourceType;
     }
 
     public function setResourceType(string $resourceType): self
     {
-    	$this->resourceType = $resourceType;
+        $this->resourceType = $resourceType;
 
         return $this;
     }
 
     public function getRoute(): ?string
     {
-    	return $this->resourceType;
+        return $this->resourceType;
     }
 
     public function setRoute(string $route): self
@@ -497,7 +496,7 @@ class AuditTrail
 
     public function getAccept(): ?string
     {
-    	return $this->accept;
+        return $this->accept;
     }
 
     public function setAccept(string $accept): self
@@ -533,7 +532,7 @@ class AuditTrail
 
     public function getIp(): ?string
     {
-    	return $this->ip;
+        return $this->ip;
     }
 
     public function setIp(string $ip): self
@@ -557,7 +556,7 @@ class AuditTrail
 
     public function getHeaders(): ?array
     {
-    	return $this->headers;
+        return $this->headers;
     }
 
     public function setHeaders(array $headers): self
@@ -569,7 +568,7 @@ class AuditTrail
 
     public function getStatusCode(): ?int
     {
-    	return $this->statusCode;
+        return $this->statusCode;
     }
 
     public function setStatusCode(int $statusCode): self
@@ -581,7 +580,7 @@ class AuditTrail
 
     public function getNotFound(): ?bool
     {
-    	return $this->notFound;
+        return $this->notFound;
     }
 
     public function setNotFound(?bool $notFound): self
@@ -593,7 +592,7 @@ class AuditTrail
 
     public function getForbidden(): ?bool
     {
-    	return $this->forbidden;
+        return $this->forbidden;
     }
 
     public function setForbidden(?bool $forbidden): self
@@ -605,7 +604,7 @@ class AuditTrail
 
     public function getOk(): ?bool
     {
-    	return $this->ok;
+        return $this->ok;
     }
 
     public function setOk(?bool $ok): self
@@ -617,7 +616,7 @@ class AuditTrail
 
     public function getDateCreated(): ?\DateTimeInterface
     {
-    	return $this->dateCreated;
+        return $this->dateCreated;
     }
 
     public function setDateCreated(\DateTimeInterface $dateCreated): self
@@ -629,7 +628,7 @@ class AuditTrail
 
     public function getDateModified(): ?\DateTimeInterface
     {
-    	return $this->dateModified;
+        return $this->dateModified;
     }
 
     public function setDateModified(\DateTimeInterface $dateModified): self
