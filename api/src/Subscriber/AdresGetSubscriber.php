@@ -13,6 +13,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -32,89 +34,141 @@ final class AdresGetSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW => ['adres', EventPriorities::PRE_VALIDATE],
+            KernelEvents::REQUEST => ['adres', EventPriorities::PRE_DESERIALIZE],
         ];
     }
 
-    public function adres(GetResponseForControllerResultEvent $event)
+    public function adres(RequestEvent $event)
     {
-        $route = $event->getRequest()->get('_route');
+        $path = explode('/', parse_url($event->getRequest()->getUri())['path']);
+        $route = $event->getRequest()->attributes->get('_route');
         $method = $event->getRequest()->getMethod();
 
         // Lats make sure that some one posts correctly
-        if (Request::METHOD_GET !== $method || $route != 'api_adres_get_collection') {
+        if (Request::METHOD_GET !== $method || ($route != 'api_adres_get_collection' && $path[1] != "adressen")) {
             return;
         }
-
-        $huisnummer = (int) $event->getRequest()->query->get('huisnummer');
-        $postcode = $event->getRequest()->query->get('postcode');
-        $huisnummerToevoeging = $event->getRequest()->query->get('huisnummer_toevoeging');
-        $bagId = $event->getRequest()->query->get('bagid');
-        /* @deprecated */
-        if (!$huisnummerToevoeging) {
-            $huisnummerToevoeging = $event->getRequest()->query->get('huisnummertoevoeging');
+        $contentType = $event->getRequest()->headers->get('accept');
+        if (!$contentType) {
+            $contentType = $event->getRequest()->headers->get('Accept');
         }
+        switch ($contentType) {
+            case 'application/json':
+                $renderType = 'json';
+                break;
+            case 'application/ld+json':
+                $renderType = 'jsonld';
+                break;
+            case 'application/hal+json':
+                $renderType = 'jsonhal';
+                break;
+            default:
+                $contentType = 'application/ld+json';
+                $renderType = 'jsonld';
+        }
+        $bagId = null;
+        if( $route != 'api_adres_get_collection' && $path[1] == "adressen" || $route == 'api_adres_get_collection' && $bagId = $event->getRequest()->query->get('bagid') ){
 
-        // Let clear up the postcode
-        $postcode = preg_replace('/\s+/', '', $postcode);
-        $postcode = strtoupper($postcode);
-        $postcode = trim($postcode);
+            if(!$bagId){
+                $bagId = $path[2];
+            }
+            $adres = $this->kadasterService->getAdresOnBagId($bagId);
 
-        if($bagId && $bagId != ""){
+            $response = $this->serializer->serialize(
+                $adres,
+                $renderType,
+                ['enable_max_depth'=> true]
+            );
 
-            $response = $this->kadasterService->getAdresOnBagId($bagId);
+            // Creating a response
+            $response = new Response(
+                $response,
+                Response::HTTP_OK,
+                ['content-type' => $contentType]
+            );
+
+            $event->setResponse($response);
+
+        }
+        else{
+
+            $huisnummer = (int) $event->getRequest()->query->get('huisnummer');
+            $postcode = $event->getRequest()->query->get('postcode');
+            $huisnummerToevoeging = $event->getRequest()->query->get('huisnummer_toevoeging');
+            $bagId = $event->getRequest()->query->get('bagid');
+
+
+            /* @deprecated */
+            if (!$huisnummerToevoeging) {
+                $huisnummerToevoeging = $event->getRequest()->query->get('huisnummertoevoeging');
+            }
+
+            // Let clear up the postcode
+            $postcode = preg_replace('/\s+/', '', $postcode);
+            $postcode = strtoupper($postcode);
+            $postcode = trim($postcode);
+
+            /* @deprecated */
+            if($bagId && $bagId != ""){
+
+                $adres = $this->kadasterService->getAdresOnBagId($bagId);
 //            var_dump($result);
 
-        }
-        else {
-            // Even iets van basis valdiatie
-            if (!$huisnummer || !is_int($huisnummer)) {
-                throw new InvalidArgumentException(sprintf('Invalid huisnummer: ' . $huisnummer));
             }
-
-            if (!$postcode || strlen($postcode) != 6) {
-                throw new InvalidArgumentException(sprintf('Invalid postcode: ' . $postcode));
-            }
-
-            $adressen = $this->kadasterService->getAdresOnHuisnummerPostcode($huisnummer, $postcode);
-
-            // If a huisnummer_toevoeging is provided we need to do some aditional filtering
-            if ($huisnummerToevoeging) {
-                $response['_links']['self'] = '/adressen?huisnummer=' . $huisnummer . '&huisnummertoevoeging=' . $huisnummerToevoeging . '&postcode=' . $postcode;
-
-                // Lets loop trough the addreses to see if we have a match
-                $filterdAdressen = [];
-                foreach ($adressen as $adres) {
-                    if (array_key_exists('huisnummertoevoeging', $adres) && preg_match('/.*?' . strtolower($huisnummerToevoeging) . '.*?/', strtolower($adres['huisnummertoevoeging']))) {
-                        $filterdAdressen[] = $adres;
-                    }
+            else {
+                // Even iets van basis valdiatie
+                if (!$huisnummer || !is_int($huisnummer)) {
+                    throw new InvalidArgumentException(sprintf('Invalid huisnummer: ' . $huisnummer));
                 }
 
-                // we are only going to overide our initial result if we have more then one match
-                if (count($filterdAdressen) > 0) {
-                    $adressen = $filterdAdressen;
+                if (!$postcode || strlen($postcode) != 6) {
+                    throw new InvalidArgumentException(sprintf('Invalid postcode: ' . $postcode));
                 }
+
+                $adressen = $this->kadasterService->getAdresOnHuisnummerPostcode($huisnummer, $postcode);
+
+                // If a huisnummer_toevoeging is provided we need to do some aditional filtering
+//            if ($huisnummerToevoeging) {
+//                $response['_links']['self'] = '/adressen?huisnummer=' . $huisnummer . '&huisnummertoevoeging=' . $huisnummerToevoeging . '&postcode=' . $postcode;
+//
+//                // Lets loop trough the addreses to see if we have a match
+//                $filterdAdressen = [];
+//                foreach ($adressen as $adres) {
+//                    if (array_key_exists('huisnummertoevoeging', $adres) && preg_match('/.*?' . strtolower($huisnummerToevoeging) . '.*?/', strtolower($adres['huisnummertoevoeging']))) {
+//                        $filterdAdressen[] = $adres;
+//                    }
+//                }
+//
+//                // we are only going to overide our initial result if we have more then one match
+//                if (count($filterdAdressen) > 0) {
+//                    $adressen = $filterdAdressen;
+//                }
+//            }
+
+                // Let then create the responce
+//            $response = [];
+//            $response['adressen'] = $adressen;
+//            $response['_links'] = ['self' => '/adressen?huisnummer=' . $huisnummer . '&postcode=' . $postcode];
+//            $response['totalItems'] = count($adressen);
+//            $response['itemsPerPage'] = 30;
+
+
             }
 
-            // Let then create the responce
-            $response = [];
-            $response['adressen'] = $adressen;
-            $response['_links'] = ['self' => '/adressen?huisnummer=' . $huisnummer . '&postcode=' . $postcode];
-            $response['totalItems'] = count($adressen);
-            $response['itemsPerPage'] = 30;
-            
-        }
-        $json = $this->serializer->serialize(
-            $response,
-            'jsonhal', ['enable_max_depth' => true]
-        );
-//            var_dump($json);
-        $response = new Response(
-            $json,
-            Response::HTTP_OK,
-            ['content-type' => 'application/json+hal']
-        );
+            $response = $this->serializer->serialize(
+                $adressen,
+                $renderType,
+                ['enable_max_depth'=> true]
+            );
+
+            // Creating a response
+            $response = new Response(
+                $response,
+                Response::HTTP_OK,
+                ['content-type' => $contentType]
+            );
 //            var_dump($response);
-        $event->setResponse($response);
+            $event->setResponse($response);
+        }
     }
 }

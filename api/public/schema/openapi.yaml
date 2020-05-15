@@ -29,7 +29,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/Adres:jsonld' } }
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/Adres:jsonld-read' } }
                   'hydra:totalItems': { type: integer, minimum: 0 }
                   'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
                   'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string }, required: { type: boolean } } } } } }
@@ -39,7 +39,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/Adres:jsonld' } }
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/Adres:jsonld-read' } }
                   'hydra:totalItems': { type: integer, minimum: 0 }
                   'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
                   'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string }, required: { type: boolean } } } } } }
@@ -49,57 +49,57 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Adres'
+                  $ref: '#/components/schemas/Adres-read'
             application/json+hal:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Adres'
+                  $ref: '#/components/schemas/Adres-read'
             application/vnd.api+json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Adres'
+                  $ref: '#/components/schemas/Adres-read'
             application/json+vnd.api:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Adres'
+                  $ref: '#/components/schemas/Adres-read'
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Adres'
+                  $ref: '#/components/schemas/Adres-read'
             application/health+json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Adres'
+                  $ref: '#/components/schemas/Adres-read'
             application/json+health:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Adres'
+                  $ref: '#/components/schemas/Adres-read'
             application/xml:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Adres'
+                  $ref: '#/components/schemas/Adres-read'
             application/x-yaml:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Adres'
+                  $ref: '#/components/schemas/Adres-read'
             text/csv:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Adres'
+                  $ref: '#/components/schemas/Adres-read'
             text/html:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Adres'
+                  $ref: '#/components/schemas/Adres-read'
       parameters:
         -
           name: page
@@ -180,6 +180,137 @@ paths:
             type: string
             format: date-time
           in: query
+      produces:
+        - application/health+json
+  '/adressen/{id}':
+    get:
+      tags:
+        - Adres
+      operationId: getAdresItem
+      summary: 'Retrieves a Adres resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      responses:
+        200:
+          description: 'Adres resource response'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Adres:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Adres:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Adres-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Adres-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Adres-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Adres-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Adres-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Adres-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Adres-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Adres-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Adres-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Adres-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Adres-read'
+        404:
+          description: 'Resource not found'
       produces:
         - application/health+json
   /audit_trails:
@@ -2093,90 +2224,129 @@ paths:
         description: 'The updated ChangeLog resource'
 components:
   schemas:
-    Adres:
+    Adres-read:
       type: object
       description: 'An BAG addres.'
       properties:
         id:
           readOnly: true
+          description: 'The UUID identifier of this object'
+          externalDocs:
+            url: 'http://schema.org/identifier'
           type: string
         type:
+          readOnly: true
           type: string
         oppervlakte:
+          readOnly: true
           type: integer
         huisnummer:
+          readOnly: true
           type: integer
         huisnummerToevoeging:
+          readOnly: true
           type: string
         straat:
+          readOnly: true
           type: string
         postcode:
+          readOnly: true
           type: string
         woonplaats:
+          readOnly: true
           type: string
         woonplaatsNummer:
+          readOnly: true
           type: integer
         gemeenteNummer:
+          readOnly: true
           type: integer
         gemeenteRsin:
+          readOnly: true
           type: string
         statusNummeraanduiding:
+          readOnly: true
           type: string
         statusVerblijfsobject:
+          readOnly: true
           type: string
         statusOpenbareRuimte:
+          readOnly: true
           type: string
         statusWoonplaats:
+          readOnly: true
           type: string
         links:
+          readOnly: true
           type: array
           items:
             type: string
-      required:
-        - straat
-        - postcode
-    'Adres:jsonld':
+    'Adres:jsonld-read':
       type: object
       description: 'An BAG addres.'
       properties:
-        id:
+        '@context':
           readOnly: true
           type: string
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          description: 'The UUID identifier of this object'
+          externalDocs:
+            url: 'http://schema.org/identifier'
+          type: string
         type:
+          readOnly: true
           type: string
         oppervlakte:
+          readOnly: true
           type: integer
         huisnummer:
+          readOnly: true
           type: integer
         huisnummerToevoeging:
+          readOnly: true
           type: string
         straat:
+          readOnly: true
           type: string
         postcode:
+          readOnly: true
           type: string
         woonplaats:
+          readOnly: true
           type: string
         woonplaatsNummer:
+          readOnly: true
           type: integer
         gemeenteNummer:
+          readOnly: true
           type: integer
         gemeenteRsin:
+          readOnly: true
           type: string
         statusNummeraanduiding:
+          readOnly: true
           type: string
         statusVerblijfsobject:
+          readOnly: true
           type: string
         statusOpenbareRuimte:
+          readOnly: true
           type: string
         statusWoonplaats:
+          readOnly: true
           type: string
         links:
+          readOnly: true
           type: array
           items:
             type: string
-      required:
-        - straat
-        - postcode
     AuditTrail-read:
       type: object
       description: 'An resource representing a log line.'
@@ -2564,6 +2734,14 @@ components:
           readOnly: true
           type: string
 definitions:
+  Adres-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this object'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+    required: []
   AuditTrail-read:
     properties:
       id:
@@ -2668,12 +2846,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-04-29 13:51:14'
+        example: '2020-05-15 15:15:28'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-04-29 13:51:14'
+        example: '2020-05-15 15:15:28'
     required: []
   AuditTrail-write:
     properties:
@@ -2721,12 +2899,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-04-29 13:51:14'
+        example: '2020-05-15 15:15:28'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-04-29 13:51:14'
+        example: '2020-05-15 15:15:28'
     required: []
   ChangeLog-write:
     properties:
