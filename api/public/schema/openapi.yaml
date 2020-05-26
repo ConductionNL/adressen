@@ -10,7 +10,7 @@ info:
     - Version: V.0.1
     - Repository: [online](https://github.com/ConductionNL/adresservice) / [zip](https://github.com/ConductionNL/adresservice/archive/master.zip)
     - Docker Image: [online](https://hub.docker.com/repository/docker/conduction/adressen-php) 
-    - Datamodel: [postman](/schema/adressen.postman_collection.json) / [oas](/schema/openapi.yaml) / [pdf](/schema/datamodel.pdf) / [mwb](/schema/datamodel.mwb) 
+    - Datamodel: [postman](/schema/adressen.postman_collection.json) / [oas](/schema/openapi.yaml) / [pdf](/schema/datamodel.pdf) / [modelio (zip)](/schema/Datamodel_Modelio.zip) 
     
     'Naast deze JSON rest API is er ook een [graphql](/graphql) interface beschikbaar.'         
     
@@ -2102,36 +2102,51 @@ components:
           type: string
         type:
           type: string
+          nullable: true
         oppervlakte:
           type: integer
+          nullable: true
         huisnummer:
           type: integer
+          nullable: true
         huisnummerToevoeging:
           type: string
+          nullable: true
         straat:
           type: string
+          nullable: true
         postcode:
           type: string
+          nullable: true
         woonplaats:
           type: string
+          nullable: true
         woonplaatsNummer:
           type: integer
+          nullable: true
         gemeenteNummer:
           type: integer
+          nullable: true
         gemeenteRsin:
           type: string
+          nullable: true
         statusNummeraanduiding:
           type: string
+          nullable: true
         statusVerblijfsobject:
           type: string
+          nullable: true
         statusOpenbareRuimte:
           type: string
+          nullable: true
         statusWoonplaats:
           type: string
+          nullable: true
         links:
           type: array
           items:
             type: string
+          nullable: true
       required:
         - straat
         - postcode
@@ -2144,36 +2159,51 @@ components:
           type: string
         type:
           type: string
+          nullable: true
         oppervlakte:
           type: integer
+          nullable: true
         huisnummer:
           type: integer
+          nullable: true
         huisnummerToevoeging:
           type: string
+          nullable: true
         straat:
           type: string
+          nullable: true
         postcode:
           type: string
+          nullable: true
         woonplaats:
           type: string
+          nullable: true
         woonplaatsNummer:
           type: integer
+          nullable: true
         gemeenteNummer:
           type: integer
+          nullable: true
         gemeenteRsin:
           type: string
+          nullable: true
         statusNummeraanduiding:
           type: string
+          nullable: true
         statusVerblijfsobject:
           type: string
+          nullable: true
         statusOpenbareRuimte:
           type: string
+          nullable: true
         statusWoonplaats:
           type: string
+          nullable: true
         links:
           type: array
           items:
             type: string
+          nullable: true
       required:
         - straat
         - postcode
@@ -2660,12 +2690,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-04-29 13:51:14'
+        example: '2020-05-26 11:30:48'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-04-29 13:51:14'
+        example: '2020-05-26 11:30:48'
     required: []
   AuditTrail-write:
     properties:
@@ -2713,12 +2743,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-04-29 13:51:14'
+        example: '2020-05-26 11:30:48'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-04-29 13:51:14'
+        example: '2020-05-26 11:30:48'
     required: []
   ChangeLog-write:
     properties:

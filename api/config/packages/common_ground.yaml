@@ -505,7 +505,8 @@ twig:
     app_demo: "%env(APP_DEMO)%"
     app_container: "%env(APP_CONTAINER)%"
     app_repro: "%env(APP_REPRO)%"
-
+    app_commonground_bag_apikey: '%env(APP_COMMONGROUND_BAG_APIKEY)%'
+    
     # Security Details
     app_commonground_id: "%env(APP_COMMONGROUND_ID)%"
     app_commonground_key: "%env(APP_COMMONGROUND_KEY)%"
