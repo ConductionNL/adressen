@@ -16,7 +16,6 @@ namespace App\Service;
 use GuzzleHttp\Client;
 use Symfony\Component\Cache\Adapter\AdapterInterface as CacheInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class KadasterService
 {
@@ -267,7 +266,8 @@ class KadasterService
     }
 
     // Somedoc block here
-    public function getObject($nummeraanduiding){
+    public function getObject($nummeraanduiding)
+    {
         $responce['id'] = $nummeraanduiding['identificatiecode'];
 
         $adresseerbaarObject = $this->analyseUri($nummeraanduiding['_links']['adresseerbaarObject']['href']);
@@ -434,13 +434,13 @@ class KadasterService
 
         return $responces;
     }
-    public function getAdresOnBagId($bagId){
 
+    public function getAdresOnBagId($bagId)
+    {
         $nummeraanduiding = $this->getNummeraanduiding($bagId);
 
         $response = $this->getObject($nummeraanduiding);
 
         return $response;
-
     }
 }
