@@ -5,7 +5,7 @@
 settings:
   registryBase: docker.io/conduction
   projectName: adressen
-  name: adressen
+  name: as
   title: Adressen component
   version: V.0.1
   id: 
