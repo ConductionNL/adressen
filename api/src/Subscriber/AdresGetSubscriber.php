@@ -60,32 +60,29 @@ final class AdresGetSubscriber implements EventSubscriberInterface
         $postcode = strtoupper($postcode);
         $postcode = trim($postcode);
 
-        if($bagId && $bagId != ""){
-
+        if ($bagId && $bagId != '') {
             $response = $this->kadasterService->getAdresOnBagId($bagId);
 //            var_dump($result);
-
-        }
-        else {
+        } else {
             // Even iets van basis valdiatie
             if (!$huisnummer || !is_int($huisnummer)) {
-                throw new InvalidArgumentException(sprintf('Invalid huisnummer: ' . $huisnummer));
+                throw new InvalidArgumentException(sprintf('Invalid huisnummer: '.$huisnummer));
             }
 
             if (!$postcode || strlen($postcode) != 6) {
-                throw new InvalidArgumentException(sprintf('Invalid postcode: ' . $postcode));
+                throw new InvalidArgumentException(sprintf('Invalid postcode: '.$postcode));
             }
 
             $adressen = $this->kadasterService->getAdresOnHuisnummerPostcode($huisnummer, $postcode);
 
             // If a huisnummer_toevoeging is provided we need to do some aditional filtering
             if ($huisnummerToevoeging) {
-                $response['_links']['self'] = '/adressen?huisnummer=' . $huisnummer . '&huisnummertoevoeging=' . $huisnummerToevoeging . '&postcode=' . $postcode;
+                $response['_links']['self'] = '/adressen?huisnummer='.$huisnummer.'&huisnummertoevoeging='.$huisnummerToevoeging.'&postcode='.$postcode;
 
                 // Lets loop trough the addreses to see if we have a match
                 $filterdAdressen = [];
                 foreach ($adressen as $adres) {
-                    if (array_key_exists('huisnummertoevoeging', $adres) && preg_match('/.*?' . strtolower($huisnummerToevoeging) . '.*?/', strtolower($adres['huisnummertoevoeging']))) {
+                    if (array_key_exists('huisnummertoevoeging', $adres) && preg_match('/.*?'.strtolower($huisnummerToevoeging).'.*?/', strtolower($adres['huisnummertoevoeging']))) {
                         $filterdAdressen[] = $adres;
                     }
                 }
@@ -99,14 +96,14 @@ final class AdresGetSubscriber implements EventSubscriberInterface
             // Let then create the responce
             $response = [];
             $response['adressen'] = $adressen;
-            $response['_links'] = ['self' => '/adressen?huisnummer=' . $huisnummer . '&postcode=' . $postcode];
+            $response['_links'] = ['self' => '/adressen?huisnummer='.$huisnummer.'&postcode='.$postcode];
             $response['totalItems'] = count($adressen);
             $response['itemsPerPage'] = 30;
-            
         }
         $json = $this->serializer->serialize(
             $response,
-            'jsonhal', ['enable_max_depth' => true]
+            'jsonhal',
+            ['enable_max_depth' => true]
         );
 //            var_dump($json);
         $response = new Response(
