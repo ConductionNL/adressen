@@ -5,31 +5,29 @@
 settings:
   registryBase: docker.io/conduction
   projectName: adressen
-  name: adressen
-  title: Proto Component
+  name: as
+  title: Adressen component
   version: V.0.1
+  id: 
   description: '&#039;Naast deze JSON rest API is er ook een [graphql](/graphql) interface beschikbaar.&#039;'
+  type: component
   repro: https://github.com/ConductionNL/adresservice
   demo: adressen.zaakonline.nl
   container: https://hub.docker.com/repository/docker/conduction/adressen-php
-  subdomain: adressen  
-  domains:
-    - conduction.nl
-    - zaakonline.nl
-    - huwelijksplanner.online
-    - common-ground.dev
-  domainsJson: ["conduction.nl","zaakonline.nl","huwelijksplanner.online","common-ground.dev"]
+  domain: conduction.nl
+  subdomain: as
   organisationName: Conduction
   email: info@conduction.nl
   country: Netherlands
   state: Noord-Holland
   locality: Amsterdam
-  unit: Common-Ground  
+  unit: Common-Ground
   env: dev
   debug: 1
+  cache: 1
   replicaCount: 1
   corsAllowOrigin: ['*']
-  trustedHosts: '127.0.0.1$|^(.+\.)?conduction\.nl$|^(.+\.)?huwelijksplanner\.online$|^(.+\.)?larping\.eu$|^(.+\.)?common-ground\.dev$|^(.+\.)?trouwplanner\.online$|^(.+\.)?zaakonline\.nl$|localhost'
+  trustedHosts: '^localhost$|^127.0.0.1$|^(.+\.)?conduction\.nl$|^(.+\.)?zaakonline\.nl$'
   pullPolicy: Always
   # You will need these proxies on kubernetes
   trustedProxies:
@@ -46,6 +44,7 @@ settings:
   authorisationEnabled: false
   healthEnabled: false
   archiveEnabled: false
+  bagkey: !examplekey!
 
 security:
   commongroundId: "9329d8d0-1d5e-433c-bb47-6991053c7fcb"
@@ -63,12 +62,13 @@ php:
     jwtSecret: ""
   env: prod
   secret: ""
+  replicaCount: 2
 
 nginx:
   repository: docker.io/conduction/protocomponent-nginx
   tag: latest
   pullPolicy: Always
-  replicaCount: 1
+  replicaCount: 2
 
 varnish:
   enabled: true
