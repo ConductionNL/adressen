@@ -4,7 +4,7 @@
 
 settings:
   registryBase: docker.io/conduction
-  projectName: adressen
+  projectName: as
   name: as
   title: Adressen component
   version: V.0.1
@@ -12,8 +12,8 @@ settings:
   description: '&#039;Naast deze JSON rest API is er ook een [graphql](/graphql) interface beschikbaar.&#039;'
   type: component
   repro: https://github.com/ConductionNL/adresservice
-  demo: adressen.zaakonline.nl
-  container: https://hub.docker.com/repository/docker/conduction/adressen-php
+  demo: as.zaakonline.nl
+  container: https://hub.docker.com/repository/docker/conduction/as-php
   domain: conduction.nl
   subdomain: as
   organisationName: Conduction
@@ -44,6 +44,7 @@ settings:
   authorisationEnabled: false
   healthEnabled: false
   archiveEnabled: false
+  bagkey: 
 
 security:
   commongroundId: "9329d8d0-1d5e-433c-bb47-6991053c7fcb"
