@@ -27,11 +27,15 @@ class KadasterService
     private $client;
     private $commonGroundService;
     private $manager;
+    /**
+     * @var CacheInterface
+     */
+    private $cache;
 
     public function __construct(ParameterBagInterface $params, CacheInterface $cache, EntityManagerInterface $manager)
     {
         $this->params = $params;
-        $this->cash = $cache;
+        $this->cache = $cache;
         $this->manager = $manager;
 
         $this->client = new Client([
@@ -51,18 +55,33 @@ class KadasterService
 
     public function getNummeraanduidingen($query)
     {
+        // Lets first try the cach
+        $item = $this->cache->getItem('nummeraanduidingen_'.md5($query));
+        if ($item->isHit()) {
+            return $item->get();
+        }
+
         $response = $this->client->request('GET', 'nummeraanduidingen', [
             'query' => $query,
         ]);
         $response = json_decode($response->getBody(), true);
+        $nummeraanduidingen = $response['_embedded'];
+        while(key_exists("_links", $response)
+            && key_exists("next", $response['_links'])
+            && key_exists("href", $response['_links']['next'])
+        ){
+            $response = json_decode($this->client->request('GET',$response['_links']['next']['href'])->getBody(), true);
+            $nummeraanduidingen['nummeraanduidingen'] = array_merge($nummeraanduidingen['nummeraanduidingen'], $response['_embedded']['nummeraanduidingen']);
+        }
+        $this->cache->save($nummeraanduidingen);
 
-        return $response['_embedded'];
+        return $nummeraanduidingen;
     }
 
     public function getNummeraanduiding($id)
     {
         // Lets first try the cach
-        $item = $this->cash->getItem('nummeraanduiding_'.md5($id));
+        $item = $this->cache->getItem('nummeraanduiding_'.md5($id));
         if ($item->isHit()) {
             return $item->get();
         }
@@ -72,7 +91,7 @@ class KadasterService
 
         $item->set($response);
         $item->expiresAt(new \DateTime('tomorrow'));
-        $this->cash->save($item);
+        $this->cache->save($item);
 
         return $item->get();
     }
@@ -90,7 +109,7 @@ class KadasterService
     public function getWoonplaats($id)
     {
         // Lets first try the cach
-        $item = $this->cash->getItem('woonplaats_'.md5($id));
+        $item = $this->cache->getItem('woonplaats_'.md5($id));
         if ($item->isHit()) {
             return $item->get();
         }
@@ -101,7 +120,7 @@ class KadasterService
         // Save to cash
         $item->set($response);
         $item->expiresAt(new \DateTime('January 1st Next Year')); // By law dutch localities only change in Januray the first
-        $this->cash->save($item);
+        $this->cache->save($item);
 
         return $item->get();
     }
@@ -120,7 +139,7 @@ class KadasterService
     public function getOpenbareruimte($id)
     {
         // Lets first try the cach
-        $item = $this->cash->getItem('openbare-ruimte_'.md5($id));
+        $item = $this->cache->getItem('openbare-ruimte_'.md5($id));
         if ($item->isHit()) {
             return $item->get();
         }
@@ -131,7 +150,7 @@ class KadasterService
         // Save to cach
         $item->set($response);
         $item->expiresAfter(3600);
-        $this->cash->save($item);
+        $this->cache->save($item);
 
         return $item->get();
     }
@@ -149,7 +168,7 @@ class KadasterService
     public function getPand($id)
     {
         // Lets first try the cach
-        $item = $this->cash->getItem('pand_'.md5($id));
+        $item = $this->cache->getItem('pand_'.md5($id));
         if ($item->isHit()) {
             return $item->get();
         }
@@ -160,7 +179,7 @@ class KadasterService
         // Save to cach
         $item->set($response);
         $item->expiresAfter(3600);
-        $this->cash->save($item);
+        $this->cache->save($item);
 
         return $item->get();
     }
@@ -178,7 +197,7 @@ class KadasterService
     public function getVerblijfsobject($id)
     {
         // Lets first try the cach
-        $item = $this->cash->getItem('verblijfsobject_'.md5($id));
+        $item = $this->cache->getItem('verblijfsobject_'.md5($id));
         if ($item->isHit()) {
             return $item->get();
         }
@@ -189,7 +208,7 @@ class KadasterService
         // Save to cach
         $item->set($response);
         $item->expiresAfter(3600);
-        $this->cash->save($item);
+        $this->cache->save($item);
 
         return $item->get();
     }
@@ -207,7 +226,7 @@ class KadasterService
     public function getLigplaats($id)
     {
         // Lets first try the cach
-        $item = $this->cash->getItem('ligplaats_'.md5($id));
+        $item = $this->cache->getItem('ligplaats_'.md5($id));
         if ($item->isHit()) {
             return $item->get();
         }
@@ -218,7 +237,7 @@ class KadasterService
         // Save to cach
         $item->set($response);
         $item->expiresAfter(3600);
-        $this->cash->save($item);
+        $this->cache->save($item);
 
         return $item->get();
     }
@@ -236,7 +255,7 @@ class KadasterService
     public function getStandplaats($id)
     {
         // Lets first try the cach
-        $item = $this->cash->getItem('standplaats_'.md5($id));
+        $item = $this->cache->getItem('standplaats_'.md5($id));
         if ($item->isHit()) {
             return $item->get();
         }
@@ -247,7 +266,7 @@ class KadasterService
         // Save to cach
         $item->set($response);
         $item->expiresAfter(3600);
-        $this->cash->save($item);
+        $this->cache->save($item);
 
         return $item->get();
     }
@@ -322,13 +341,20 @@ class KadasterService
         }
 
         // Then the apropriote openbare ruimte
-        $bijbehorendeOpenbareRuimte = $this->analyseUri($nummeraanduiding['_links']['bijbehorendeOpenbareRuimte']['href']);
+        $links['bijbehorendeOpenbareRuimte']['href'] = $nummeraanduiding['_links']['bijbehorendeOpenbareRuimte']['href'];
+        $bijbehorendeOpenbareRuimte = $this->analyseUri($links['bijbehorendeOpenbareRuimte']['href']);
         $nummeraanduiding['openbareRuimte'] = $this->getOpenbareruimte($bijbehorendeOpenbareRuimte['id']);
         $adres->setStraat($nummeraanduiding['openbareRuimte']['naam']);
 
         // Then the gemeente
-        $bijbehorendeOpenbareRuimte = $this->analyseUri($nummeraanduiding['openbareRuimte']['_links']['bijbehorendeWoonplaats']['href']);
+        $links['bijbehorendeWoonplaats']['href'] = $nummeraanduiding['openbareRuimte']['_links']['bijbehorendeWoonplaats']['href'];
+        $bijbehorendeOpenbareRuimte = $this->analyseUri($links['bijbehorendeWoonplaats']['href']);
         $nummeraanduiding['woonplaats'] = $this->getWoonplaats($bijbehorendeOpenbareRuimte['id']);
+
+        $links['adresseerbaarObject']['href'] = $nummeraanduiding['adres']['_links']['self']['href'];
+        $links['nummeraanduiding']['href'] = $nummeraanduiding['adres']['_links']['hoofdadres']['href'];
+
+        $adres->setLinks($links);
 
         $adres->setWoonplaats($nummeraanduiding['woonplaats']['naam']);
         $adres->setWoonplaatsNummer($nummeraanduiding['woonplaats']['identificatiecode']);

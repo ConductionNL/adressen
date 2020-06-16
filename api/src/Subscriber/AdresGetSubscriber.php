@@ -128,35 +128,38 @@ final class AdresGetSubscriber implements EventSubscriberInterface
                 $adressen = $this->kadasterService->getAdresOnHuisnummerPostcode($huisnummer, $postcode);
 
                 // If a huisnummer_toevoeging is provided we need to do some aditional filtering
-//            if ($huisnummerToevoeging) {
-//                $response['_links']['self'] = '/adressen?huisnummer=' . $huisnummer . '&huisnummertoevoeging=' . $huisnummerToevoeging . '&postcode=' . $postcode;
-//
-//                // Lets loop trough the addreses to see if we have a match
-//                $filterdAdressen = [];
-//                foreach ($adressen as $adres) {
-//                    if (array_key_exists('huisnummertoevoeging', $adres) && preg_match('/.*?' . strtolower($huisnummerToevoeging) . '.*?/', strtolower($adres['huisnummertoevoeging']))) {
-//                        $filterdAdressen[] = $adres;
-//                    }
-//                }
-//
-//                // we are only going to overide our initial result if we have more then one match
-//                if (count($filterdAdressen) > 0) {
-//                    $adressen = $filterdAdressen;
-//                }
-//            }
-
-                // Let then create the responce
-//            $response = [];
-//            $response['adressen'] = $adressen;
-//            $response['_links'] = ['self' => '/adressen?huisnummer=' . $huisnummer . '&postcode=' . $postcode];
-//            $response['totalItems'] = count($adressen);
-//            $response['itemsPerPage'] = 30;
-
-
+                if ($huisnummerToevoeging) {
+                    $results = [];
+                    foreach ($adressen as $adres){
+                        if(
+                            $adres instanceof Adres &&
+                            str_replace(" ","",strtolower($adres->getHuisnummerToevoeging())) == str_replace(" ","",strtolower($huisnummerToevoeging))
+                        ){
+                            $results[] = $adres;
+                        }
+                    }
+                    $adressen = $results;
+                }
+            }
+            switch($renderType){
+                case 'jsonld':
+                    $response['@context'] = "/contexts/Adres";
+                    $response['@id'] = "/adressen";
+                    $response['@type'] = "hydra:Collection";
+                    $response['hydra:member'] = $adressen;
+                    $response['hydra:totalItems'] = count($adressen);
+                    break;
+                default:
+                    $response['adressen'] = $adressen;
+                    $response['totalItems'] = count($adressen);
+                    $response['itemsPerPage'] = count($adressen);
+                    $response['_links'] = $response['_links'] = ['self' => '/adressen?huisnummer=' . $huisnummer . '&postcode=' . $postcode];
+                    break;
             }
 
+
             $response = $this->serializer->serialize(
-                $adressen,
+                $response,
                 $renderType,
                 ['enable_max_depth'=> true]
             );

@@ -2235,66 +2235,67 @@ components:
             url: 'http://schema.org/identifier'
           type: string
         type:
-          readOnly: true
           type: string
           nullable: true
         oppervlakte:
-          readOnly: true
           type: integer
           nullable: true
         huisnummer:
-          readOnly: true
           type: integer
           nullable: true
         huisnummerToevoeging:
-          readOnly: true
           type: string
           nullable: true
         straat:
-          readOnly: true
           type: string
           nullable: true
         postcode:
-          readOnly: true
           type: string
           nullable: true
         woonplaats:
-          readOnly: true
           type: string
           nullable: true
         woonplaatsNummer:
-          readOnly: true
           type: integer
           nullable: true
         gemeenteNummer:
-          readOnly: true
           type: integer
           nullable: true
         gemeenteRsin:
-          readOnly: true
           type: string
           nullable: true
         statusNummeraanduiding:
-          readOnly: true
           type: string
           nullable: true
         statusVerblijfsobject:
-          readOnly: true
           type: string
           nullable: true
         statusOpenbareRuimte:
-          readOnly: true
           type: string
           nullable: true
         statusWoonplaats:
-          readOnly: true
           type: string
           nullable: true
         links:
-          readOnly: true
           type: array
           items:
             type: string
+          nullable: true
+        nummeraanduiding:
+          type: string
+          nullable: true
+        bijbehorendeOpenbareRuimte:
+          type: string
+          nullable: true
+        bijbehorendeWoonplaats:
+          type: string
+          nullable: true
+        adresseerbaarObject:
+          type: string
+          nullable: true
+      required:
+        - straat
+        - postcode
     'Adres:jsonld-read':
       type: object
       description: 'An BAG addres.'
@@ -2315,66 +2316,67 @@ components:
             url: 'http://schema.org/identifier'
           type: string
         type:
-          readOnly: true
           type: string
           nullable: true
         oppervlakte:
-          readOnly: true
           type: integer
           nullable: true
         huisnummer:
-          readOnly: true
           type: integer
           nullable: true
         huisnummerToevoeging:
-          readOnly: true
           type: string
           nullable: true
         straat:
-          readOnly: true
           type: string
           nullable: true
         postcode:
-          readOnly: true
           type: string
           nullable: true
         woonplaats:
-          readOnly: true
           type: string
           nullable: true
         woonplaatsNummer:
-          readOnly: true
           type: integer
           nullable: true
         gemeenteNummer:
-          readOnly: true
           type: integer
           nullable: true
         gemeenteRsin:
-          readOnly: true
           type: string
           nullable: true
         statusNummeraanduiding:
-          readOnly: true
           type: string
           nullable: true
         statusVerblijfsobject:
-          readOnly: true
           type: string
           nullable: true
         statusOpenbareRuimte:
-          readOnly: true
           type: string
           nullable: true
         statusWoonplaats:
-          readOnly: true
           type: string
           nullable: true
         links:
-          readOnly: true
           type: array
           items:
             type: string
+          nullable: true
+        nummeraanduiding:
+          type: string
+          nullable: true
+        bijbehorendeOpenbareRuimte:
+          type: string
+          nullable: true
+        bijbehorendeWoonplaats:
+          type: string
+          nullable: true
+        adresseerbaarObject:
+          type: string
+          nullable: true
+      required:
+        - straat
+        - postcode
     AuditTrail-read:
       type: object
       description: 'An resource representing a log line.'
@@ -2761,6 +2763,10 @@ definitions:
         type: string
         example: e2984465-190a-4562-829e-a8cca81aa35d
         format: uuid
+      nummeraanduiding: []
+      bijbehorendeOpenbareRuimte: []
+      bijbehorendeWoonplaats: []
+      adresseerbaarObject: []
     required: []
   AuditTrail-read:
     properties:
@@ -2866,12 +2872,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-05-15 15:15:28'
+        example: '2020-06-16 07:18:19'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-05-15 15:15:28'
+        example: '2020-06-16 07:18:19'
     required: []
   AuditTrail-write:
     properties:
@@ -2919,12 +2925,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-05-15 15:15:28'
+        example: '2020-06-16 07:18:19'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-05-15 15:15:28'
+        example: '2020-06-16 07:18:19'
     required: []
   ChangeLog-write:
     properties:
