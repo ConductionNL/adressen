@@ -1,3 +1,4 @@
+{{ if or (eq .Values.settings.type "application") .Values.settings.web }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
