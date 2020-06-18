@@ -63,8 +63,8 @@ final class AdresGetSubscriber implements EventSubscriberInterface
                 $renderType = 'jsonhal';
                 break;
             default:
-                $contentType = 'application/ld+json';
-                $renderType = 'jsonld';
+                $contentType = 'application/hal+json';
+                $renderType = 'jsonhal';
         }
         $bagId = null;
         if( $route != 'api_adres_get_collection' && $path[1] == "adressen" || $route == 'api_adres_get_collection' && $bagId = $event->getRequest()->query->get('bagid') ){
