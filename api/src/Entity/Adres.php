@@ -7,6 +7,7 @@ use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\NumericFilter;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -24,6 +25,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  *
  * @ApiResource(
+ *     normalizationContext={"groups"={"read"}, "enable_max_depth"=true},
+ *     denormalizationContext={"groups"={"write"}, "enable_max_depth"=true},
  *     collectionOperations={
  *          "get"={
  *      		"path"="/adressen",
@@ -60,30 +63,28 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          }
  *     },
  *     itemOperations={
+ *        "get"={
+ *          "path"="/adressen/{id}",
+ *          "method"="GET"
+ *        }
  *     }
  * )
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Repository\AdresRepository")
  * @ApiFilter(NumericFilter::class, properties={"test"})
  */
 class Adres
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="string")
-     * @Assert\Length(
-     *     max = 16
-     * )
-     * @ApiProperty(
-     * 	   identifier=true,
-     *     attributes={
-     *         "swagger_context"={
-     *         	   "description" = "The BAG identifier of this address",
-     *             "type"="string",
-     *             "example"="0363200000218908"
-     *         }
-     *     }
-     * )
+     * @var string The UUID identifier of this object
+     *
+     * @example e2984465-190a-4562-829e-a8cca81aa35d
+     *
+     * @Groups({"read"})
+     * @Assert\Uuid
+     * @ORM\Id
+     * @ORM\Column(type="string", unique=true)
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
     private $id;
 
@@ -260,10 +261,12 @@ class Adres
     private $statusWoonplaats;
 
     /**
-     * @param array $links The Bag objects beloning to this adress.
+     * @param array $_links The Bag objects beloning to this adress.
      * @Groups({"read"})
      */
     private $links = [];
+
+
 
     public function getId(): ?string
     {

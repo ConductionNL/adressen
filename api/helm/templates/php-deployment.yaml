@@ -80,6 +80,11 @@ spec:
                   configMapKeyRef:
                       name: {{ template "fullname" . }}
                       key: app-type
+            - name: APP_WEB
+              valueFrom:
+                  configMapKeyRef:
+                      name: {{ template "fullname" . }}
+                      key: app-web
             {{ if .Values.settings.id }}
             - name: APP_ID
               valueFrom:
@@ -117,8 +122,13 @@ spec:
               valueFrom:
                   configMapKeyRef:
                       name: {{ template "fullname" . }}
-                      key: cache      
-            # organization
+                      key: cache
+            - name: APP_COMMONGROUND_BAG_APIKEY
+              valueFrom:
+                  configMapKeyRef:
+                      name: {{ template "fullname" . }}
+                      key: app-commonground-bag-apikey
+              # organization
             - name: ORGANIZATION_NAME
               valueFrom:
                 configMapKeyRef:
