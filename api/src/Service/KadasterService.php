@@ -73,7 +73,7 @@ class KadasterService
             $response = json_decode($this->client->request('GET',$response['_links']['next']['href'])->getBody(), true);
             $nummeraanduidingen['nummeraanduidingen'] = array_merge($nummeraanduidingen['nummeraanduidingen'], $response['_embedded']['nummeraanduidingen']);
         }
-        $this->cache->save($nummeraanduidingen);
+//        $this->cache->save($nummeraanduidingen);
 
         return $nummeraanduidingen;
     }
