@@ -332,11 +332,11 @@ class KadasterService
 
         // We want return a single housenumber suffix
         if (!array_key_exists('huisnummertoevoeging', $responce) && array_key_exists('huisletter', $responce)) {
-            $adres->setHuisnummerToevoeging($responce['huisletter']);
+            $adres->setHuisnummertoevoeging($responce['huisletter']);
             unset($responce['huisletter']);
         } elseif (array_key_exists('huisnummertoevoeging', $responce) && array_key_exists('huisletter', $responce)) {
             /* @todo uitzoeken of deze samentrekking conform de norm is */
-            $adres->setHuisnummerToevoeging($responce['huisletter'].' '.$responce['huisnummertoevoeging']);
+            $adres->setHuisnummertoevoeging($responce['huisletter'].' '.$responce['huisnummertoevoeging']);
             unset($responce['huisletter']);
         }
 
