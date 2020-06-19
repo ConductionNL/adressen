@@ -56,10 +56,10 @@ class KadasterService
     public function getNummeraanduidingen($query)
     {
         // Lets first try the cach
-        $item = $this->cache->getItem('nummeraanduidingen_'.md5($query));
-        if ($item->isHit()) {
-            return $item->get();
-        }
+//        $item = $this->cache->getItem('nummeraanduidingen_'.md5($query));
+//        if ($item->isHit()) {
+//            return $item->get();
+//        }
 
         $response = $this->client->request('GET', 'nummeraanduidingen', [
             'query' => $query,
