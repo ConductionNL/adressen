@@ -66,12 +66,12 @@ class KadasterService
         ]);
         $response = json_decode($response->getBody(), true);
         $nummeraanduidingen = $response['_embedded'];
-        while(key_exists("_links", $response)
-            && key_exists("next", $response['_links'])
-            && key_exists("href", $response['_links']['next'])
+        while (array_key_exists('_links', $response)
+            && array_key_exists('next', $response['_links'])
+            && array_key_exists('href', $response['_links']['next'])
             && !empty($response['_embedded']['nummeraanduidingen'])
-        ){
-            $response = json_decode($this->client->request('GET',$response['_links']['next']['href'])->getBody(), true);
+        ) {
+            $response = json_decode($this->client->request('GET', $response['_links']['next']['href'])->getBody(), true);
             $nummeraanduidingen['nummeraanduidingen'] = array_merge($nummeraanduidingen['nummeraanduidingen'], $response['_embedded']['nummeraanduidingen']);
         }
 //        $this->cache->save($nummeraanduidingen);
@@ -291,10 +291,9 @@ class KadasterService
     }
 
     // Somedoc block here
-    public function getObject($nummeraanduiding) : Adres
+    public function getObject($nummeraanduiding): Adres
     {
         $adres = new Adres();
-
 
         $adresseerbaarObject = $this->analyseUri($nummeraanduiding['_links']['adresseerbaarObject']['href']);
 
@@ -372,7 +371,6 @@ class KadasterService
 //
 //
 //        $this->manager->getRepository('App:Adres')->findBy(['id'=>$nummeraanduiding['identificatiecode']]);
-
 
         return $adres;
     }
