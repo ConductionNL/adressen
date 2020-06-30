@@ -110,6 +110,15 @@ paths:
             type: integer
             default: 1
         -
+          name: limit
+          in: query
+          required: false
+          description: 'The number of items per page'
+          schema:
+            type: integer
+            default: 30
+            minimum: 0
+        -
           name: Authorization
           description: 'The JWT of the entity performing the request'
           in: header
@@ -697,6 +706,15 @@ paths:
           schema:
             type: integer
             default: 1
+        -
+          name: limit
+          in: query
+          required: false
+          description: 'The number of items per page'
+          schema:
+            type: integer
+            default: 30
+            minimum: 0
         -
           name: Authorization
           description: 'The JWT of the entity performing the request'
@@ -1595,6 +1613,15 @@ paths:
             type: integer
             default: 1
         -
+          name: limit
+          in: query
+          required: false
+          description: 'The number of items per page'
+          schema:
+            type: integer
+            default: 30
+            minimum: 0
+        -
           name: Authorization
           description: 'The JWT of the entity performing the request'
           in: header
@@ -2243,7 +2270,7 @@ components:
         huisnummer:
           type: integer
           nullable: true
-        huisnummerToevoeging:
+        huisnummertoevoeging:
           type: string
           nullable: true
         straat:
@@ -2280,18 +2307,6 @@ components:
           type: array
           items:
             type: string
-          nullable: true
-        nummeraanduiding:
-          type: string
-          nullable: true
-        bijbehorendeOpenbareRuimte:
-          type: string
-          nullable: true
-        bijbehorendeWoonplaats:
-          type: string
-          nullable: true
-        adresseerbaarObject:
-          type: string
           nullable: true
       required:
         - straat
@@ -2324,7 +2339,7 @@ components:
         huisnummer:
           type: integer
           nullable: true
-        huisnummerToevoeging:
+        huisnummertoevoeging:
           type: string
           nullable: true
         straat:
@@ -2361,18 +2376,6 @@ components:
           type: array
           items:
             type: string
-          nullable: true
-        nummeraanduiding:
-          type: string
-          nullable: true
-        bijbehorendeOpenbareRuimte:
-          type: string
-          nullable: true
-        bijbehorendeWoonplaats:
-          type: string
-          nullable: true
-        adresseerbaarObject:
-          type: string
           nullable: true
       required:
         - straat
@@ -2763,10 +2766,6 @@ definitions:
         type: string
         example: e2984465-190a-4562-829e-a8cca81aa35d
         format: uuid
-      nummeraanduiding: []
-      bijbehorendeOpenbareRuimte: []
-      bijbehorendeWoonplaats: []
-      adresseerbaarObject: []
     required: []
   AuditTrail-read:
     properties:
@@ -2872,12 +2871,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-06-16 07:18:19'
+        example: '2020-06-30 07:00:00'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-06-16 07:18:19'
+        example: '2020-06-30 07:00:00'
     required: []
   AuditTrail-write:
     properties:
@@ -2925,12 +2924,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-06-16 07:18:19'
+        example: '2020-06-30 07:00:00'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-06-16 07:18:19'
+        example: '2020-06-30 07:00:00'
     required: []
   ChangeLog-write:
     properties:

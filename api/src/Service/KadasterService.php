@@ -69,6 +69,7 @@ class KadasterService
         while(key_exists("_links", $response)
             && key_exists("next", $response['_links'])
             && key_exists("href", $response['_links']['next'])
+            && !empty($response['_embedded']['nummeraanduidingen'])
         ){
             $response = json_decode($this->client->request('GET',$response['_links']['next']['href'])->getBody(), true);
             $nummeraanduidingen['nummeraanduidingen'] = array_merge($nummeraanduidingen['nummeraanduidingen'], $response['_embedded']['nummeraanduidingen']);
