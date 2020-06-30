@@ -102,7 +102,7 @@ final class AdresGetSubscriber implements EventSubscriberInterface
             if (!$huisnummerToevoeging) {
                 $huisnummerToevoeging = $event->getRequest()->query->get('huisnummertoevoeging');
             }
-            if($huisnummerToevoeging && trim($huisnummerToevoeging) == ""){
+            if($huisnummerToevoeging && str_replace(" ","",$huisnummerToevoeging)){
                 unset($huisnummerToevoeging);
             }
 
