@@ -102,6 +102,9 @@ final class AdresGetSubscriber implements EventSubscriberInterface
             if (!$huisnummerToevoeging) {
                 $huisnummerToevoeging = $event->getRequest()->query->get('huisnummertoevoeging');
             }
+            if($huisnummerToevoeging && trim($huisnummerToevoeging) == ""){
+                unset($huisnummerToevoeging);
+            }
 
             // Let clear up the postcode
             $postcode = preg_replace('/\s+/', '', $postcode);
