@@ -332,13 +332,24 @@ class KadasterService
         }
 
         // We want return a single housenumber suffix
-        if (!array_key_exists('huisnummertoevoeging', $responce) && array_key_exists('huisletter', $responce)) {
+        if ((!array_key_exists('huisnummertoevoeging', $responce) || $responce['huisnummertoevoeging'] == null) &&
+            (array_key_exists('huisletter', $responce) && $responce['huisletter'] != null) )
+        {
             $adres->setHuisnummertoevoeging($responce['huisletter']);
             unset($responce['huisletter']);
-        } elseif (array_key_exists('huisnummertoevoeging', $responce) && array_key_exists('huisletter', $responce)) {
+        }
+        elseif (array_key_exists('huisnummertoevoeging', $responce) && $responce['huisnummertoevoeging'] != null &&
+            array_key_exists('huisletter', $responce) && $responce['huisletter'] != null)
+        {
             /* @todo uitzoeken of deze samentrekking conform de norm is */
             $adres->setHuisnummertoevoeging($responce['huisletter'].' '.$responce['huisnummertoevoeging']);
             unset($responce['huisletter']);
+        }
+        elseif (array_key_exists('huisnummertoevoeging', $responce) && $responce['huisnummertoevoeging'] != null &&
+            (!array_key_exists('huisletter', $responce) || $responce['huisletter'] == null))
+        {
+            /* @todo uitzoeken of deze samentrekking conform de norm is */
+            $adres->setHuisnummertoevoeging($responce['huisnummertoevoeging']);
         }
 
         // Then the apropriote openbare ruimte
