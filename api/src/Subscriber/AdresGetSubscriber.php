@@ -61,8 +61,8 @@ final class AdresGetSubscriber implements EventSubscriberInterface
                 $renderType = 'jsonhal';
                 break;
             default:
-                $contentType = 'application/ld+json';
-                $renderType = 'jsonld';
+                $contentType = 'application/hal+json';
+                $renderType = 'jsonhal';
         }
         $bagId = null;
         if ($route != 'api_adres_get_collection' && $path[1] == 'adressen' || $route == 'api_adres_get_collection' && $bagId = $event->getRequest()->query->get('bagid')) {
@@ -95,6 +95,9 @@ final class AdresGetSubscriber implements EventSubscriberInterface
             if (!$huisnummerToevoeging) {
                 $huisnummerToevoeging = $event->getRequest()->query->get('huisnummertoevoeging');
             }
+            if($huisnummerToevoeging && str_replace(" ","",$huisnummerToevoeging) == ""){
+                unset($huisnummerToevoeging);
+            }
 
             // Let clear up the postcode
             $postcode = preg_replace('/\s+/', '', $postcode);
@@ -123,8 +126,8 @@ final class AdresGetSubscriber implements EventSubscriberInterface
                     foreach ($adressen as $adres) {
                         if (
                             $adres instanceof Adres &&
-                            str_replace(' ', '', strtolower($adres->getHuisnummerToevoeging())) == str_replace(' ', '', strtolower($huisnummerToevoeging))
-                        ) {
+                            str_replace(" ","",strtolower($adres->getHuisnummertoevoeging())) == str_replace(" ","",strtolower($huisnummerToevoeging))
+                        ){
                             $results[] = $adres;
                         }
                     }
