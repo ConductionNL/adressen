@@ -56,10 +56,10 @@ class KadasterService
     public function getNummeraanduidingen($query)
     {
         // Lets first try the cach
-        $item = $this->cache->getItem('nummeraanduidingen_'.md5($query));
-        if ($item->isHit()) {
-            return $item->get();
-        }
+//        $item = $this->cache->getItem('nummeraanduidingen_'.md5($query));
+//        if ($item->isHit()) {
+//            return $item->get();
+//        }
 
         $response = $this->client->request('GET', 'nummeraanduidingen', [
             'query' => $query,
@@ -69,11 +69,13 @@ class KadasterService
         while(key_exists("_links", $response)
             && key_exists("next", $response['_links'])
             && key_exists("href", $response['_links']['next'])
+            && $response['_links']['next']['href']
+            && !empty($response['_embedded']['nummeraanduidingen'])
         ){
             $response = json_decode($this->client->request('GET',$response['_links']['next']['href'])->getBody(), true);
-            $nummeraanduidingen['nummeraanduidingen'] = array_merge($nummeraanduidingen['nummeraanduidingen'], $response['_embedded']['nummeraanduidingen']);
+                $nummeraanduidingen['nummeraanduidingen'] = array_merge($nummeraanduidingen['nummeraanduidingen'], $response['_embedded']['nummeraanduidingen']);
         }
-        $this->cache->save($nummeraanduidingen);
+//        $this->cache->save($nummeraanduidingen);
 
         return $nummeraanduidingen;
     }
@@ -331,13 +333,24 @@ class KadasterService
         }
 
         // We want return a single housenumber suffix
-        if (!array_key_exists('huisnummertoevoeging', $responce) && array_key_exists('huisletter', $responce)) {
-            $adres->setHuisnummerToevoeging($responce['huisletter']);
+        if ((!array_key_exists('huisnummertoevoeging', $responce) || $responce['huisnummertoevoeging'] == null) &&
+            (array_key_exists('huisletter', $responce) && $responce['huisletter'] != null) )
+        {
+            $adres->setHuisnummertoevoeging($responce['huisletter']);
             unset($responce['huisletter']);
-        } elseif (array_key_exists('huisnummertoevoeging', $responce) && array_key_exists('huisletter', $responce)) {
+        }
+        elseif (array_key_exists('huisnummertoevoeging', $responce) && $responce['huisnummertoevoeging'] != null &&
+            array_key_exists('huisletter', $responce) && $responce['huisletter'] != null)
+        {
             /* @todo uitzoeken of deze samentrekking conform de norm is */
-            $adres->setHuisnummerToevoeging($responce['huisletter'].' '.$responce['huisnummertoevoeging']);
+            $adres->setHuisnummertoevoeging($responce['huisletter'].' '.$responce['huisnummertoevoeging']);
             unset($responce['huisletter']);
+        }
+        elseif (array_key_exists('huisnummertoevoeging', $responce) && $responce['huisnummertoevoeging'] != null &&
+            (!array_key_exists('huisletter', $responce) || $responce['huisletter'] == null))
+        {
+            /* @todo uitzoeken of deze samentrekking conform de norm is */
+            $adres->setHuisnummertoevoeging($responce['huisnummertoevoeging']);
         }
 
         // Then the apropriote openbare ruimte

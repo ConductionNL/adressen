@@ -144,7 +144,7 @@ class Adres
      *     max = 4
      * )
      */
-    private $huisnummerToevoeging;
+    private $huisnummertoevoeging;
 
     /**
      * @param string $straat The street name of this address.
@@ -316,14 +316,14 @@ class Adres
         return $this;
     }
 
-    public function getHuisnummerToevoeging(): ?string
+    public function getHuisnummertoevoeging(): ?string
     {
-        return $this->huisnummerToevoeging;
+        return $this->huisnummertoevoeging;
     }
 
-    public function setHuisnummerToevoeging(?string $huisnummerToevoeging): self
+    public function setHuisnummertoevoeging(?string $huisnummertoevoeging): self
     {
-        $this->huisnummerToevoeging = $huisnummerToevoeging;
+        $this->huisnummertoevoeging = $huisnummertoevoeging;
 
         return $this;
     }
