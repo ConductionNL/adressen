@@ -95,7 +95,7 @@ final class AdresGetSubscriber implements EventSubscriberInterface
             if (!$huisnummerToevoeging) {
                 $huisnummerToevoeging = $event->getRequest()->query->get('huisnummertoevoeging');
             }
-            if($huisnummerToevoeging && str_replace(" ","",$huisnummerToevoeging) == ""){
+            if ($huisnummerToevoeging && str_replace(' ', '', $huisnummerToevoeging) == '') {
                 unset($huisnummerToevoeging);
             }
 
@@ -126,8 +126,8 @@ final class AdresGetSubscriber implements EventSubscriberInterface
                     foreach ($adressen as $adres) {
                         if (
                             $adres instanceof Adres &&
-                            str_replace(" ","",strtolower($adres->getHuisnummertoevoeging())) == str_replace(" ","",strtolower($huisnummerToevoeging))
-                        ){
+                            str_replace(' ', '', strtolower($adres->getHuisnummertoevoeging())) == str_replace(' ', '', strtolower($huisnummerToevoeging))
+                        ) {
                             $results[] = $adres;
                         }
                     }
