@@ -120,7 +120,7 @@ spec:
                       key: cache
             - name: APP_COMMONGROUND_BAG_APIKEY
               valueFrom:
-                  configMapKeyRef:
+                  secretKeyRef:
                       name: {{ template "fullname" . }}
                       key: app-commonground-bag-apikey
               # organization
