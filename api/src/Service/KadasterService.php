@@ -292,10 +292,9 @@ class KadasterService
     }
 
     // Somedoc block here
-    public function getObject($nummeraanduiding) : Adres
+    public function getObject($nummeraanduiding): Adres
     {
         $adres = new Adres();
-
 
         $adresseerbaarObject = $this->analyseUri($nummeraanduiding['_links']['adresseerbaarObject']['href']);
 
@@ -384,7 +383,6 @@ class KadasterService
 //
 //
 //        $this->manager->getRepository('App:Adres')->findBy(['id'=>$nummeraanduiding['identificatiecode']]);
-
 
         return $adres;
     }
