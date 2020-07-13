@@ -76,7 +76,7 @@ class KadasterService
             $nummeraanduidingen['nummeraanduidingen'] = array_merge($nummeraanduidingen['nummeraanduidingen'], $response['_embedded']['nummeraanduidingen']);
         }
         $item->set($nummeraanduidingen);
-        $item->expiresAt(new \DateTime('tomorrow'));
+        $item->expiresAt(new \DateTime('tomorrow 4:59'));
         $this->cache->save($item);
 
         return $nummeraanduidingen;
@@ -94,7 +94,7 @@ class KadasterService
         $response = json_decode($response->getBody(), true);
 
         $item->set($response);
-        $item->expiresAt(new \DateTime('tomorrow'));
+        $item->expiresAt(new \DateTime('tomorrow 4:59'));
         $this->cache->save($item);
 
         return $item->get();
@@ -153,7 +153,7 @@ class KadasterService
 
         // Save to cach
         $item->set($response);
-        $item->expiresAfter(3600);
+        $item->expiresAt(new \DateTime('tomorrow 4:59'));
         $this->cache->save($item);
 
         return $item->get();
@@ -182,7 +182,7 @@ class KadasterService
 
         // Save to cach
         $item->set($response);
-        $item->expiresAfter(3600);
+        $item->expiresAt(new \DateTime('tomorrow 4:59'));
         $this->cache->save($item);
 
         return $item->get();
@@ -211,7 +211,7 @@ class KadasterService
 
         // Save to cach
         $item->set($response);
-        $item->expiresAfter(3600);
+        $item->expiresAt(new \DateTime('tomorrow 4:59'));
         $this->cache->save($item);
 
         return $item->get();
@@ -240,7 +240,7 @@ class KadasterService
 
         // Save to cach
         $item->set($response);
-        $item->expiresAfter(3600);
+        $item->expiresAt(new \DateTime('tomorrow 4:59'));
         $this->cache->save($item);
 
         return $item->get();
@@ -269,7 +269,7 @@ class KadasterService
 
         // Save to cach
         $item->set($response);
-        $item->expiresAfter(3600);
+        $item->expiresAt(new \DateTime('tomorrow 4:59'));
         $this->cache->save($item);
 
         return $item->get();
