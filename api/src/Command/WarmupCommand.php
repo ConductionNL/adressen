@@ -4,11 +4,9 @@
 
 namespace App\Command;
 
-use App\Service\HealthService;
 use App\Service\KadasterService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -52,14 +50,13 @@ class WarmupCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        if($input->getOption('houseNumber') && $input->getOption('postcode')){
+        if ($input->getOption('houseNumber') && $input->getOption('postcode')) {
             $houseNumber = $input->getOption('houseNumber');
             $postcode = $input->getOption('postcode');
-        }else{
-            $postcode='5382JX';
-            $houseNumber=1;
+        } else {
+            $postcode = '5382JX';
+            $houseNumber = 1;
         }
-
 
         /** @var string $version */
         $io->text("Warming up cache for postcode $postcode with house number $houseNumber");

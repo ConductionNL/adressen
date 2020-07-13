@@ -55,7 +55,6 @@ class KadasterService
 
     public function getNummeraanduidingen($query)
     {
-
         $item = $this->cache->getItem('nummeraanduidingen_'.md5(implode($query)));
         if ($item->isHit()) {
             return $item->get();
