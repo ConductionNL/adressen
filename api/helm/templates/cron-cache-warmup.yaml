@@ -19,7 +19,7 @@ spec:
           containers:
           - name: {{ include "name" . }}-php
             image: "{{ .Values.settings.registryBase }}/{{ .Values.settings.projectName }}-php:{{ .Values.settings.env }}"
-            imagePullPolicy: always
+            imagePullPolicy: Always
             args:
             - bin/console 
             - app:cache:warmup
