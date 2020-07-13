@@ -55,11 +55,10 @@ class KadasterService
 
     public function getNummeraanduidingen($query)
     {
-        // Lets first try the cach
-//        $item = $this->cache->getItem('nummeraanduidingen_'.md5($query));
-//        if ($item->isHit()) {
-//            return $item->get();
-//        }
+        $item = $this->cache->getItem('nummeraanduidingen_'.md5(implode($query)));
+        if ($item->isHit()) {
+            return $item->get();
+        }
 
         $response = $this->client->request('GET', 'nummeraanduidingen', [
             'query' => $query,
@@ -75,7 +74,9 @@ class KadasterService
             $response = json_decode($this->client->request('GET', $response['_links']['next']['href'])->getBody(), true);
             $nummeraanduidingen['nummeraanduidingen'] = array_merge($nummeraanduidingen['nummeraanduidingen'], $response['_embedded']['nummeraanduidingen']);
         }
-//        $this->cache->save($nummeraanduidingen);
+        $item->set($nummeraanduidingen);
+        $item->expiresAt(new \DateTime('tomorrow 4:59'));
+        $this->cache->save($item);
 
         return $nummeraanduidingen;
     }
@@ -92,7 +93,7 @@ class KadasterService
         $response = json_decode($response->getBody(), true);
 
         $item->set($response);
-        $item->expiresAt(new \DateTime('tomorrow'));
+        $item->expiresAt(new \DateTime('tomorrow 4:59'));
         $this->cache->save($item);
 
         return $item->get();
@@ -151,7 +152,7 @@ class KadasterService
 
         // Save to cach
         $item->set($response);
-        $item->expiresAfter(3600);
+        $item->expiresAt(new \DateTime('tomorrow 4:59'));
         $this->cache->save($item);
 
         return $item->get();
@@ -180,7 +181,7 @@ class KadasterService
 
         // Save to cach
         $item->set($response);
-        $item->expiresAfter(3600);
+        $item->expiresAt(new \DateTime('tomorrow 4:59'));
         $this->cache->save($item);
 
         return $item->get();
@@ -209,7 +210,7 @@ class KadasterService
 
         // Save to cach
         $item->set($response);
-        $item->expiresAfter(3600);
+        $item->expiresAt(new \DateTime('tomorrow 4:59'));
         $this->cache->save($item);
 
         return $item->get();
@@ -238,7 +239,7 @@ class KadasterService
 
         // Save to cach
         $item->set($response);
-        $item->expiresAfter(3600);
+        $item->expiresAt(new \DateTime('tomorrow 4:59'));
         $this->cache->save($item);
 
         return $item->get();
@@ -267,7 +268,7 @@ class KadasterService
 
         // Save to cach
         $item->set($response);
-        $item->expiresAfter(3600);
+        $item->expiresAt(new \DateTime('tomorrow 4:59'));
         $this->cache->save($item);
 
         return $item->get();
