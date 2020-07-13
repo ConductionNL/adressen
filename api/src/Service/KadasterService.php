@@ -55,11 +55,11 @@ class KadasterService
 
     public function getNummeraanduidingen($query)
     {
-        // Lets first try the cach
-//        $item = $this->cache->getItem('nummeraanduidingen_'.md5($query));
-//        if ($item->isHit()) {
-//            return $item->get();
-//        }
+
+        $item = $this->cache->getItem('nummeraanduidingen_'.md5(implode($query)));
+        if ($item->isHit()) {
+            return $item->get();
+        }
 
         $response = $this->client->request('GET', 'nummeraanduidingen', [
             'query' => $query,
@@ -75,7 +75,9 @@ class KadasterService
             $response = json_decode($this->client->request('GET', $response['_links']['next']['href'])->getBody(), true);
             $nummeraanduidingen['nummeraanduidingen'] = array_merge($nummeraanduidingen['nummeraanduidingen'], $response['_embedded']['nummeraanduidingen']);
         }
-//        $this->cache->save($nummeraanduidingen);
+        $item->set($nummeraanduidingen);
+        $item->expiresAt(new \DateTime('tomorrow'));
+        $this->cache->save($item);
 
         return $nummeraanduidingen;
     }
