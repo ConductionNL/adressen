@@ -126,7 +126,8 @@ final class AdresGetSubscriber implements EventSubscriberInterface
                     foreach ($adressen as $adres) {
                         if (
                             $adres instanceof Adres &&
-                            str_replace(' ', '', strtolower($adres->getHuisnummertoevoeging())) == str_replace(' ', '', strtolower($huisnummerToevoeging))
+                            str_replace(' ', '', strtolower($adres->getHuisnummertoevoeging())) == str_replace(' ', '', strtolower($huisnummerToevoeging)) ||
+                            strpos(str_replace(' ', '', strtolower($adres->getHuisnummertoevoeging())), str_replace(' ', '', strtolower($huisnummerToevoeging))) !== false
                         ) {
                             $results[] = $adres;
                         }
