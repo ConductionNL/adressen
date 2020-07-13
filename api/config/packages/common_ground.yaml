@@ -17,7 +17,7 @@ parameters:
     # Application Parameters
     env(APP_ENV): "prod"
     env(APP_DEBUG): false
-    env(APP_CACHE): false
+    env(APP_CACHE): true
     env(APP_AUTH): true
     env(AUDITTRAIL_ENABLED): true
     env(NOTIFICATION_ENABLED): false
@@ -64,6 +64,9 @@ parameters:
     app_web: "%env(APP_WEB)%"
     app_internal: "%env(APP_INTERNAL)%"
     app_build_all_fixtures: "%env(APP_BUILD_ALL_FIXTURES)%"
+    
+    #Adresservice specifics
+    app_commonground_bag_apikey: "%env(APP_COMMONGROUND_BAG_APIKEY)%"
 
     # Organisatie details
     env(GOOGLE_TAG_MANAGER_ID): ""
@@ -305,6 +308,9 @@ twig:
         app_repro: "%env(APP_REPRO)%"
         app_web: "%env(APP_WEB)%"
         app_build_all_fixtures: "%env(APP_BUILD_ALL_FIXTURES)%"
+
+        #Adresservice specifics
+        app_commonground_bag_apikey: "%env(APP_COMMONGROUND_BAG_APIKEY)%"
 
         # Security Details
         app_commonground_id: "%env(APP_COMMONGROUND_ID)%"
