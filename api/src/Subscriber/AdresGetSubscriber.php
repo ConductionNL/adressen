@@ -71,7 +71,6 @@ final class AdresGetSubscriber implements EventSubscriberInterface
             }
             $adres = $this->kadasterService->getAdresOnBagId($bagId);
 
-
             $response = $this->serializer->serialize(
                 $adres,
                 $renderType,
