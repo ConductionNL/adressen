@@ -84,7 +84,8 @@ final class AdresGetSubscriber implements EventSubscriberInterface
                 ['content-type' => $contentType]
             );
 
-            $event->setResponse($response);
+//            $event->setResponse($response);
+            $response->send();
         } else {
             $huisnummer = (int) $event->getRequest()->query->get('huisnummer');
             $postcode = $event->getRequest()->query->get('postcode');
