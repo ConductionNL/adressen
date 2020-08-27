@@ -3,14 +3,14 @@ entries:
   as:
   - apiVersion: v1
     appVersion: V.0.1
-    created: "2020-07-13T11:54:08.0394415Z"
+    created: "2020-08-27T07:12:08.7407626Z"
     description: '&#039;Naast deze JSON rest API is er ook een [graphql](/graphql)
       interface beschikbaar.&#039;'
-    digest: 36fcf4b47bd364e53de435c676560994aa11bd2a2afba4e45f61b4c03192cc4a
+    digest: 5091d724dc8b89bed014304b9f11e56771bb1a100f350107ed135b45c46f7c2e
     home: pc.zaakonline.nl
     icon: pc.zaakonline.nl
     name: as
     urls:
     - as-0.1.0.tgz
     version: 0.1.0
-generated: "2020-07-13T11:54:08.0330135Z"
+generated: "2020-08-27T07:12:08.7347961Z"
