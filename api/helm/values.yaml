@@ -16,8 +16,8 @@ settings:
   demo: as.zaakonline.nl
   container: https://hub.docker.com/repository/docker/conduction/as-php
   domain: conduction.nl
-  subdomain: pc
-  subpath: pc
+  subdomain: as
+  subpath: as
   subpathRouting: true
   organisationName: Conduction
   email: info@conduction.nl
