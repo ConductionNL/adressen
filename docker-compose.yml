@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.5'
 
 x-cache:
   &cache
@@ -6,72 +6,241 @@ x-cache:
     - ${CONTAINER_REGISTRY_BASE}/${CONTAINER_PROJECT_NAME}-php
     - ${CONTAINER_REGISTRY_BASE}/${CONTAINER_PROJECT_NAME}-nginx
     - ${CONTAINER_REGISTRY_BASE}/${CONTAINER_PROJECT_NAME}-varnish
-    - ${CONTAINER_REGISTRY_BASE}/${CONTAINER_PROJECT_NAME}-admin
-    - ${CONTAINER_REGISTRY_BASE}/${CONTAINER_PROJECT_NAME}-client
-    - ${CONTAINER_REGISTRY_BASE}/${CONTAINER_PROJECT_NAME}-h2-proxy
+    - ${CONTAINER_REGISTRY_BASE}/${CONTAINER_PROJECT_NAME}-phpdoc
+    - ${CONTAINER_REGISTRY_BASE}/${CONTAINER_PROJECT_NAME}-sphinx
 
 services:
-  adressen-php:
-    image: ${CONTAINER_REGISTRY_BASE}/${CONTAINER_PROJECT_NAME}-php
+  php:
+    &php
+    image: ${CONTAINER_REGISTRY_BASE}/${CONTAINER_PROJECT_NAME}-php:${APP_ENV}
     build:
       context: ./api
       target: api_platform_php
       <<: *cache
     depends_on:
       - db
-    # Comment out these volumes in production
     volumes:
       - ./api:/srv/api:rw,cached
+      - ./nlx-setup:/cert:rw,cached
+      #- ./nlx-setup:/Users/<your-username>/nlx-setup:rw,cached
       # If you develop on Linux, uncomment the following line to use a bind-mounted host directory instead
       # - ./api/var:/srv/api/var:rw
+    environment:
+      - CONTAINER_REGISTRY_BASE=${CONTAINER_REGISTRY_BASE}
+      - CONTAINER_PROJECT_NAME=${CONTAINER_PROJECT_NAME}
+      - CONTAINER_REPRO=${CONTAINER_REPRO}
+      #- DATABASE_URL=postgres://api-platform:!ChangeMe!@db/api?serverVersion=10.1
+      - DATABASE_URL=mysql://api-platform:!ChangeMe!@db/api?serverVersion=10.1
+      - APP_ENV=${APP_ENV}
+      - APP_DEBUG=${APP_DEBUG} 
+      - APP_CACHE=${APP_CACHE}
+      - APP_VERSION=${APP_VERSION}    
+      - APP_MAJOR_VERSION=${APP_MAJOR_VERSION}    
+      - APP_NAME=${APP_NAME} 
+      - APP_TITLE=${APP_TITLE}
+      - APP_ID=${APP_ID}
+      - APP_DOMAIN=${APP_DOMAIN}
+      - APP_SUBDOMAIN=${APP_SUBDOMAIN}
+      - APP_SUBPATH=${APP_SUBPATH}
+      - APP_SUBPATH_ROUTING=${APP_SUBPATH_ROUTING}
+      - APP_DEMO=${APP_DEMO}
+      - APP_REPRO=${APP_REPRO}
+      - APP_CONTAINER=${APP_CONTAINER}
+      - APP_DESCRIPTION=${APP_DESCRIPTION}
+      - APP_TYPE=${APP_TYPE}
+      - APP_LOGO=${APP_LOGO}
+      - APP_HOME=${APP_HOME}
+      - APP_COMMONGROUND_ID=${APP_COMMONGROUND_ID}
+      - APP_COMMONGROUND_BAG_APIKEY=${APP_COMMONGROUND_BAG_APIKEY}
+      - APP_COMMONGROUND_KEY=${APP_COMMONGROUND_KEY}
+      - APP_APPLICATION_KEY=${APP_APPLICATION_KEY}
+      - APP_USER_KEY=${APP_USER_KEY}
+      - APP_BUILD_ALL_FIXTURES=${APP_BUILD_ALL_FIXTURES}
+      - APP_WEB=${APP_WEB}
+      - APP_INTERNAL${APP_INTERNAL}
+      - ORGANIZATION_NAME=${ORGANIZATION_NAME}
+      - ORGANIZATION_EMAIL_ADDRESS=${ORGANIZATION_EMAIL_ADDRESS}
+      - ORGANIZATION_COUNTRY_NAME=${ORGANIZATION_COUNTRY_NAME}
+      - ORGANIZATION_STATE=${ORGANIZATION_STATE}
+      - ORGANIZATION_LOCALITY=${ORGANIZATION_LOCALITY}
+      - ORGANIZATION_UNIT_NAME=${ORGANIZATION_UNIT_NAME}
+      - TRUSTED_PROXIES=${TRUSTED_PROXIES}
+      - TRUSTED_HOSTS=${TRUSTED_HOSTS}
+      - AUTH_ENABLED=${AUTH_ENABLED}
+      - AUTH_PROVIDER_USER=${AUTH_PROVIDER_USER}
+      - AUTH_PROVIDER_APPLICATION=${AUTH_PROVIDER_APPLICATION}
+      - AUDITTRAIL_ENABLED=${AUDITTRAIL_ENABLED}
+      - NOTIFICATION_ENABLED=${NOTIFICATION_ENABLED}
+      - HEALTH_ENABLED=${HEALTH_ENABLED}
+      - ARCHIVE_ENABLED=${ARCHIVE_ENABLED}
+      - NLX_OUTWAY=${NLX_OUTWAY}
+      - NLX_INWAY=${NLX_INWAY}
+      - APP_COMMONGROUND_ZRC_LOCATION=${APP_COMMONGROUND_ZRC_LOCATION}
+      - APP_COMMONGROUND_ZTC_LOCATION=${APP_COMMONGROUND_ZTC_LOCATION}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    ports:
+      - "82:80"
 
-  adressen-api:
-    image: ${CONTAINER_REGISTRY_BASE}/${CONTAINER_PROJECT_NAME}-nginx
+  api:
+    &nginx
+    image: ${CONTAINER_REGISTRY_BASE}/${CONTAINER_PROJECT_NAME}-nginx:${APP_ENV}
     build:
       context: ./api
       target: api_platform_nginx
       <<: *cache
     depends_on:
-      - adressen-php
+      - php
+    # Comment out this volume in production if you do not want to use nlx
+    #  - nlx-outway
+    # If you us this docker-compose file for production enviroments and want to us nlx-inway uncomment the following lins
+    #  - nlx-inway
     # Comment out this volume in production
     volumes:
       - ./api/public:/srv/api/public:ro
     ports:
-      - "8080:80"
+      - "80:80"
+    environment:
+      - NGINX_HOST=php
 
-  adressen-cache-proxy:
-    image: ${CONTAINER_REGISTRY_BASE}/${CONTAINER_PROJECT_NAME}-varnish
+  cache-proxy:
+    &varnish
+    image: ${CONTAINER_REGISTRY_BASE}/${CONTAINER_PROJECT_NAME}-varnish:${APP_ENV}
     build:
       context: ./api
       target: api_platform_varnish
       <<: *cache
     depends_on:
-      - adressen-api
+      - api
+      - php
     volumes:
-      - ./api/docker/varnish/conf:/usr/local/etc/varnish:ro
+      - ./api/docker/varnish/conf:/usr/local/etc/varnish:rw,cached
     tmpfs:
       - /usr/local/var/varnish:exec
     ports:
-      - "8081:80"
-
-  db:
-    # In production, you may want to use a managed database service
-    image: postgres:10-alpine
+     - "81:80"
     environment:
-      - POSTGRES_DB=api
-      - POSTGRES_USER=api-platform
+     - BACKENDS=php
+      
+ # nlx-outway:
+ #   image: ${CONTAINER_REGISTRY_BASE}/${CONTAINER_PROJECT_NAME}-nlx-outway:${APP_ENV}
+ #   build:
+ #     context: ./api
+ #     target: api-nlx-outway
+ #   depends_on:
+ #     - nlx-postgres
+ #   volumes:
+ #     - ./api/nlx-setup:/certs:rw,cached
+ #   environment:
+ #     - DIRECTORY_INSPECTION_ADDRESS=directory-inspection-api.demo.nlx.io:443 
+ #     - TLS_NLX_ROOT_CERT=/certs/root.crt 
+ #     - TLS_ORG_CERT=/certs/org.crt 
+ #     - TLS_ORG_KEY=/certs/org.key 
+ #     - POSTGRES_DSN=postgres://postgres:postgres@nlx-postgres/txlog-db?sslmode=disable&connect_timeout=10
+ #   networks:
+ #     - nlx
+    
+ # Uncomment the follwoign lines if you want to deploy trough a docker-compose chart and wish to use an nlx inway
+ # 
+ # nlx-inway:
+ #   image: ${CONTAINER_REGISTRY_BASE}/${CONTAINER_PROJECT_NAME}-nlx-inway:${APP_ENV}
+ #   build:
+ #     context: ./api
+ #     target: api-nlx-inway
+ #   depends_on:
+ #     - nlx-postgres
+ #   volumes:
+ #     - ./api/nlx-setup:/certs:rw,cached
+ #   environment:
+ #     - DIRECTORY_REGISTRATION_ADDRESS=directory-registration-api.demo.nlx.io:443 
+ #     - SELF_ADDRESS=pc.zaakonline.nl:443 
+ #     - SERVICE_CONFIG=/service-config.toml 
+ #     - TLS_NLX_ROOT_CERT=/certs/root.crt 
+ #     - TLS_ORG_CERT=/certs/org.crt 
+ #     - TLS_ORG_KEY=/certs/org.key 
+ #     - POSTGRES_DSN=postgres://postgres:postgres@nlx-postgres/txlog-db?sslmode=disable&connect_timeout=10
+ #   networks:
+ #     -  nlx
+  
+  # Comment out this service in production if you do not want to use nlx
+ # nlx-postgres:
+ #   image: postgres:12
+ #   environment:
+ #     POSTGRES_PASSWORD: postgres
+ #     POSTGRES_DB: txlog-db
+ #     POSTGRES_USER: postgres
+ #   volumes:
+ #     - nlx-data-2:/var/lib/postgresql/data:rw
+ #   networks:
+ #     - nlx
+      
+  # Comment out this service in production if you do not want to use nlx
+  #txlog-db:
+  #  image: nlxio/txlog-db
+  #  depends_on:
+  #    - nlx-postgres
+  #    - nlx-outway
+    # If you us this docker-compose file for production enviroments and want to us nlx-inway uncomment the following lins
+    #  - nlx-inway
+  #  environment:
+  #    PGHOST: nlx-postgres
+  #    PGUSER: postgres
+  #    PGPASSWORD: postgres
+  #    PGDATABASE: txlog-db
+  #  command: /usr/local/bin/upgrade-db.sh
+  #  networks:
+  #    - nlx
+    
+  #db:
+  #  image: postgres:10-alpine
+  #  environment:
+  #    - POSTGRES_DB=api
+  #    - POSTGRES_USER=api-platform
       # You should definitely change the password in production
-      - POSTGRES_PASSWORD=!ChangeMe!
+  #    - POSTGRES_PASSWORD=!ChangeMe!
+  #  volumes:
+  #    - db-data:/var/lib/postgresql/data:rw
+  
+  # From: https://hub.docker.com/r/phpdoc/phpdoc/
+  phpDocumentor:
+    image: phpdoc/phpdoc
+    
+  helmPackage:
+    image: alpine/helm:3.2.1
+    volumes: 
+      - ./api/helm:/apps
+    command: package /apps 
+    
+  helmIndex:
+    depends_on:
+      - helmPackage
+    image: alpine/helm:3.2.1
     volumes:
-      - db-data:/var/lib/postgresql/data:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
+      - ./api/helm:/apps
+    command: repo index /apps
+    
+  redis:
+    image: redis:4-alpine
+      
+  # From: tsgkadot/docker-doxygen    
+  sphinx:
+    image: tsgkadot/docker-doxygen
+      
+  db:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=example
+      - MYSQL_DATABASE=api
+      - MYSQL_USER=api-platform
+      - MYSQL_PASSWORD=!ChangeMe!
+    volumes:
+      - db-mysql:/var/lib/mysql:rw 
     ports:
-      - "5432:5432"
+     - "3366:3306"
 
   mercure:
     # In production, you may want to use the managed version of Mercure, https://mercure.rocks
-    image: dunglas/mercure
+    image: dunglas/mercure:v0.9
     environment:
       # You should definitely change all these values in production
       - JWT_KEY=!UnsecureChangeMe!
@@ -81,54 +250,12 @@ services:
       - DEMO=1
     ports:
       - "1337:80"
-  
-  client:
-    # Use a static website hosting service in production
-    # See https://facebook.github.io/create-react-app/docs/deployment
-    image: ${CONTAINER_REGISTRY_BASE}/${CONTAINER_PROJECT_NAME}-client
-    build:
-      context: ./client
-      cache_from:
-        - ${CONTAINER_REGISTRY_BASE}/${CONTAINER_PROJECT_NAME}-client
-    env_file:
-      - ./client/.env
-    volumes:
-      - ./client:/usr/src/client:rw,cached
-      - /usr/src/client/node_modules
-    ports:
-      - "80:3000"
 
-  admin:
-    # Use a static website hosting service in production
-    # See https://facebook.github.io/create-react-app/docs/deployment
-    image: ${CONTAINER_REGISTRY_BASE}/${CONTAINER_PROJECT_NAME}-admin
-    build:
-      context: ./admin
-      cache_from:
-        - ${CONTAINER_REGISTRY_BASE}/${CONTAINER_PROJECT_NAME}-admin
-    volumes:
-      - ./admin:/usr/src/admin:rw,cached
-      - /usr/src/admin/node_modules
-    ports:
-      - "81:3000"
-
-  h2-proxy:
-    # Don't use this proxy in prod
-    build:
-      context: ./h2-proxy
-      cache_from:
-        - ${CONTAINER_REGISTRY_BASE}/${CONTAINER_PROJECT_NAME}-h2-proxy
-    depends_on:
-      - db
-      - client
-      - admin
-      - adressen-api
-      - adressen-cache-proxy
-    ports:
-      - "443:443"
-      - "444:444"
-      - "8443:8443"
-      - "8444:8444"
+networks:
+  nlx:
+    name: nlx
 
 volumes:
   db-data: {}
+  db-mysql: {}
+  nlx-data-2: {}

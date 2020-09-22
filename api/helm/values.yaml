@@ -1,60 +1,106 @@
 # Default values for api.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-docker:
-  containerRegistryBase: docker.io/conduction/
-  containerProjectName: adressen
 
-php:
-  repository: docker.io/conduction/adressen-php
-  tag: latest
-  pullPolicy: Always
+settings:
+  registryBase: docker.io/conduction
+  projectName: as
+  name: as
+  title: Adressen component
+  version: V1.0
+  majorVersion: v1
+  id: 
+  description: '&#039;Naast deze JSON rest API is er ook een [graphql](/graphql) interface beschikbaar.&#039;'
+  type: component
+  repro: https://github.com/ConductionNL/adresservice
+  demo: as.zaakonline.nl
+  container: https://hub.docker.com/repository/docker/conduction/as-php
+  domain: conduction.nl
+  subdomain: as
+  subpath: as
+  subpathRouting: true
+  organisationName: Conduction
+  email: info@conduction.nl
+  country: Netherlands
+  state: Noord-Holland
+  locality: Amsterdam
+  unit: Common-Ground
+  env: dev
+  web: false
+  debug: 1
+  cache: 1
   replicaCount: 1
-  mercure:
-    jwtSecret: ""
-  env: prod
-  debug: '0'
-  secret: ""
   corsAllowOrigin: ['*']
-  trustedHosts: '^(.+\.)?common-ground\.dev$|^(.+\.)?zaakonline\.nl$|^example\.com$|^(.+\.)?178.128.142.152$|178.128.142.152|localhost'
+  trustedHosts: '^.+$'
+  pullPolicy: Always
+  # You will need these proxies on kubernetes
   trustedProxies:
     - 10.0.0.0/8
     - 172.16.0.0/12
     - 192.168.0.0/16
+  # If you are runnig a single component on a kubernetes cluster you can just easaliy enable the load balancer, if not you need to set up a multi component load balancer
+  loadbalancerEnabled: false
+  # If you want to enable NLX you are requered to add the appropreate certificates to you nlx-settings folder (located in the /api folder)
+  nlxInwayEnabled: false
+  # If you are runnig a single component on a kubernetes cluster you can just easaliy enable the load balancer, if not you need to set up a multi component load balancer
+  notificationEnabled: false
+  audittrailEnabled: false
+  authorisationEnabled: false
+  healthEnabled: false
+  archiveEnabled: false
+  bagkey: 
+
+security:
+  commongroundId: "9329d8d0-1d5e-433c-bb47-6991053c7fcb"
+  commongroundKey: "9329d8d0-1d5e-433c-bb47-6991053c7fcb"
+  applicationKey: "45c1a4b6-59d3-4a6e-86bf-88a872f35845"
+  userKey: "79d5b14c-70ab-41fb-ac02-917e3288870b"
+  authorisationProviderUser: https://uc.zuid-drecht.nl
+  authorisationProviderApplication: https://openzaak.dev.zuid-drecht.nl/authorizaties/api/v1
+
+
+php:
+  repository: docker.io/conduction/protocomponent-php
+  tag: latest
+  mercure:
+    jwtSecret: ""
+  env: prod
+  secret: ""
+  replicaCount: 2
 
 nginx:
-  repository: docker.io/conduction/adressen-nginx
+  repository: docker.io/conduction/protocomponent-nginx
   tag: latest
   pullPolicy: Always
-  replicaCount: 1
+  replicaCount: 2
 
 varnish:
   enabled: true
-  #url: https://zaakonline.nl
-  repository: docker.io/conduction/adressen-varnish
+  #url: https://example.com
+  repository: docker.io/conduction/protocomponent-varnish
   tag: latest
   pullPolicy: Always
   replicaCount: 1
 
 postgresql:
-  enabled: false
+  enabled: true
   imageTag: 10-alpine
   # If bringing your own PostgreSQL, the full uri to use
-  url: postgres://adressen-demo:fptej5iw7qh43cju@den-bosh-postgresql-ams3-03414-do-user-4716261-0.db.ondigitalocean.com:25060/adressen-demo?sslmode=require
+  #url: pgsql://api-platform:!ChangeMe!@example.com/api?serverVersion=10.1
   postgresqlUsername: "example"
   postgresqlPassword: "!ChangeMe!"
   postgresqlDatabase: "api"
   # Persistent Volume Storage configuration.
   # ref: https://kubernetes.io/docs/user-guide/persistent-volumes
   persistence:
-    enabled: true
+    enabled: false
   pullPolicy: IfNotPresent
 #  image:
 #    repository: postgres
 #    tag: alpine
 
 mercure:
-  enabled: false
+  enabled: true
   publishUrl: http://mercure/hub
   subscribeUrl: https://mercure.example.com/hub
   allowAnonymous: "1"
@@ -63,6 +109,15 @@ mercure:
   service:
     type: NodePort
     port: 80
+
+redis:
+    port: 6379
+    version: 5.0
+    memory: 100Mi
+    cpu: 100m
+    limits:
+        memory: 200Mi
+        cpu: 250m
 
 ingress:
   annotations:
