@@ -506,9 +506,9 @@
 	],
 	"variable": [
 		{
-			"id": "d916c0dc-9332-419c-8b86-aa033d71a53f",
+			"id": "51508bef-040e-454c-a4b1-09d8c5af12e9",
 			"key": "baseUrl",
-			"value": "as.dev.zuid-drecht.nl"
+			"value": "https://as.dev.zuid-drecht.nl"
 		}
 	],
 	"protocolProfileBehavior": {}
