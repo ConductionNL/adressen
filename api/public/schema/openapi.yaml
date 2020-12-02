@@ -10,9 +10,9 @@ info:
     - Version: V1.0
     - Repository: [online](https://github.com/ConductionNL/adresservice) / [zip](https://github.com/ConductionNL/adresservice/archive/master.zip)
     - Docker Image: [online](https://hub.docker.com/repository/docker/conduction/as-php) 
-    - Datamodel: [postman](/schema/as.postman_collection.json) / [oas](/schema/openapi.yaml) / [pdf](/schema/datamodel.pdf) / [modelio (zip)](/schema/Datamodel_Modelio.zip) 
+    - Datamodel: [postman](schema/as.postman_collection.json) / [oas](schema/openapi.yaml) / [pdf](schema/datamodel.pdf) / [modelio (zip)](schema/Datamodel_Modelio.zip) 
     
-    Naast deze JSON rest API is er ook een [graphql](/graphql) interface beschikbaar.         
+    'Naast deze JSON rest API is er ook een [graphql](/graphql) interface beschikbaar.'         
     
 paths:
   /adressen:
@@ -2883,12 +2883,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-10-16 13:43:02'
+        example: '2020-12-02 09:14:46'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-10-16 13:43:02'
+        example: '2020-12-02 09:14:46'
     required: []
   AuditTrail-write:
     properties:
@@ -2936,12 +2936,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-10-16 13:43:02'
+        example: '2020-12-02 09:14:46'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-10-16 13:43:02'
+        example: '2020-12-02 09:14:46'
     required: []
   ChangeLog-write:
     properties:
