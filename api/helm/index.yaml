@@ -3,10 +3,10 @@ entries:
   as:
   - apiVersion: v1
     appVersion: V1.0
-    created: "2020-12-02T11:33:07.0646923Z"
+    created: "2020-12-02T12:34:26.5556839Z"
     description: '&#039;Naast deze JSON rest API is er ook een [graphql](/graphql)
       interface beschikbaar.&#039;'
-    digest: 61369413e3b64809fe5a5eb8d8e7180524c5bd9644c54cb197d33574f9bf51a8
+    digest: 1f2df755a6b8a63553472d2497eb6c29b4c689f1710ebd14dc13933620ebd110
     home: pc.zaakonline.nl
     icon: pc.zaakonline.nl
     name: as
@@ -18,7 +18,7 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 11.10.0
-    created: "2020-12-02T11:33:07.0812321Z"
+    created: "2020-12-02T12:34:26.5695357Z"
     dependencies:
     - name: common
       repository: https://charts.bitnami.com/bitnami
@@ -47,4 +47,4 @@ entries:
     urls:
     - charts/postgresql-10.1.1.tgz
     version: 10.1.1
-generated: "2020-12-02T11:33:07.050996Z"
+generated: "2020-12-02T12:34:26.5404218Z"
