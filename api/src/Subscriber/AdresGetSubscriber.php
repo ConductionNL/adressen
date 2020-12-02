@@ -43,7 +43,7 @@ final class AdresGetSubscriber implements EventSubscriberInterface
         $method = $event->getRequest()->getMethod();
 
         // Lats make sure that some one posts correctly
-        if (Request::METHOD_GET !== $method || ($route != 'api_adres_get_collection' && $path[1] != 'adressen')) {
+        if (Request::METHOD_GET !== $method || ($route != 'api_adres_get_collection' && !in_array('adressen', $path))) {
             return;
         }
         $contentType = $event->getRequest()->headers->get('accept');
@@ -65,9 +65,9 @@ final class AdresGetSubscriber implements EventSubscriberInterface
                 $renderType = 'jsonhal';
         }
         $bagId = null;
-        if ($route != 'api_adres_get_collection' && $path[1] == 'adressen' || $route == 'api_adres_get_collection' && $bagId = $event->getRequest()->query->get('bagid')) {
+        if (($route != 'api_adres_get_collection' && in_array('adressen', $path)) || ($route == 'api_adres_get_collection' && $bagId = $event->getRequest()->query->get('bagid'))) {
             if (!$bagId) {
-                $bagId = $path[2];
+                $bagId = end($path);
             }
             $adres = $this->kadasterService->getAdresOnBagId($bagId);
 
