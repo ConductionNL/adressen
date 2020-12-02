@@ -122,11 +122,6 @@ spec:
                   configMapKeyRef:
                       name: {{ template "fullname" . }}
                       key: cache
-            - name: APP_COMMONGROUND_BAG_APIKEY
-              valueFrom:
-                  secretKeyRef:
-                      name: {{ template "fullname" . }}
-                      key: app-commonground-bag-apikey
               # organization
             - name: ORGANIZATION_NAME
               valueFrom:
@@ -253,6 +248,24 @@ spec:
                 secretKeyRef:
                   name: {{ template "fullname" . }}
                   key: app_user_key
+
+            -   name: APP_COMMONGROUND_BAG_APIKEY
+                valueFrom:
+                    secretKeyRef:
+                        name: {{ template "fullname" . }}
+                        key: app_commonground_bag_apikey
+                  
+                #Redis
+            -   name: REDIS_HOST
+                valueFrom:
+                    configMapKeyRef:
+                        name: {{ template "fullname" . }}
+                        key: redis-host
+            -   name: REDIS_PORT
+                valueFrom:
+                    configMapKeyRef:
+                        name: {{ template "fullname" . }}
+                        key: redis-port
             - name: APP_URL
               {{- if and (eq $.Values.settings.env "prod") (eq $.Values.settings.type "component") }}
               value: https://{{ $.Values.settings.domain }}/api/{{ $.Values.settings.majorVersion }}/{{ $.Values.settings.subpath }}
