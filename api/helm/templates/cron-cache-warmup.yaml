@@ -18,7 +18,11 @@ spec:
         spec:
           containers:
           - name: {{ include "name" . }}-php
+          {{ if eq .Values.settings.env "prod"}}
+            image: "{{ .Values.settings.registryBase }}/{{ .Values.settings.projectName }}-php:latest"
+        {{ else }}
             image: "{{ .Values.settings.registryBase }}/{{ .Values.settings.projectName }}-php:{{ .Values.settings.env }}"
+        {{ end }}
             imagePullPolicy: Always
             args:
             - bin/console 
