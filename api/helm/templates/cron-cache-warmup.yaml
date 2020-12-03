@@ -234,7 +234,7 @@ spec:
                 valueFrom:
                     secretKeyRef:
                         name: {{ template "fullname" . }}
-                        key: app-commonground-bag-apikey
+                        key: app_commonground_bag_apikey
            
             #Redis
             -   name: REDIS_HOST
