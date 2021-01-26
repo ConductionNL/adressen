@@ -26,6 +26,8 @@ data:
   app-type: {{ .Values.settings.type | quote }}
   app-commonground-bag-apikey: {{ .Values.settings.bagkey | quote }}
   app-web: {{ .Values.settings.web | quote }}
+  app-subpath-routing: {{ .Values.settings.subpathRouting | quote }}
+  app-subpath: {{ .Values.settings.subpath | quote }}
   
   app-auth: {{ .Values.settings.authorisationEnabled | quote }}
   app-audittrail: {{ .Values.settings.audittrailEnabled | quote }}
@@ -50,3 +52,6 @@ data:
   varnish-url: {{ if .Values.varnish.enabled }}http://varnish{{ else }}{{ .Values.varnish.url | quote }}{{ end }}
   mercure-publish-url: {{ .Values.mercure.publishUrl | quote }}
   mercure-subscribe-url: {{ .Values.mercure.subscribeUrl | quote }}
+
+  redis-host: '{{ .Values.settings.name }}-cache'
+  redis-port: {{ .Values.redis.port | toString | quote }}

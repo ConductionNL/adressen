@@ -43,7 +43,7 @@ final class AdresGetSubscriber implements EventSubscriberInterface
         $method = $event->getRequest()->getMethod();
 
         // Lats make sure that some one posts correctly
-        if (Request::METHOD_GET !== $method || ($route != 'api_adres_get_collection' && $path[1] != 'adressen')) {
+        if (Request::METHOD_GET !== $method || ($route != 'api_adres_get_collection' && !in_array('adressen', $path))) {
             return;
         }
         $contentType = $event->getRequest()->headers->get('accept');
@@ -65,9 +65,9 @@ final class AdresGetSubscriber implements EventSubscriberInterface
                 $renderType = 'jsonhal';
         }
         $bagId = null;
-        if ($route != 'api_adres_get_collection' && $path[1] == 'adressen' || $route == 'api_adres_get_collection' && $bagId = $event->getRequest()->query->get('bagid')) {
+        if (($route != 'api_adres_get_collection' && in_array('adressen', $path)) || ($route == 'api_adres_get_collection' && $bagId = $event->getRequest()->query->get('bagid'))) {
             if (!$bagId) {
-                $bagId = $path[2];
+                $bagId = end($path);
             }
             $adres = $this->kadasterService->getAdresOnBagId($bagId);
 
@@ -84,7 +84,8 @@ final class AdresGetSubscriber implements EventSubscriberInterface
                 ['content-type' => $contentType]
             );
 
-            $event->setResponse($response);
+//            $event->setResponse($response);
+            $response->send();
         } else {
             $huisnummer = (int) $event->getRequest()->query->get('huisnummer');
             $postcode = $event->getRequest()->query->get('postcode');
@@ -95,7 +96,7 @@ final class AdresGetSubscriber implements EventSubscriberInterface
             if (!$huisnummerToevoeging) {
                 $huisnummerToevoeging = $event->getRequest()->query->get('huisnummertoevoeging');
             }
-            if($huisnummerToevoeging && str_replace(" ","",$huisnummerToevoeging) == ""){
+            if ($huisnummerToevoeging && str_replace(' ', '', $huisnummerToevoeging) == '') {
                 unset($huisnummerToevoeging);
             }
 
@@ -126,8 +127,9 @@ final class AdresGetSubscriber implements EventSubscriberInterface
                     foreach ($adressen as $adres) {
                         if (
                             $adres instanceof Adres &&
-                            str_replace(" ","",strtolower($adres->getHuisnummertoevoeging())) == str_replace(" ","",strtolower($huisnummerToevoeging))
-                        ){
+                            str_replace(' ', '', strtolower($adres->getHuisnummertoevoeging())) == str_replace(' ', '', strtolower($huisnummerToevoeging)) ||
+                            strpos(str_replace(' ', '', strtolower($adres->getHuisnummertoevoeging())), str_replace(' ', '', strtolower($huisnummerToevoeging))) !== false
+                        ) {
                             $results[] = $adres;
                         }
                     }
