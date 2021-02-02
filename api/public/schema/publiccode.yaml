@@ -114,3 +114,7 @@ dependsOn:
     - name: Kubernetes
       versionMin: "1.15.5-do.1"
 
+installations:
+    - type: helm
+      url: "https://github.com/ConductionNL/adresservice/raw/master/api/helm/as-0.1.0.tgz"
+
