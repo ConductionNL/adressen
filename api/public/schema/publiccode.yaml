@@ -119,6 +119,5 @@ dependsOn:
 
 installations:
     - type: helm
-      url: "https://raw.githubusercontent.com/ConductionNL/adresservice/master/api/helm/"
-
+      url: "https://raw.githubusercontent.com/ConductionNL/OpenWebConcept/master/wordpress-docker/helm/"
 
