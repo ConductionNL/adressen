@@ -119,5 +119,6 @@ dependsOn:
 
 installations:
     - type: helm
-      url: "https://github.com/ConductionNL/adresservice/raw/master/api/helm/as-0.1.0.tgz"
+      url: "https://raw.githubusercontent.com/ConductionNL/adresservice/master/api/helm/"
+
 
