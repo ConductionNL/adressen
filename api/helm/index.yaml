@@ -3,13 +3,26 @@ entries:
   as:
   - apiVersion: v1
     appVersion: V1.0
-    created: "2020-12-02T11:33:07.0646923Z"
-    description: '&#039;Naast deze JSON rest API is er ook een [graphql](/graphql)
-      interface beschikbaar.&#039;'
-    digest: 61369413e3b64809fe5a5eb8d8e7180524c5bd9644c54cb197d33574f9bf51a8
+    created: "2021-02-16T21:03:56.7748088Z"
+    description: Naast deze JSON rest API is er ook een [graphql](/graphql) interface
+      beschikbaar.
+    digest: ab719b968c01ae014b528f7eb6f2205951e6dc34b6d1e9cd0a183c6b05bb4dc5
     home: pc.zaakonline.nl
     icon: pc.zaakonline.nl
+    keywords:
+    - commonground
+    - haven
+    - nlx
+    - component
+    maintainers:
+    - email: ruben@conduction.nl
+      name: Ruben van der Linde
+    - email: info@conduction.nl
+      name: Conduction
     name: as
+    sources:
+    - https://commonground.conduction.nl/
+    - https://www.commonground.nl/
     urls:
     - as-0.1.0.tgz
     version: 0.1.0
@@ -18,7 +31,7 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 11.10.0
-    created: "2020-12-02T11:33:07.0812321Z"
+    created: "2021-02-16T21:03:56.7987823Z"
     dependencies:
     - name: common
       repository: https://charts.bitnami.com/bitnami
@@ -47,4 +60,4 @@ entries:
     urls:
     - charts/postgresql-10.1.1.tgz
     version: 10.1.1
-generated: "2020-12-02T11:33:07.050996Z"
+generated: "2021-02-16T21:03:56.7339723Z"
