@@ -4,18 +4,17 @@ publiccodeYmlVersion: "0.2"
 name: {{ app_name }}
 applicationSuite: commonground
 url: "{{ app_repro }}"
-landingURL: "{{ app_demo }}" 
-{# we asume that everything is based on the proto component #}
-isBasedOn: "https://github.com/ConductionNL/Proto-component-commonground.git" 
+landingURL: "{{ app_demo }}"
+isBasedOn: "https://github.com/ConductionNL/Proto-component-commonground.git"
 softwareVersion: "{{ app_version }}"
 releaseDate: "{{ "now"|date("Y-d-m") }}"
-logo: {{ app_logo }} 
+logo: {{ app_logo }}
 monochromeLogo: img/logo-mono.svg
 
 inputTypes:
   - application/json
   - application/xml
-  
+
 outputTypes:
   - application/json
   - application/ld+json
@@ -29,15 +28,18 @@ outputTypes:
 
 platforms:
   - web
+  - haven
+  - nlx
+  - gaia-x
 
 categories:
-  - it-development 
+  - it-development
 
 usedBy:
   - Gemeente Utrecht
   - Gemeente Den Haag
   - Gemeente Hoorn
-  
+
 
 roadmap: "{{ app_repro }}/blob/master/ROADMAP.md"
 
@@ -115,4 +117,9 @@ dependsOn:
   open:
     - name: Kubernetes
       versionMin: "1.15.5-do.1"
+
+installations:
+    - type: helm
+      url: "https://raw.githubusercontent.com/{{ app_repro|trim('https://github.com', 'left') }}/master/api/helm/"
+
 
