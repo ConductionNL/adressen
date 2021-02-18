@@ -1,16 +1,16 @@
 openapi: 3.0.2
 info:
-  title: 'Adressen component'
+  title: ''
   version: V1.0
   description: |
     API Details
-    - Component: Adressen component
-    - Reference: as
+    - Component: 
+    - Reference: adresservice
     - Enviroment: dev
     - Version: V1.0
     - Repository: [online](https://github.com/ConductionNL/adresservice) / [zip](https://github.com/ConductionNL/adresservice/archive/master.zip)
-    - Docker Image: [online](https://hub.docker.com/repository/docker/conduction/as-php) 
-    - Datamodel: [postman](schema/as.postman_collection.json) / [oas](schema/openapi.yaml) / [pdf](schema/datamodel.pdf) / [modelio (zip)](schema/Datamodel_Modelio.zip) 
+    - Docker Image: [online]() 
+    - Datamodel: [postman](schema/adresservice.postman_collection.json) / [oas](schema/openapi.yaml) / [pdf](schema/datamodel.pdf) / [modelio (zip)](schema/Datamodel_Modelio.zip) 
     
     Naast deze JSON rest API is er ook een [graphql](/graphql) interface beschikbaar.         
     
@@ -2883,12 +2883,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-02-16 21:02:03'
+        example: '2021-02-18 17:26:47'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-02-16 21:02:03'
+        example: '2021-02-18 17:26:47'
     required: []
   AuditTrail-write:
     properties:
@@ -2936,12 +2936,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-02-16 21:02:03'
+        example: '2021-02-18 17:26:47'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-02-16 21:02:03'
+        example: '2021-02-18 17:26:47'
     required: []
   ChangeLog-write:
     properties:
@@ -2989,7 +2989,7 @@ host: irc.zaakonline.nl
 servers:
   -
     name: conduction.nl
-    url: as.dev.conduction.nl
+    url: adresservice.dev.conduction.nl
 externalDocs:
   -
     description: 'OAS Documentatie'

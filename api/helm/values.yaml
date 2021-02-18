@@ -4,15 +4,15 @@
 
 settings:
   registryBase: docker.io/conduction
-  projectName: as
-  name: as
+  projectName: adresservice
+  name: adresservice
   version: V1.0
   description: 'Naast deze JSON rest API is er ook een [graphql](/graphql) interface beschikbaar.'
   repro: https://github.com/ConductionNL/adresservice
   demo: as.zaakonline.nl
   domain: conduction.nl
-  subdomain: as
-  subpath: as
+  subdomain: adresservice
+  subpath: adresservice
   subpathRouting: true
   env: dev
   web: false
