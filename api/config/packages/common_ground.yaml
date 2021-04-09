@@ -133,7 +133,8 @@ parameters:
     env(APP_COMMONGROUND_KIC_SECRET): "%env(APP_COMMONGROUND_SECRET)%"
 
     # BasisAdressenGemeenten
-    env(APP_COMMONGROUND_BAG_LOCATION): "https://bag.basisregistraties.overheid.nl/api/v1/"
+#    env(APP_COMMONGROUND_BAG_LOCATION): "https://bag.basisregistraties.overheid.nl/api/v1/"
+    env(APP_COMMONGROUND_BAG_LOCATION): "https://api.bag.acceptatie.kadaster.nl/lvbag/individuelebevragingen/v2"
     env(APP_COMMONGROUND_BAG_APIKEY): "%env(APP_COMMONGROUND_KEY)%"
     # KamerVanKoophandel
     env(APP_COMMONGROUND_KVK_LOCATION): "https://kvk.%env(APP_DOMAIN)%"
