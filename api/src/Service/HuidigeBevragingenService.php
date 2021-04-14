@@ -33,8 +33,9 @@ class HuidigeBevragingenService implements KadasterServiceInterface
             // This api key needs to go into params
             'headers' => [
                 'X-Api-Key' => $this->params->get('common_ground.components')['bag']['apikey'],
-                'Accept-Crs'  => 'EPSG:4326',
+                'Accept-Crs'  => 'epsg:28992',
                 ],
+            'http_errors' => false,
             ]
         );
     }
@@ -71,6 +72,7 @@ class HuidigeBevragingenService implements KadasterServiceInterface
         $results = [];
         $response = $this->client->get('adressen/zoek', ['query' => $this->convertQuery(['zoek' => $search, 'pageSize' => 100, 'page' => $page])]);
         if($response->getStatusCode() != 200){
+            var_dump($this->client->getConfig()['headers']);
             throw new HttpException($response->getStatusCode(), $response->getReasonPhrase());
         }
         $response = json_decode($response->getBody()->getContents(), true);

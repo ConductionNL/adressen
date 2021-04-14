@@ -33,6 +33,8 @@ class IndividueleBevragingenService implements KadasterServiceInterface
                 'X-Api-Key' => $this->params->get('common_ground.components')['bag']['apikey'],
                 'Accept-Crs'  => 'epsg:28992',
                 ],
+            // Base URI is used with relative requests
+//            'http_errors' => false,
             ]
         );
     }
@@ -145,7 +147,7 @@ class IndividueleBevragingenService implements KadasterServiceInterface
         if ($item->isHit()) {
             return $item->get();
         }
-        $query = $this->convertQuery(['huisnummer' => $huisnummer, 'postcode' => $postcode, 'page' => $page, 'pageSize' => 100, "expand" => "ligtAanOpenbareRuimte,ligtInWoonplaats"]);
+        $query = $this->convertQuery(['huisnummer' => $huisnummer, 'postcode' => $postcode, 'page' => $page, 'pageSize' => 100, "expand" => "ligtAanOpenbareRuimte,ligtInWoonplaats", 'huidig' => true]);
         $results = [];
         $response = $this->client->get('nummeraanduidingen', ['query' => $query]);
         if($response->getStatusCode() != 200){
@@ -159,7 +161,7 @@ class IndividueleBevragingenService implements KadasterServiceInterface
             key_exists('_links', $response) &&
             key_exists('self', $response['_links']) &&
             key_exists('last', $response['_links']) &&
-            $response['links']['self'] != $response['_links']['last']
+            $response['_links']['self'] != $response['_links']['last']
         ){
             $results = array_merge($results, $this->getNumberObjects($postcode, $huisnummer, $page + 1));
         }
