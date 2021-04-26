@@ -29,15 +29,16 @@ final class AdresGetSubscriber implements EventSubscriberInterface
     {
         $this->params = $params;
 
-        if($this->params->get('common_ground.components')['bag']['location'] == 'https://bag.basisregistraties.overheid.nl/api/v1/')
+        if ($this->params->get('common_ground.components')['bag']['location'] == 'https://bag.basisregistraties.overheid.nl/api/v1/') {
             $this->kadasterService = $kadasterService;
-        elseif(
+        } elseif (
             $this->params->get('common_ground.components')['bag']['location'] == 'https://api.bag.acceptatie.kadaster.nl/lvbag/individuelebevragingen/v2/' ||
             $this->params->get('common_ground.components')['bag']['location'] == 'https://api.bag.kadaster.nl/lvbag/individuelebevragingen/v2/'
-        )
+        ) {
             $this->kadasterService = $individueleBevragingenService;
-        else
+        } else {
             $this->kadasterService = $huidigeBevragingenService;
+        }
         $this->serializer = $serializer;
     }
 

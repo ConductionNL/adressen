@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Service;
-
 
 use App\Entity\Adres;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,18 +21,19 @@ class IndividueleBevragingenService implements KadasterServiceInterface
         $this->params = $params;
         $this->entityManager = $entityManager;
         $this->cache = $cache;
-        $this->client = new Client([
-            // Base URI is used with relative requests
-            'base_uri' => $this->params->get('common_ground.components')['bag']['location'],
-            // You can set any number of default request options.
-            'timeout' => 4000.0,
-            // This api key needs to go into params
-            'headers' => [
-                'X-Api-Key' => $this->params->get('common_ground.components')['bag']['apikey'],
-                'Accept-Crs'  => 'epsg:28992',
+        $this->client = new Client(
+            [
+                // Base URI is used with relative requests
+                'base_uri' => $this->params->get('common_ground.components')['bag']['location'],
+                // You can set any number of default request options.
+                'timeout' => 4000.0,
+                // This api key needs to go into params
+                'headers' => [
+                    'X-Api-Key'   => $this->params->get('common_ground.components')['bag']['apikey'],
+                    'Accept-Crs'  => 'epsg:28992',
                 ],
-            // Base URI is used with relative requests
-//            'http_errors' => false,
+                // Base URI is used with relative requests
+                //            'http_errors' => false,
             ]
         );
     }
@@ -68,17 +67,17 @@ class IndividueleBevragingenService implements KadasterServiceInterface
         }
 
         $response = $this->client->get('adresseerbareobjecten', ['query' => $this->convertQuery(['nummeraanduidingIdentificatie' => $numberedObjectId])]);
-        if($response->getStatusCode() != 200){
+        if ($response->getStatusCode() != 200) {
             throw new HttpException($response->getStatusCode(), $response->getReasonPhrase());
         }
         $response = json_decode($response->getBody()->getContents(), true);
-        if(
+        if (
             key_exists('_embedded', $response) &&
             key_exists('adresseerbareObjecten', $response['_embedded']) &&
             count($response['_embedded']['adresseerbareObjecten']) > 0
-        ){
-            foreach($response['_embedded']['adresseerbareObjecten'][0] as $key => $value){
-                if($key != '_links'){
+        ) {
+            foreach ($response['_embedded']['adresseerbareObjecten'][0] as $key => $value) {
+                if ($key != '_links') {
                     $item->set($value);
                     $item->expiresAt(new \DateTime('tomorrow 4:59'));
                     $this->cache->save($item);
@@ -87,6 +86,7 @@ class IndividueleBevragingenService implements KadasterServiceInterface
                 }
             }
         }
+
         throw new HttpException(404, 'The addressable object for this numbered object has not been found');
     }
 
@@ -114,7 +114,7 @@ class IndividueleBevragingenService implements KadasterServiceInterface
         ) {
             $address->setStraat($addressArray['_embedded']['ligtAanOpenbareRuimte']['openbareRuimte']['naam']);
         }
-        if($address->getType() == 'verblijfsobject'){
+        if ($address->getType() == 'verblijfsobject') {
             $address->setOppervlakte($addressableObject[$address->getType()]['oppervlakte']);
         }
 
@@ -147,27 +147,28 @@ class IndividueleBevragingenService implements KadasterServiceInterface
         if ($item->isHit()) {
             return $item->get();
         }
-        $query = $this->convertQuery(['huisnummer' => $huisnummer, 'postcode' => $postcode, 'page' => $page, 'pageSize' => 100, "expand" => "ligtAanOpenbareRuimte,ligtInWoonplaats", 'huidig' => true]);
+        $query = $this->convertQuery(['huisnummer' => $huisnummer, 'postcode' => $postcode, 'page' => $page, 'pageSize' => 100, 'expand' => 'ligtAanOpenbareRuimte,ligtInWoonplaats', 'huidig' => true]);
         $results = [];
         $response = $this->client->get('nummeraanduidingen', ['query' => $query]);
-        if($response->getStatusCode() != 200){
+        if ($response->getStatusCode() != 200) {
             throw new HttpException($response->getStatusCode(), $response->getReasonPhrase());
         }
         $response = json_decode($response->getBody()->getContents(), true);
-        if(key_exists('_embedded', $response) && key_exists('nummeraanduidingen', $response['_embedded'])){
+        if (key_exists('_embedded', $response) && key_exists('nummeraanduidingen', $response['_embedded'])) {
             $results = $response['_embedded']['nummeraanduidingen'];
         }
-        if(
+        if (
             key_exists('_links', $response) &&
             key_exists('self', $response['_links']) &&
             key_exists('last', $response['_links']) &&
             $response['_links']['self'] != $response['_links']['last']
-        ){
+        ) {
             $results = array_merge($results, $this->getNumberObjects($postcode, $huisnummer, $page + 1));
         }
         $item->set($results);
         $item->expiresAt(new \DateTime('tomorrow 4:59'));
         $this->cache->save($item);
+
         return $results;
     }
 
@@ -177,8 +178,8 @@ class IndividueleBevragingenService implements KadasterServiceInterface
         if ($item->isHit()) {
             return $item->get();
         }
-        $response = $this->client->get("nummeraanduidingen/$bagId", ['query' => $this->convertQuery([ "expand" => "ligtAanOpenbareRuimte,ligtInWoonplaats"])]);
-        if($response->getStatusCode() != 200){
+        $response = $this->client->get("nummeraanduidingen/$bagId", ['query' => $this->convertQuery(['expand' => 'ligtAanOpenbareRuimte,ligtInWoonplaats'])]);
+        if ($response->getStatusCode() != 200) {
             throw new HttpException($response->getStatusCode(), $response->getReasonPhrase());
         }
         $response = json_decode($response->getBody()->getContents(), true);
@@ -187,6 +188,7 @@ class IndividueleBevragingenService implements KadasterServiceInterface
         $item->set($address);
         $item->expiresAt(new \DateTime('tomorrow 4:59'));
         $this->cache->save($item);
+
         return $address;
     }
 
@@ -194,11 +196,10 @@ class IndividueleBevragingenService implements KadasterServiceInterface
     {
         $addresses = $this->getNumberObjects($postcode, $huisnummer);
         $results = [];
-        foreach($addresses as $address){
+        foreach ($addresses as $address) {
             $results[] = $this->getObject($address);
         }
 
         return $results;
     }
-
 }
