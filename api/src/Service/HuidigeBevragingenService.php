@@ -72,7 +72,6 @@ class HuidigeBevragingenService implements KadasterServiceInterface
         $results = [];
         $response = $this->client->get('adressen/zoek', ['query' => $this->convertQuery(['zoek' => $search, 'pageSize' => 100, 'page' => $page])]);
         if($response->getStatusCode() != 200){
-            var_dump($this->client->getConfig()['headers']);
             throw new HttpException($response->getStatusCode(), $response->getReasonPhrase());
         }
         $response = json_decode($response->getBody()->getContents(), true);
@@ -83,7 +82,7 @@ class HuidigeBevragingenService implements KadasterServiceInterface
             key_exists('_links', $response) &&
             key_exists('self', $response['_links']) &&
             key_exists('last', $response['_links']) &&
-            $response['links']['self'] != $response['_links']['last']
+            $response['_links']['self'] != $response['_links']['last']
         ){
             $results = array_merge($results, $this->getSearchResults($search, $page + 1));
         }
@@ -114,6 +113,10 @@ class HuidigeBevragingenService implements KadasterServiceInterface
     }
     public function getObject(array $addressArray): Adres
     {
+        if(!key_exists('adresseerbaarObjectIdentificatie', $addressArray)){
+            var_dump($addressArray);
+            die;
+        }
         $addressableObject = $this->getAddressableObject($addressArray['adresseerbaarObjectIdentificatie']);
         $address = new Adres();
         $address->setId($addressArray['nummeraanduidingIdentificatie']);
@@ -124,12 +127,16 @@ class HuidigeBevragingenService implements KadasterServiceInterface
         if (array_key_exists('huisnummer', $addressArray)) {
             $address->setHuisnummer($addressArray['huisnummer']);
         }
-        $suffix = !$addressArray['huisletter'] ? null : (!$addressArray['huisnummertoevoeging'] ? $addressArray['huisletter'] : "{$addressArray['huisletter']} {$addressArray['huisnummertoevoeging']}");
+        $suffix = !key_exists('huisletter', $addressArray) ?
+            (!key_exists('huisnummertoevoeging', $addressArray) ? null : $addressArray['huisnummertoevoeging']) :
+            (!key_exists('huisnummertoevoeging', $addressArray) ? $addressArray['huisletter'] : "{$addressArray['huisletter']} {$addressArray['huisnummertoevoeging']}");
         $address->setHuisnummertoevoeging($suffix);
         if (array_key_exists('straat', $addressArray)) {
             $address->setStraat($addressArray['straat']);
         }
-        $address->setOppervlakte($addressableObject['oppervlakte']);
+        if(key_exists('oppervlakte', $addressableObject)){
+            $address->setOppervlakte($addressableObject['oppervlakte']);
+        }
 
         $address->setWoonplaats($addressArray['woonplaats']);
         $address->setWoonplaatsNummer($addressArray['woonplaatsIdentificatie']);
@@ -156,11 +163,11 @@ class HuidigeBevragingenService implements KadasterServiceInterface
 
     public function getAddress($searchResult): array
     {
-        $item = $this->cache->getItem('address'.md5($searchResult['identification']));
+        $item = $this->cache->getItem('address'.md5($searchResult['identificatie']));
         if ($item->isHit()) {
             return $item->get();
         }
-        $response = $this->client->get('/adressen', ['query' => $this->convertQuery(['zoekresultaatIdentificatie' => $searchResult['identification']])]);
+        $response = $this->client->get('adressen', ['query' => $this->convertQuery(['zoekresultaatIdentificatie' => $searchResult['identificatie'], 'expand' => 'openbareRuimte,nummeraanduiding,woonplaats'])]);
         if($response->getStatusCode() != 200){
             throw new HttpException($response->getStatusCode(), $response->getReasonPhrase());
         }
@@ -178,8 +185,12 @@ class HuidigeBevragingenService implements KadasterServiceInterface
         $results = [];
         foreach($searchResults as $searchResult){
             $response = $this->getAddress($searchResult);
+
             if(key_exists('_embedded', $response) && key_exists('adressen', $response['_embedded'])){
                 foreach($response['_embedded']['adressen'] as $address){
+                    if(!key_exists('nummeraanduidingIdentificatie', $address)){
+                        continue;
+                    }
                     $results[] = $this->getObject($address);
                 }
             }
