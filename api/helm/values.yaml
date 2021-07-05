@@ -14,6 +14,11 @@ security:
   jwt:
     id:
     privateKey:
+  dependencies:
+      bag:
+          auth: apikey
+          location: bag.local
+          apikey: 45c1a4b6-59d3-4a6e-86bf-88a872f35845
 
 php:
   repository: docker.io/conduction/protocomponent-php

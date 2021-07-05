@@ -5,7 +5,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: V1.0
-    created: "2021-07-05T15:34:57.9091581Z"
+    created: "2021-07-05T16:20:39.7430762Z"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -20,7 +20,7 @@ entries:
       (en bijbehorende bag ID’s) te suggereren. Het vormt hiermee de kernfunctionaliteit
       voor formulieren waarin klanten adressen kunnen opgeven aan de hand van huisnummer
       en postcode combinatie.
-    digest: 7c2f4fd9f4f46300b8b373ec20acab3da42fd9420f08a48d7444c7edca131d92
+    digest: eb02ecd311ca65af7402177b765b78b73ace5bd038f024c89caf257556b3c53a
     home: https://www.conduction.nl
     icon: https://conductionnl.github.io/images/conduction_avatar_blue_on_transparant.svg
     keywords:
@@ -42,7 +42,7 @@ entries:
     version: 1.0.0
   - apiVersion: v1
     appVersion: V1.0
-    created: "2021-07-05T15:34:57.8514558Z"
+    created: "2021-07-05T16:20:39.6902461Z"
     description: De Adresservice biedt een koppelvlak met de BAG API (V1), waardoor
       het mogelijk is om aan de hand van postcode en huisnummer combinaties adressen
       (en bijbehorende bag ID’s) te suggereren. Het vormt hiermee de kernfunctionaliteit
@@ -73,7 +73,7 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 11.10.0
-    created: "2021-07-05T15:34:58.0617343Z"
+    created: "2021-07-05T16:20:39.8696428Z"
     dependencies:
     - name: common
       repository: https://charts.bitnami.com/bitnami
@@ -107,7 +107,7 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 6.0.11
-    created: "2021-07-05T15:34:58.0758935Z"
+    created: "2021-07-05T16:20:40.0552756Z"
     dependencies:
     - name: common
       repository: https://charts.bitnami.com/bitnami
@@ -136,4 +136,4 @@ entries:
     urls:
     - charts/redis-12.7.7.tgz
     version: 12.7.7
-generated: "2021-07-05T15:34:57.7454533Z"
+generated: "2021-07-05T16:20:39.5327155Z"
