@@ -2,8 +2,8 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>{{ app_name|capitalize }}</title>
-    <link rel="icon" href="conduction.svg">
+    <title>Commonground Component</title>
+    <link rel="icon" href="{{ asset('/conduction.svg') }}">
     {% if google_tag_manager_id %}
        <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -88,7 +88,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </svg>
 <header>
     <a id="logo" href="https://www.conduction.nl/">
-        <img src="conduction.svg" alt="conduction">
+        <img src="{{ asset('/conduction.svg') }}" alt="conduction">
     </a>
 </header>
 
