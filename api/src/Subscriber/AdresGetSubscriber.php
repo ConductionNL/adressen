@@ -7,7 +7,10 @@ namespace App\Subscriber;
 use ApiPlatform\Core\EventListener\EventPriorities;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Entity\Adres;
+use App\Service\HuidigeBevragingenService;
+use App\Service\IndividueleBevragingenService;
 use App\Service\KadasterService;
+use App\Service\KadasterServiceInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,13 +22,23 @@ use Symfony\Component\Serializer\SerializerInterface;
 final class AdresGetSubscriber implements EventSubscriberInterface
 {
     private $params;
-    private $kadasterService;
+    private KadasterServiceInterface $kadasterService;
     private $serializer;
 
-    public function __construct(ParameterBagInterface $params, KadasterService $kadasterService, SerializerInterface $serializer)
+    public function __construct(ParameterBagInterface $params, KadasterService $kadasterService, HuidigeBevragingenService $huidigeBevragingenService, IndividueleBevragingenService $individueleBevragingenService, SerializerInterface $serializer)
     {
         $this->params = $params;
-        $this->kadasterService = $kadasterService;
+
+        if ($this->params->get('components')['bag']['location'] == 'https://bag.basisregistraties.overheid.nl/api/v1/') {
+            $this->kadasterService = $kadasterService;
+        } elseif (
+            $this->params->get('components')['bag']['location'] == 'https://api.bag.acceptatie.kadaster.nl/lvbag/individuelebevragingen/v2/' ||
+            $this->params->get('components')['bag']['location'] == 'https://api.bag.kadaster.nl/lvbag/individuelebevragingen/v2/'
+        ) {
+            $this->kadasterService = $individueleBevragingenService;
+        } else {
+            $this->kadasterService = $huidigeBevragingenService;
+        }
         $this->serializer = $serializer;
     }
 
@@ -43,7 +56,7 @@ final class AdresGetSubscriber implements EventSubscriberInterface
         $method = $event->getRequest()->getMethod();
 
         // Lats make sure that some one posts correctly
-        if (Request::METHOD_GET !== $method || ($route != 'api_adres_get_collection' && $path[1] != 'adressen')) {
+        if (Request::METHOD_GET !== $method || ($route != 'api_adres_get_collection' && !in_array('adressen', $path))) {
             return;
         }
         $contentType = $event->getRequest()->headers->get('accept');
@@ -65,9 +78,11 @@ final class AdresGetSubscriber implements EventSubscriberInterface
                 $renderType = 'jsonhal';
         }
         $bagId = null;
-        if ($route != 'api_adres_get_collection' && $path[1] == 'adressen' || $route == 'api_adres_get_collection' && $bagId = $event->getRequest()->query->get('bagid')) {
-            if (!$bagId) {
-                $bagId = $path[2];
+        if (($route != 'api_adres_get_collection' && in_array('adressen', $path)) || ($route == 'api_adres_get_collection' && $event->getRequest()->query->has('bagid'))) {
+            if (!$event->getRequest()->query->has('bagid')) {
+                $bagId = end($path);
+            } else {
+                $bagId = $event->getRequest()->query->get('bagid');
             }
             $adres = $this->kadasterService->getAdresOnBagId($bagId);
 
@@ -108,7 +123,6 @@ final class AdresGetSubscriber implements EventSubscriberInterface
             /* @deprecated */
             if ($bagId && $bagId != '') {
                 $adres = $this->kadasterService->getAdresOnBagId($bagId);
-//            var_dump($result);
             } else {
                 // Even iets van basis valdiatie
                 if (!$huisnummer || !is_int($huisnummer)) {

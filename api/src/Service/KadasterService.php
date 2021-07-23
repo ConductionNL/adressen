@@ -20,7 +20,7 @@ use GuzzleHttp\Client;
 use Symfony\Component\Cache\Adapter\AdapterInterface as CacheInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-class KadasterService
+class KadasterService implements KadasterServiceInterface
 {
     private $config;
     private $params;
@@ -40,11 +40,11 @@ class KadasterService
 
         $this->client = new Client([
             // Base URI is used with relative requests
-            'base_uri' => $this->params->get('common_ground.components')['bag']['location'],
+            'base_uri' => $this->params->get('components')['bag']['location'],
             // You can set any number of default request options.
             'timeout'  => 4000.0,
             // This api key needs to go into params
-            'headers' => ['X-Api-Key' => $this->params->get('common_ground.components')['bag']['apikey']],
+            'headers' => ['X-Api-Key' => $this->params->get('components')['bag']['apikey']],
         ]);
     }
 
@@ -383,7 +383,7 @@ class KadasterService
         return $adres;
     }
 
-    public function getAdresOnHuisnummerPostcode($huisnummer, $postcode)
+    public function getAdresOnHuisnummerPostcode($huisnummer, $postcode): array
     {
         // Lets start with th getting of nummer aanduidingen
         $now = new \Datetime();
@@ -400,7 +400,7 @@ class KadasterService
         return $responces;
     }
 
-    public function getAdresOnBagId($bagId)
+    public function getAdresOnBagId($bagId): Adres
     {
         $nummeraanduiding = $this->getNummeraanduiding($bagId);
 
