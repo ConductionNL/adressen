@@ -11,9 +11,8 @@ info:
     - Repository: [online](https://github.com/ConductionNL/adresservice) / [zip](https://github.com/ConductionNL/adresservice/archive/master.zip)
     - Docker Image: [online]() 
     - Datamodel: [postman](schema/adresservice.postman_collection.json) / [oas](schema/openapi.yaml) / [pdf](schema/datamodel.pdf) / [modelio (zip)](schema/Datamodel_Modelio.zip) 
-    
-    Naast deze JSON rest API is er ook een [graphql](/graphql) interface beschikbaar.         
-    
+
+    De Adresservice biedt een koppelvlak met de BAG API (V1), waardoor het mogelijk is om aan de hand van postcode en huisnummer combinaties adressen (en bijbehorende bag ID’s) te suggereren. Het vormt hiermee de kernfunctionaliteit voor formulieren waarin klanten adressen kunnen opgeven aan de hand van huisnummer en postcode combinatie.         
 paths:
   /adressen:
     get:
@@ -2883,12 +2882,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-04-08 14:57:47'
+        example: '2021-07-06 10:35:06'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-04-08 14:57:47'
+        example: '2021-07-06 10:35:06'
     required: []
   AuditTrail-write:
     properties:
@@ -2936,12 +2935,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-04-08 14:57:47'
+        example: '2021-07-06 10:35:06'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-04-08 14:57:47'
+        example: '2021-07-06 10:35:06'
     required: []
   ChangeLog-write:
     properties:
@@ -2954,21 +2953,20 @@ definitions:
 tags:
   -
     name: Adres
-    description: |
+    description: |+
       An BAG addres.
-      
-      
+
   -
     name: AuditTrail
-    description: |
+    description: |-
       An resource representing a log line.
-      
+
       This entity represents a product that can be ordered via the OrderRegistratieComponent.
   -
     name: ChangeLog
-    description: |
+    description: |-
       An resource representing a log line.
-      
+
       This entity represents a product that can be ordered via the OrderRegistratieComponent.
 securityDefinitions:
   JWT-Oauth:

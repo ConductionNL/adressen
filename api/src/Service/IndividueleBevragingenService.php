@@ -24,12 +24,12 @@ class IndividueleBevragingenService implements KadasterServiceInterface
         $this->client = new Client(
             [
                 // Base URI is used with relative requests
-                'base_uri' => $this->params->get('common_ground.components')['bag']['location'],
+                'base_uri' => $this->params->get('components')['bag']['location'],
                 // You can set any number of default request options.
                 'timeout' => 4000.0,
                 // This api key needs to go into params
                 'headers' => [
-                    'X-Api-Key'   => $this->params->get('common_ground.components')['bag']['apikey'],
+                    'X-Api-Key'   => $this->params->get('components')['bag']['apikey'],
                     'Accept-Crs'  => 'epsg:28992',
                 ],
                 // Base URI is used with relative requests
