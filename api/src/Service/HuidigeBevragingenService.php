@@ -197,13 +197,22 @@ class HuidigeBevragingenService implements KadasterServiceInterface
 
     public function getAdresOnBagId(string $bagId): Adres
     {
+        $item = $this->cache->getItem('numberObject'.md5($bagId));
+        if ($item->isHit()) {
+            return $item->get();
+        }
         $response = $this->client->get("adressen/$bagId");
         if ($response->getStatusCode() != 200) {
             throw new HttpException($response->getStatusCode(), $response->getReasonPhrase());
         }
         $response = json_decode($response->getBody()->getContents(), true);
 
-        return $this->getObject($response);
+        $address = $this->getObject($response);
+        $item->set($address);
+        $item->expiresAt(new \DateTime('tomorrow 4:59'));
+        $this->cache->save($item);
+
+        return $address;
     }
 
     public function getAdresOnHuisnummerPostcode($huisnummer, $postcode): array
@@ -211,5 +220,10 @@ class HuidigeBevragingenService implements KadasterServiceInterface
         $search = "$huisnummer $postcode";
 
         return $this->getAdressesFromSearchResults($this->getSearchResults($search));
+    }
+
+    public function getAdresOnStraatnaamHuisnummerPlaatsnaam(string $street, string $houseNumber, ?string $houseNumberSuffix = null, string $locality): array
+    {
+        return [];
     }
 }

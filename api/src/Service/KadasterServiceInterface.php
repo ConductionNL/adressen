@@ -25,4 +25,14 @@ interface KadasterServiceInterface
      * @return Adres
      */
     public function getAdresOnHuisnummerPostcode($huisnummer, $postcode): array;
+
+    /**
+     * @param string      $street
+     * @param string      $houseNumber
+     * @param string|null $houseNumberSuffix
+     * @param string      $locality
+     *
+     * @return array
+     */
+    public function getAdresOnStraatnaamHuisnummerPlaatsnaam(string $street, string $houseNumber, ?string $houseNumberSuffix = null, string $locality): array;
 }

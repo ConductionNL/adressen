@@ -8,6 +8,7 @@ use GuzzleHttp\Client;
 use Symfony\Component\Cache\Adapter\AdapterInterface as CacheInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class IndividueleBevragingenService implements KadasterServiceInterface
 {
@@ -198,6 +199,55 @@ class IndividueleBevragingenService implements KadasterServiceInterface
         $results = [];
         foreach ($addresses as $address) {
             $results[] = $this->getObject($address);
+        }
+
+        return $results;
+    }
+
+    public function getAddressForSearchResult(string $searchResultId): ?Adres
+    {
+        $item = $this->cache->getItem('addressSearch'.md5($searchResultId));
+        if ($item->isHit()) {
+            return $item->get();
+        }
+        $response = $this->client->get('adressen', ['query' => "zoekresultaatIdentificatie=$searchResultId"]);
+        if ($response->getStatusCode() != 200) {
+            throw new HttpException($response->getStatusCode(), $response->getReasonPhrase());
+        }
+        $response = json_decode($response->getBody()->getContents(), true);
+        if (!isset($response['_embedded'])) {
+            throw new NotFoundHttpException('No address found for given parameters');
+        }
+        foreach ($response['_embedded']['adressen'] as $address) {
+            $address = $this->getAdresOnBagId($address['nummeraanduidingIdentificatie']);
+            $item->set($address);
+            $item->expiresAt(new \DateTime('tomorrow 4:59'));
+            $this->cache->save($item);
+
+            return $address;
+        }
+
+        return null;
+    }
+
+    public function getAdresOnStraatnaamHuisnummerPlaatsnaam(string $street, string $houseNumber, ?string $houseNumberSuffix = null, string $locality): array
+    {
+        $response = $this->client->get('adressen/zoek', ['query' => "zoek=$street $houseNumber$houseNumberSuffix $locality"]);
+        if ($response->getStatusCode() != 200) {
+            throw new HttpException($response->getStatusCode(), $response->getReasonPhrase());
+        }
+        $response = json_decode($response->getBody()->getContents(), true);
+
+        if (!isset($response['_embedded'])) {
+            var_dump($response);
+
+            throw new NotFoundHttpException('No address found for given parameters');
+        }
+
+        $results = [];
+        foreach ($response['_embedded']['zoekresultaten'] as $result) {
+            $address = $this->getAddressForSearchResult($result['identificatie']);
+            $address ? $results[] = $address : null;
         }
 
         return $results;
