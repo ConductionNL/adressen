@@ -63,23 +63,25 @@ final class AdresGetSubscriber implements EventSubscriberInterface
         if (Request::METHOD_GET !== $method || ($route != 'api_adres_get_collection' && !in_array('adressen', $path))) {
             return;
         }
-        try{
+
+        try {
             if (($route != 'api_adres_get_collection' && in_array('adressen', $path)) || ($route == 'api_adres_get_collection' && $event->getRequest()->query->has('bagid'))) {
                 $this->getAddressOnBagId($event);
             } else {
                 $this->getAddressOnSearchParameters($event);
             }
-        } catch (BadRequestHttpException|NotFoundHttpException $e){
-            $event->setResponse(new Response(
+        } catch (BadRequestHttpException|NotFoundHttpException $e) {
+            $event->setResponse(
+                new Response(
                 $e->getMessage(),
-                $e->getStatusCode())
+                $e->getStatusCode()
+            )
             );
         }
     }
 
     public function getAddressOnBagId(RequestEvent $event): void
     {
-
         $path = explode('/', parse_url($event->getRequest()->getUri())['path']);
         if (!$event->getRequest()->query->has('bagid')) {
             $bagId = end($path);
@@ -97,6 +99,7 @@ final class AdresGetSubscriber implements EventSubscriberInterface
         if ($huisnummerToevoeging && str_replace(' ', '', $huisnummerToevoeging) == '') {
             $huisnummerToevoeging = null;
         }
+
         return $huisnummerToevoeging;
     }
 
@@ -104,7 +107,7 @@ final class AdresGetSubscriber implements EventSubscriberInterface
     {
         $postcode = $event->getRequest()->query->get('postcode');
 
-        if(!$postcode){
+        if (!$postcode) {
             return $postcode;
         }
         // Let clear up the postcode
@@ -134,6 +137,7 @@ final class AdresGetSubscriber implements EventSubscriberInterface
             default:
                 $renderType = 'jsonhal';
         }
+
         return $renderType;
     }
 
@@ -170,6 +174,7 @@ final class AdresGetSubscriber implements EventSubscriberInterface
                 $results[] = $address;
             }
         }
+
         return $results;
     }
 
@@ -182,16 +187,16 @@ final class AdresGetSubscriber implements EventSubscriberInterface
         $woonplaats = $event->getRequest()->query->get('woonplaats');
         $bagId = $event->getRequest()->query->get('bagid');
 
-        if($bagId){
+        if ($bagId) {
             $result = $this->kadasterService->getAdresOnBagId($bagId);
-        } elseif($huisnummer && $postcode){
+        } elseif ($huisnummer && $postcode) {
             $result = $this->kadasterService->getAdresOnHuisnummerPostcode($huisnummer, $postcode);
-            if($huisnummerToevoeging){
+            if ($huisnummerToevoeging) {
                 $result = $this->serializeArray($this->filterHouseNumberSuffix($result, $huisnummerToevoeging), $event);
             } else {
                 $result = $this->serializeArray($result, $event);
             }
-        } elseif($huisnummer && $straat && $woonplaats) {
+        } elseif ($huisnummer && $straat && $woonplaats) {
             $result = $this->serializeArray($this->kadasterService->getAdresOnStraatnaamHuisnummerPlaatsnaam($straat, $huisnummer, $huisnummerToevoeging, $woonplaats), $event);
         } else {
             throw new BadRequestHttpException("Not enough data to find the address. The following combinations of query parameters are valid:\npostcode and huisnummer\nbagid\nstraatnaam, woonplaats and huisnummer");
