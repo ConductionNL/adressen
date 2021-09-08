@@ -69,9 +69,7 @@
             "ingress": {
                 "enabled": false,
                 "hostname": "contactcatalogus.local",
-                "path": "/",
-                "annotations": null,
-                "tls": null
+                "path": "/"
             },
             "resources": {}
         }
@@ -704,9 +702,7 @@
                 {
                     "enabled": false,
                     "hostname": "contactcatalogus.local",
-                    "path": "/",
-                    "annotations": null,
-                    "tls": null
+                    "path": "/"
                 }
             ],
             "required": [
@@ -747,23 +743,15 @@
                 },
                 "annotations": {
                     "$id": "#/properties/ingress/properties/annotations",
-                    "type": "null",
+                    "type": "object",
                     "title": "The annotations schema",
-                    "description": "",
-                    "default": null,
-                    "examples": [
-                        null
-                    ]
+                    "description": ""
                 },
                 "tls": {
                     "$id": "#/properties/ingress/properties/tls",
-                    "type": "null",
+                    "type": "array",
                     "title": "The tls schema",
-                    "description": "",
-                    "default": null,
-                    "examples": [
-                        null
-                    ]
+                    "description": ""
                 }
             },
             "additionalProperties": true

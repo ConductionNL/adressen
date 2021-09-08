@@ -5,41 +5,45 @@
 namespace App\Subscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
-use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Entity\Adres;
 use App\Service\HuidigeBevragingenService;
 use App\Service\IndividueleBevragingenService;
 use App\Service\KadasterService;
 use App\Service\KadasterServiceInterface;
+use Conduction\CommonGroundBundle\Service\SerializerService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Serializer\SerializerInterface;
 
 final class AdresGetSubscriber implements EventSubscriberInterface
 {
-    private $params;
+    private ParameterBagInterface $parameterBag;
     private KadasterServiceInterface $kadasterService;
-    private $serializer;
+    private SerializerService $serializerService;
 
-    public function __construct(ParameterBagInterface $params, KadasterService $kadasterService, HuidigeBevragingenService $huidigeBevragingenService, IndividueleBevragingenService $individueleBevragingenService, SerializerInterface $serializer)
+    public function __construct(ParameterBagInterface $parameterBag, KadasterService $kadasterService, HuidigeBevragingenService $huidigeBevragingenService, IndividueleBevragingenService $individueleBevragingenService, SerializerInterface $serializer)
     {
-        $this->params = $params;
+        $this->parameterBag = $parameterBag;
 
-        if ($this->params->get('components')['bag']['location'] == 'https://bag.basisregistraties.overheid.nl/api/v1/') {
+        if ($this->parameterBag->get('components')['bag']['location'] == 'https://bag.basisregistraties.overheid.nl/api/v1/') {
             $this->kadasterService = $kadasterService;
         } elseif (
-            $this->params->get('components')['bag']['location'] == 'https://api.bag.acceptatie.kadaster.nl/lvbag/individuelebevragingen/v2/' ||
-            $this->params->get('components')['bag']['location'] == 'https://api.bag.kadaster.nl/lvbag/individuelebevragingen/v2/'
+            $this->parameterBag->get('components')['bag']['location'] == 'https://api.bag.acceptatie.kadaster.nl/lvbag/individuelebevragingen/v2/' ||
+            $this->parameterBag->get('components')['bag']['location'] == 'https://api.bag.kadaster.nl/lvbag/individuelebevragingen/v2/'
         ) {
             $this->kadasterService = $individueleBevragingenService;
         } else {
             $this->kadasterService = $huidigeBevragingenService;
         }
         $this->serializer = $serializer;
+        $this->serializerService = new SerializerService($serializer);
     }
 
     public static function getSubscribedEvents()
@@ -59,6 +63,60 @@ final class AdresGetSubscriber implements EventSubscriberInterface
         if (Request::METHOD_GET !== $method || ($route != 'api_adres_get_collection' && !in_array('adressen', $path))) {
             return;
         }
+        try{
+            if (($route != 'api_adres_get_collection' && in_array('adressen', $path)) || ($route == 'api_adres_get_collection' && $event->getRequest()->query->has('bagid'))) {
+                $this->getAddressOnBagId($event);
+            } else {
+                $this->getAddressOnSearchParameters($event);
+            }
+        } catch (BadRequestHttpException|NotFoundHttpException $e){
+            $event->setResponse(new Response(
+                $e->getMessage(),
+                $e->getStatusCode())
+            );
+        }
+    }
+
+    public function getAddressOnBagId(RequestEvent $event): void
+    {
+
+        $path = explode('/', parse_url($event->getRequest()->getUri())['path']);
+        if (!$event->getRequest()->query->has('bagid')) {
+            $bagId = end($path);
+        } else {
+            $bagId = $event->getRequest()->query->get('bagid');
+        }
+        $adres = $this->kadasterService->getAdresOnBagId($bagId);
+
+        $this->serializerService->setResponse($adres, $event);
+    }
+
+    public function getHuisnummerToevoeging(RequestEvent $event): ?string
+    {
+        $huisnummerToevoeging = $event->getRequest()->query->get('huisnummer_toevoeging', $event->getRequest()->query->get('huisnummertoevoeging'));
+        if ($huisnummerToevoeging && str_replace(' ', '', $huisnummerToevoeging) == '') {
+            $huisnummerToevoeging = null;
+        }
+        return $huisnummerToevoeging;
+    }
+
+    public function getPostcode(RequestEvent $event): ?string
+    {
+        $postcode = $event->getRequest()->query->get('postcode');
+
+        if(!$postcode){
+            return $postcode;
+        }
+        // Let clear up the postcode
+        $postcode = preg_replace('/\s+/', '', $postcode);
+        $postcode = strtoupper($postcode);
+        $postcode = trim($postcode);
+
+        return $postcode;
+    }
+
+    public function getRenderType(RequestEvent $event): string
+    {
         $contentType = $event->getRequest()->headers->get('accept');
         if (!$contentType) {
             $contentType = $event->getRequest()->headers->get('Accept');
@@ -74,112 +132,70 @@ final class AdresGetSubscriber implements EventSubscriberInterface
                 $renderType = 'jsonhal';
                 break;
             default:
-                $contentType = 'application/hal+json';
                 $renderType = 'jsonhal';
         }
-        $bagId = null;
-        if (($route != 'api_adres_get_collection' && in_array('adressen', $path)) || ($route == 'api_adres_get_collection' && $event->getRequest()->query->has('bagid'))) {
-            if (!$event->getRequest()->query->has('bagid')) {
-                $bagId = end($path);
-            } else {
-                $bagId = $event->getRequest()->query->get('bagid');
-            }
-            $adres = $this->kadasterService->getAdresOnBagId($bagId);
+        return $renderType;
+    }
 
-            $response = $this->serializer->serialize(
-                $adres,
-                $renderType,
-                ['enable_max_depth'=> true]
-            );
-
-            // Creating a response
-            $response = new Response(
-                $response,
-                Response::HTTP_OK,
-                ['content-type' => $contentType]
-            );
-
-//            $event->setResponse($response);
-            $response->send();
-        } else {
-            $huisnummer = (int) $event->getRequest()->query->get('huisnummer');
-            $postcode = $event->getRequest()->query->get('postcode');
-            $huisnummerToevoeging = $event->getRequest()->query->get('huisnummer_toevoeging');
-            $bagId = $event->getRequest()->query->get('bagid');
-
-            /* @deprecated */
-            if (!$huisnummerToevoeging) {
-                $huisnummerToevoeging = $event->getRequest()->query->get('huisnummertoevoeging');
-            }
-            if ($huisnummerToevoeging && str_replace(' ', '', $huisnummerToevoeging) == '') {
-                unset($huisnummerToevoeging);
-            }
-
-            // Let clear up the postcode
-            $postcode = preg_replace('/\s+/', '', $postcode);
-            $postcode = strtoupper($postcode);
-            $postcode = trim($postcode);
-
-            /* @deprecated */
-            if ($bagId && $bagId != '') {
-                $adres = $this->kadasterService->getAdresOnBagId($bagId);
-            } else {
-                // Even iets van basis valdiatie
-                if (!$huisnummer || !is_int($huisnummer)) {
-                    throw new InvalidArgumentException(sprintf('Invalid huisnummer: '.$huisnummer));
-                }
-
-                if (!$postcode || strlen($postcode) != 6) {
-                    throw new InvalidArgumentException(sprintf('Invalid postcode: '.$postcode));
-                }
-
-                $adressen = $this->kadasterService->getAdresOnHuisnummerPostcode($huisnummer, $postcode);
-
-                // If a huisnummer_toevoeging is provided we need to do some aditional filtering
-                if ($huisnummerToevoeging) {
-                    $results = [];
-                    foreach ($adressen as $adres) {
-                        if (
-                            $adres instanceof Adres &&
-                            str_replace(' ', '', strtolower($adres->getHuisnummertoevoeging())) == str_replace(' ', '', strtolower($huisnummerToevoeging)) ||
-                            strpos(str_replace(' ', '', strtolower($adres->getHuisnummertoevoeging())), str_replace(' ', '', strtolower($huisnummerToevoeging))) !== false
-                        ) {
-                            $results[] = $adres;
-                        }
-                    }
-                    $adressen = $results;
-                }
-            }
-            switch ($renderType) {
-                case 'jsonld':
-                    $response['@context'] = '/contexts/Adres';
-                    $response['@id'] = '/adressen';
-                    $response['@type'] = 'hydra:Collection';
-                    $response['hydra:member'] = $adressen;
-                    $response['hydra:totalItems'] = count($adressen);
-                    break;
-                default:
-                    $response['adressen'] = $adressen;
-                    $response['totalItems'] = count($adressen);
-                    $response['itemsPerPage'] = count($adressen);
-                    $response['_links'] = $response['_links'] = ['self' => '/adressen?huisnummer='.$huisnummer.'&postcode='.$postcode];
-                    break;
-            }
-
-            $response = $this->serializer->serialize(
-                $response,
-                $renderType,
-                ['enable_max_depth'=> true]
-            );
-
-            // Creating a response
-            $response = new Response(
-                $response,
-                Response::HTTP_OK,
-                ['content-type' => $contentType]
-            );
-//            var_dump($response);
-            $event->setResponse($response);
+    public function serializeArray(array $array, RequestEvent $event): ArrayCollection
+    {
+        switch ($this->getRenderType($event)) {
+            case 'jsonld':
+                $response['@context'] = '/contexts/Adres';
+                $response['@id'] = '/adressen';
+                $response['@type'] = 'hydra:Collection';
+                $response['hydra:member'] = $array;
+                $response['hydra:totalItems'] = count($array);
+                break;
+            default:
+                $response['adressen'] = $array;
+                $response['totalItems'] = count($array);
+                $response['itemsPerPage'] = count($array);
+                $response['_links'] = $response['_links'] = ['self' => "/adressen?{$event->getRequest()->getQueryString()}"];
+                break;
         }
+
+        return new ArrayCollection($response);
+    }
+
+    public function filterHouseNumberSuffix(array $addresses, string $houseNumberSuffix): array
+    {
+        $results = [];
+        foreach ($addresses as $address) {
+            if (
+                $address instanceof Adres &&
+                str_replace(' ', '', strtolower($address->getHuisnummertoevoeging())) == str_replace(' ', '', strtolower($houseNumberSuffix)) ||
+                strpos(str_replace(' ', '', strtolower($address->getHuisnummertoevoeging())), str_replace(' ', '', strtolower($houseNumberSuffix))) !== false
+            ) {
+                $results[] = $address;
+            }
+        }
+        return $results;
+    }
+
+    public function getAddressOnSearchParameters(RequestEvent $event): void
+    {
+        $huisnummer = (int) $event->getRequest()->query->get('huisnummer');
+        $huisnummerToevoeging = $this->getHuisnummerToevoeging($event);
+        $postcode = $this->getPostcode($event);
+        $straat = $event->getRequest()->query->get('straatnaam');
+        $woonplaats = $event->getRequest()->query->get('woonplaats');
+        $bagId = $event->getRequest()->query->get('bagid');
+
+        if($bagId){
+            $result = $this->kadasterService->getAdresOnBagId($bagId);
+        } elseif($huisnummer && $postcode){
+            $result = $this->kadasterService->getAdresOnHuisnummerPostcode($huisnummer, $postcode);
+            if($huisnummerToevoeging){
+                $result = $this->serializeArray($this->filterHouseNumberSuffix($result, $huisnummerToevoeging), $event);
+            } else {
+                $result = $this->serializeArray($result, $event);
+            }
+        } elseif($huisnummer && $straat && $woonplaats) {
+            $result = $this->serializeArray($this->kadasterService->getAdresOnStraatnaamHuisnummerPlaatsnaam($straat, $huisnummer, $huisnummerToevoeging, $woonplaats), $event);
+        } else {
+            throw new BadRequestHttpException("Not enough data to find the address. The following combinations of query parameters are valid:\npostcode and huisnummer\nbagid\nstraatnaam, woonplaats and huisnummer");
+        }
+        $this->serializerService->setResponse($result, $event);
     }
 }

@@ -408,4 +408,9 @@ class KadasterService implements KadasterServiceInterface
 
         return $response;
     }
+
+    public function getAdresOnStraatnaamHuisnummerPlaatsnaam(string $street, string $houseNumber, ?string $houseNumberSuffix = null, string $locality): array
+    {
+        return [];
+    }
 }
