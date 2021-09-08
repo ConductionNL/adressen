@@ -16,6 +16,7 @@ metadata:
       {{ end }}
       {{- with .Values.ingress.annotations }}
       {{- toYaml . | nindent 4 }}
+      {{- end }}
     name: {{ .Release.Name }}-ingress
     labels:
         app.kubernetes.io/name: {{ .Release.Name }}-ingress
