@@ -31,7 +31,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      		"path"="/adressen",
  *              "method"="GET",
  *              "swagger_context" = {
- *              	"description" = "Gets an list of BAG [nummer aanduidingen]( https://bag.basisregistraties.overheid.nl/restful-api/-/article/basisregistraties-adressen-en-gebouwen-bag-#/paths/~1nummeraanduidingen/get) enriched with __straatnaam__,__woonplaats__ and __gemeente_nummer__ .",
+ *              	"description" = "Gets an list of BAG [nummer aanduidingen]( https://bag.basisregistraties.overheid.nl/restful-api/-/article/basisregistraties-adressen-en-gebouwen-bag-#/paths/~1nummeraanduidingen/get) enriched with __straatnaam__,__woonplaats__ and __gemeente_nummer__ . There are 2 combinations of query parameters possible: postcode+huisnummer(+huisnummer_toevoeging) and straatnaam+huisnummer(+huisnummer_toevoeging)+woonplaats",
  *                  "parameters" = {
  *                      {
  *                          "name" = "huisnummer",
@@ -51,11 +51,25 @@ use Symfony\Component\Validator\Constraints as Assert;
  *                          "name" = "postcode",
  *                          "in" = "query",
  *                          "description" = "The zip or postcode of the address in a P6 format e.g. 1234AB (without spaces)",
- *                          "required" = true,
+ *                          "required" = false,
  *                          "type" : "string",
  *                          "format" : "P6",
  *             				"maxLength"="6",
  *             				"minLength"="6"
+ *                      },
+ *                      {
+ *                          "name" = "straatnaam",
+ *                          "in" = "query",
+ *                          "description" = "The street name for the building",
+ *                          "required" = false,
+ *                          "type" : "string"
+ *                      },
+ *                      {
+ *                          "name" = "woonplaats",
+ *                          "in" = "query",
+ *                          "description" = "The locality for the building",
+ *                          "required" = false,
+ *                          "type" : "string"
  *                      }
  *                  }
  *               }
