@@ -2,28 +2,25 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-    annotations:
-        # add an annotation indicating the issuer to use.
-        #    cert-manager.io/acme-challenge-type: http01
-        #    cert-manager.io/cluster-issuer: letsencrypt-prod
-      {{ if eq .Values.ingress.type "nginx" }}
-        kubernetes.io/ingress.class: nginx
-        nginx.ingress.kubernetes.io/rewrite-target: /$2
-      {{ end }}
-      {{ if eq .Values.ingress.type "traefik"}}
-        kubernetes.io/ingress.class: traefik
-        traefik.ingress.kubernetes.io/router.middlewares: {{ .Release.Namespace }}-{{ .Release.Name }}-middleware@kubernetescrd
-      {{ end }}
-      {{- with .Values.ingress.annotations }}
-      {{- toYaml . | nindent 4 }}
-      {{- end }}
-    name: {{ .Release.Name }}-ingress
-    labels:
-        app.kubernetes.io/name: {{ .Release.Name }}-ingress
-        app.kubernetes.io/part-of: {{ .Release.Name }}
-        helm.sh/chart: {{ include "chart" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
-        app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+    {{- if eq .Values.ingress.type "nginx" }}
+      kubernetes.io/ingress.class: nginx
+      nginx.ingress.kubernetes.io/rewrite-target: /$2
+    {{- end }}
+    {{- if eq .Values.ingress.type "traefik"}}
+      kubernetes.io/ingress.class: traefik
+      traefik.ingress.kubernetes.io/router.middlewares: {{ .Release.Namespace }}-{{ .Release.Name }}-middleware@kubernetescrd
+    {{- end }}
+    {{- with .Values.ingress.annotations }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+  name: {{ .Release.Name }}-ingress
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}-ingress
+    app.kubernetes.io/part-of: {{ .Release.Name }}
+    helm.sh/chart: {{ include "chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
     {{- if .Values.ingress.tls }}
     tls:
