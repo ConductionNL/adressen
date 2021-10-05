@@ -73,5 +73,7 @@ class WarmupCommand extends Command
         $io->text("Warming up cache for postcode $postcode with house number $houseNumber");
         $this->kadasterService->getAdresOnHuisnummerPostcode($houseNumber, $postcode);
         $io->text("Cache warmed up with postcode $postcode and house number $houseNumber");
+
+        return 0;
     }
 }
