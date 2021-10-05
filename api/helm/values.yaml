@@ -39,7 +39,7 @@ redis:
     enabled: false
   redisPort: 6379
   usePassword: false
-  enabled: false
+  enabled: true
   pullPolicy: IfNotPresent
 
 nginx:
