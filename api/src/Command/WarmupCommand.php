@@ -4,6 +4,8 @@
 
 namespace App\Command;
 
+use App\Service\HuidigeBevragingenService;
+use App\Service\IndividueleBevragingenService;
 use App\Service\KadasterService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -11,17 +13,26 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class WarmupCommand extends Command
 {
     private $em;
     private $kadasterService;
 
-    public function __construct(EntityManagerInterface $em, KadasterService $kadasterService)
+    public function __construct(EntityManagerInterface $em, KadasterService $kadasterService, HuidigeBevragingenService $huidigeBevragingenService, IndividueleBevragingenService $individueleBevragingenService, ParameterBagInterface $parameterBag)
     {
+        if ($parameterBag->get('components')['bag']['location'] == 'https://bag.basisregistraties.overheid.nl/api/v1/') {
+            $this->kadasterService = $kadasterService;
+        } elseif (
+            $parameterBag->get('components')['bag']['location'] == 'https://api.bag.acceptatie.kadaster.nl/lvbag/individuelebevragingen/v2/' ||
+            $parameterBag->get('components')['bag']['location'] == 'https://api.bag.kadaster.nl/lvbag/individuelebevragingen/v2/'
+        ) {
+            $this->kadasterService = $individueleBevragingenService;
+        } else {
+            $this->kadasterService = $huidigeBevragingenService;
+        }
         $this->em = $em;
-        $this->kadasterService = $kadasterService;
-
         parent::__construct();
     }
 
