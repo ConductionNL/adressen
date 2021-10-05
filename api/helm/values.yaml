@@ -30,7 +30,7 @@ security:
 replicaCount: 2
 
 php:
-  repository: ghcr.io/conductionnl/webresourcecatalogus-php
+  repository: ghcr.io/conductionnl/adresservice-php
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
@@ -45,7 +45,7 @@ php:
     #   memory: 72Mi
 
 nginx:
-  repository: ghcr.io/conductionnl/webresourcecatalogus-nginx
+  repository: ghcr.io/conductionnl/adresservice-nginx
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
