@@ -40,58 +40,58 @@ spec:
               - name: TRUSTED_HOSTS
                 valueFrom:
                   configMapKeyRef:
-                    name: {{ template "fullname" . }}
+                    name: {{ .Chart.Name }}
                     key: trusted-hosts
               - name: TRUSTED_PROXIES
                 valueFrom:
                   configMapKeyRef:
-                    name: {{ template "fullname" . }}
+                    name: {{ .Chart.Name }}
                     key: trusted-proxies
               - name: APP_VERSION
                 valueFrom:
                   configMapKeyRef:
-                    name: {{ template "fullname" . }}
+                    name: {{ .Chart.Name }}
                     key: app-version
               - name: APP_DEBUG
                 valueFrom:
                   configMapKeyRef:
-                    name: {{ template "fullname" . }}
+                    name: {{ .Chart.Name }}
                     key: debug
               - name: APP_CACHE
                 valueFrom:
                   configMapKeyRef:
-                    name: {{ template "fullname" . }}
+                    name: {{ .Chart.Name }}
                     key: cache
               - name: DATABASE_URL
                 valueFrom:
                   secretKeyRef:
-                    name: {{ template "fullname" . }}
+                    name: {{ .Chart.Name }}
                     key: database-url
               - name: CORS_ALLOW_ORIGIN
                 valueFrom:
                   configMapKeyRef:
-                    name: {{ template "fullname" . }}
+                    name: {{ .Chart.Name }}
                     key: app-corsAllowOrigin
               - name: APP_APPLICATION_KEY
                 valueFrom:
                   secretKeyRef:
-                    name: {{ template "fullname" . }}
+                    name: {{ .Chart.Name }}
                     key: app_application_key
               {{ if .Values.redis.enabled }}
               - name: REDIS_HOST
                 valueFrom:
                   configMapKeyRef:
-                    name: {{ template "fullname" . }}
+                    name: {{ .Chart.Name }}
                     key: redis-host
               - name: REDIS_PORT
                 valueFrom:
                   configMapKeyRef:
-                    name: {{ template "fullname" . }}
+                    name: {{ .Chart.Name }}
                     key: redis-port
               {{- end }}
               - name: APP_URL
                 valueFrom:
                   configMapKeyRef:
                     key: url
-                    name: {{ template "fullname" . }}
+                    name: {{ .Chart.Name }}
           restartPolicy: OnFailure
