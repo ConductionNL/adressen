@@ -1,13 +1,9 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ include "name" . }}-warmup
+  name: {{ .Chart.Name }}-warmup
   labels:
-    app.kubernetes.io/name: {{ include "name" . }}-warmup
-    app.kubernetes.io/part-of: {{ include "name" . }}
-    helm.sh/chart: {{ include "chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- include "template.labels" . | nindent 4 }}
 spec:
   # this cronjob runs every 10 minutes https://crontab.guru/#*_*_*_*_*
   schedule: "0 5 * * *"
@@ -18,10 +14,10 @@ spec:
           volumes:
           - name: dependencies
             secret:
-              secretName: {{ template "fullname" . }}-dependencies
+              secretName: {{ .Chart.Name }}-dependencies
               defaultMode: 420
           containers:
-          - name: {{ include "name" . }}-php
+          - name: {{ .Chart.Name }}-php
             image: "{{ .Values.php.image }}:{{ .Values.php.tag }}"
             imagePullPolicy: Always
             args:
