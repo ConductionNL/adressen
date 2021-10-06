@@ -15,6 +15,11 @@ spec:
     spec:
       template:
         spec:
+          volumes:
+          - name: dependencies
+            secret:
+              secretName: {{ template "fullname" . }}-dependencies
+              defaultMode: 420
           containers:
           - name: {{ include "name" . }}-php
             image: "{{ .Values.php.image }}:{{ .Values.php.tag }}"
