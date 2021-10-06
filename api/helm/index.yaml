@@ -5,7 +5,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: V1.0
-    created: "2021-10-06T16:50:45.158945672+02:00"
+    created: "2021-10-06T16:58:50.180295297+02:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -20,7 +20,7 @@ entries:
       (en bijbehorende bag ID’s) te suggereren. Het vormt hiermee de kernfunctionaliteit
       voor formulieren waarin klanten adressen kunnen opgeven aan de hand van huisnummer
       en postcode combinatie.
-    digest: a8009d94115ac49b503b67ea7945de28b1e47c1550473a6f56485f7f26893104
+    digest: 0005dc7455254f908aa1caf405d994a1e9432b4d8c9e7a939afc5affe6b8c0fa
     home: https://www.conduction.nl
     icon: https://conductionnl.github.io/images/conduction_avatar_blue_on_transparant.svg
     keywords:
@@ -44,7 +44,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: V1.0
-    created: "2021-10-06T16:50:45.138226553+02:00"
+    created: "2021-10-06T16:58:50.166250965+02:00"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -81,7 +81,7 @@ entries:
     version: 1.0.0
   - apiVersion: v1
     appVersion: V1.0
-    created: "2021-10-06T16:50:45.117659933+02:00"
+    created: "2021-10-06T16:58:50.153278498+02:00"
     description: De Adresservice biedt een koppelvlak met de BAG API (V1), waardoor
       het mogelijk is om aan de hand van postcode en huisnummer combinaties adressen
       (en bijbehorende bag ID’s) te suggereren. Het vormt hiermee de kernfunctionaliteit
@@ -112,7 +112,7 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 11.13.0
-    created: "2021-10-06T16:50:45.169036692+02:00"
+    created: "2021-10-06T16:58:50.187705201+02:00"
     dependencies:
     - name: common
       repository: https://charts.bitnami.com/bitnami
@@ -146,7 +146,7 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 6.2.5
-    created: "2021-10-06T16:50:45.17970956+02:00"
+    created: "2021-10-06T16:58:50.196800675+02:00"
     dependencies:
     - name: common
       repository: https://charts.bitnami.com/bitnami
@@ -175,4 +175,4 @@ entries:
     urls:
     - charts/redis-15.3.2.tgz
     version: 15.3.2
-generated: "2021-10-06T16:50:45.105519375+02:00"
+generated: "2021-10-06T16:58:50.145962102+02:00"
