@@ -51,6 +51,7 @@ RUN set -eux; \
 	chmod +x bin/console; sync
 
 VOLUME /srv/api/var
+RUN echo "php_admin_value[memory_limit] = 256M" >> /usr/local/etc/php-fpm.d/www.conf
 
 COPY docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 RUN chmod +x /usr/local/bin/docker-entrypoint

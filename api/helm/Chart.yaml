@@ -4,7 +4,7 @@ apiVersion: v2
 appVersion: V1.0
 description: 'De Adresservice biedt een koppelvlak met de BAG API (V1), waardoor het mogelijk is om aan de hand van postcode en huisnummer combinaties adressen (en bijbehorende bag ID’s) te suggereren. Het vormt hiermee de kernfunctionaliteit voor formulieren waarin klanten adressen kunnen opgeven aan de hand van huisnummer en postcode combinatie.'
 name: adresservice
-version: 1.1.0
+version: 1.0.0
 home: https://www.conduction.nl
 icon: https://conductionnl.github.io/images/conduction_avatar_blue_on_transparant.svg
 sources:
@@ -23,9 +23,9 @@ maintainers:
 dependencies:
     - name: postgresql
       repository: https://charts.bitnami.com/bitnami
-      version: 10.10.3
+      version: 10.1.1
       condition: postgresql.enabled
     - name: redis
       repository: https://charts.bitnami.com/bitnami
-      version: 15.3.2
+      version: 12.7.7
       condition: redis.enabled
