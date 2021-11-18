@@ -16,7 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-class ExtractCommand extends Command
+class MutationExtractCommand extends Command
 {
     private EntityManagerInterface $entityManager;
 
@@ -32,14 +32,14 @@ class ExtractCommand extends Command
     protected function configure()
     {
         $this
-        ->setName('app:extract:load')
+        ->setName('app:extract:update')
         // the short description shown while running "php bin/console list"
         ->setDescription('Loads an BAG extract into the database')
 
         // the full command description shown when running the command with
         // the "--help" option
-        ->setHelp('This command loads an BAG extract into the database as fallback for when the BAG APIs are down')
-        ->setDescription('This command loads an BAG extract into the database as fallback for when the BAG APIs are down');
+        ->setHelp('This command loads updates for a BAG extract into the database')
+        ->setDescription('This command loads updates for a BAG extract into the database');
     }
 
     /**
@@ -49,9 +49,6 @@ class ExtractCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $extractService = new LoadExtractService($this->entityManager, $io);
-        $extractService->loadWoonplaatsen();
-        $extractService->loadOpenbareRuimtes();
-        $extractService->loadNummerObjecten();
-        $extractService->loadVerblijfsObjecten();
+        $extractService->processMutations();
     }
 }
