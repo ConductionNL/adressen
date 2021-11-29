@@ -1,0 +1,8 @@
+parameters:
+  env(KADASTER_USERNAME): 'vrijBRP_BAG'
+  env(KADASTER_PASSWORD): 'Cd0zALt3A!AnEnp3zALi'
+  env(LOCAL_DATABASE): 'true'
+
+  kadaster-username: "%env(KADASTER_USERNAME)%"
+  kadaster-password: "%env(KADASTER_PASSWORD)%"
+  local-database: "%env(bool:LOCAL_DATABASE)%"

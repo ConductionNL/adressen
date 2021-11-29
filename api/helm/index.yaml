@@ -5,7 +5,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: V1.0
-    created: "2021-11-08T13:53:34.244683627Z"
+    created: "2021-11-26T14:09:37.6819792Z"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -44,7 +44,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: V1.0
-    created: "2021-11-08T13:53:34.226892686Z"
+    created: "2021-11-26T14:09:37.6417199Z"
     dependencies:
     - condition: postgresql.enabled
       name: postgresql
@@ -54,12 +54,12 @@ entries:
       name: redis
       repository: https://charts.bitnami.com/bitnami
       version: 12.7.7
-    description: De Adresservice biedt een koppelvlak met de BAG API (V1), waardoor
-      het mogelijk is om aan de hand van postcode en huisnummer combinaties adressen
-      (en bijbehorende bag ID’s) te suggereren. Het vormt hiermee de kernfunctionaliteit
+    description: '&quot;De Adresservice biedt een koppelvlak met de BAG API (V1),
+      waardoor het mogelijk is om aan de hand van postcode en huisnummer combinaties
+      adressen (en bijbehorende bag ID’s) te suggereren. Het vormt hiermee de kernfunctionaliteit
       voor formulieren waarin klanten adressen kunnen opgeven aan de hand van huisnummer
-      en postcode combinatie.
-    digest: 4c9914593efb621fa988dc1a3d63ed05772c653fea91e29f2a063c7c1c16a171
+      en postcode combinatie.&quot;'
+    digest: 25cf33ff536757fa3b7865ce5cf62313451e435b4124cd88bd258e730afcfe8f
     home: https://www.conduction.nl
     icon: https://conductionnl.github.io/images/conduction_avatar_blue_on_transparant.svg
     keywords:
@@ -81,7 +81,7 @@ entries:
     version: 1.0.0
   - apiVersion: v1
     appVersion: V1.0
-    created: "2021-11-08T13:53:34.207196059Z"
+    created: "2021-11-26T14:09:37.6202411Z"
     description: De Adresservice biedt een koppelvlak met de BAG API (V1), waardoor
       het mogelijk is om aan de hand van postcode en huisnummer combinaties adressen
       (en bijbehorende bag ID’s) te suggereren. Het vormt hiermee de kernfunctionaliteit
@@ -112,7 +112,7 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 11.13.0
-    created: "2021-11-08T13:53:34.254052365Z"
+    created: "2021-11-26T14:09:37.6976086Z"
     dependencies:
     - name: common
       repository: https://charts.bitnami.com/bitnami
@@ -146,7 +146,7 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 6.2.5
-    created: "2021-11-08T13:53:34.26501143Z"
+    created: "2021-11-26T14:09:37.7167151Z"
     dependencies:
     - name: common
       repository: https://charts.bitnami.com/bitnami
@@ -175,4 +175,4 @@ entries:
     urls:
     - charts/redis-15.3.2.tgz
     version: 15.3.2
-generated: "2021-11-08T13:53:34.194855139Z"
+generated: "2021-11-26T14:09:37.602676Z"

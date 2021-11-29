@@ -14,6 +14,8 @@ data:
   trusted-hosts: {{ .Values.config.trustedHosts | quote }}
   php-service: {{ .Release.Name }}-php  
   url: {{ printf "https://%s%s" .Values.ingress.hostname .Values.ingress.path | quote }}
+  local-database: {{ .Values.config.localDatabase | quote | default "false" }}
+
   {{- if .Values.redis.enabled }}
   redis-host: {{ printf "%s-headless" $redisServiceName | quote }}
   redis-port: {{ .Values.redis.redisPort | toString | quote }}
