@@ -1,4 +1,6 @@
 # adresservice
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FConductionNL%2Fadresservice.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FConductionNL%2Fadresservice?ref=badge_shield)
+
 
 Description
 ----
@@ -77,3 +79,7 @@ Credits
 Information about the authors of this component can be found [here](AUTHORS.md)
 
 Copyright © [Utrecht](https://www.utrecht.nl/) 2019
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FConductionNL%2Fadresservice.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FConductionNL%2Fadresservice?ref=badge_large)
